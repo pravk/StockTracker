@@ -51,16 +51,8 @@ public class MainActivity extends AppCompatActivity {
         // Setup drawer view
         setupDrawerContent(nvDrawer);
 
-       // nvDrawer.getMenu().performIdentifierAction(R.id.nav_list_movies, 0);
-        /*TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        nvDrawer.getMenu().performIdentifierAction(R.id.new_portfolio, 0);
 
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-        }
-
-        viewPager.setAdapter(new MainFragmentAdapter(getSupportFragmentManager()));
-        tabLayout.setupWithViewPager(viewPager);*/
     }
 
     @Override

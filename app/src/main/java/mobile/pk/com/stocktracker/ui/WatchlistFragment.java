@@ -1,13 +1,19 @@
 package mobile.pk.com.stocktracker.ui;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 import mobile.pk.com.stocktracker.R;
 
 /**
@@ -34,6 +40,9 @@ public class WatchlistFragment extends Fragment {
         return fragment;
     }
 
+    @InjectView(R.id.fab_add_new_stock)
+    FloatingActionButton fabAddNewStock;
+
     public WatchlistFragment() {
         // Required empty public constructor
     }
@@ -44,13 +53,21 @@ public class WatchlistFragment extends Fragment {
         if (getArguments() != null) {
             watchListId = getArguments().getString(WATCH_LIST_ID);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_watchlist, container, false);
+        View view = inflater.inflate(R.layout.fragment_watchlist, container, false);
+        ButterKnife.inject(this, view);
+        return view;
+    }
+
+    @OnClick(R.id.fab_add_new_stock)
+    public void onAddNewStock(){
+        SelectStockDialog.newInstance("Add new Stock").show(getChildFragmentManager(), null);
     }
 
     /**
