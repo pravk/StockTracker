@@ -33,13 +33,12 @@ import mobile.pk.com.stocktracker.dao.Watchlist;
  * create an instance of this fragment.
  */
 public class WatchlistFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String WATCH_LIST_ID = "WATCH_LIST_ID";
+
+   private static final String WATCH_LIST_ID = "WATCH_LIST_ID";
 
     // TODO: Rename and change types of parameters
    private long watchListId;
-    private WatchListAdapter watchlistAdapter;
+   private WatchListAdapter watchlistAdapter;
 
     public static WatchlistFragment newInstance(Long watchListId) {
         WatchlistFragment fragment = new WatchlistFragment();

@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/new_portfolio"
-            android:icon="@drawable/ic_more_vert_black_24dp"
-         android:title="New Portfolio" android:checked="true" />
-        <item
-            android:id="@+id/new_watchlist"
-            android:icon="@drawable/ic_more_vert_black_24dp"
-            android:title="New Watchlist" />
+    <group android:checkableBehavior="single" android:id="@+id/watchlist_group">
     </group>
 </menu>

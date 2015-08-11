@@ -70,9 +70,11 @@ public class SelectStockDialog extends DialogFragment  {
         Button button = (Button)view.findViewById(R.id.ok);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Stock s = Stock.from(match);
-                listener.onStockSelect(s);
-                getDialog().dismiss();
+                if(match != null) {
+                    Stock s = Stock.from(match);
+                    listener.onStockSelect(s);
+                    getDialog().dismiss();
+                }
             }
         });
 

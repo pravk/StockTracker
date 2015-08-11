@@ -2,6 +2,7 @@ package mobile.pk.com.stocktracker.ui;
 
 import android.app.Activity;
 import android.app.SearchManager;
+import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -17,11 +18,15 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Iterator;
 
 import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.dao.Watchlist;
@@ -52,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         // Setup drawer view
         setupDrawerContent(nvDrawer);
 
-        nvDrawer.getMenu().performIdentifierAction(R.id.new_portfolio, 0);
+        //nvDrawer.getMenu().performIdentifierAction(R.id.default_watchlist, 0);
 
     }
 
@@ -86,6 +91,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
+
+        Menu menu = navigationView.getMenu();
+        menu.clear();
+
+        Iterator<Watchlist> iterator = Watchlist.findAll(Watchlist.class);
+        while (iterator != null && iterator.hasNext())
+        {
+            Watchlist watchlist = iterator.next();
+            MenuItem subMenu = menu.add(R.id.watchlist_group, watchlist.getId().intValue(), 0, watchlist.getWatchlistName());
+            subMenu.setIcon(getResources().getDrawable(R.drawable.ic_menu_black_24dp));
+            Intent intent = new Intent();
+            intent.putExtra("watchlistId", watchlist.getId());
+            subMenu.setIntent(intent);
+        }
+
+        menu.add(R.id.watchlist_group, 0, 0, R.string.create_new_watchlist);
+
+        menu.setGroupCheckable(R.id.watchlist_group,true, true );
+
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -101,17 +125,32 @@ public class MainActivity extends AppCompatActivity {
         // position
         Fragment fragment = null;
         Fragment fragmentClass = null;
-        switch(menuItem.getItemId()) {
-            case R.id.new_portfolio:
-                fragmentClass = WatchlistFragment.newInstance(Watchlist.getDefaultWatchList().getId());
-                break;
-            case R.id.new_watchlist:
-                fragmentClass = WatchlistFragment.newInstance(Watchlist.getDefaultWatchList().getId());
-                break;
-            default:
-                //fragmentClass = MoviesFragment.class;
-        }
+        if(menuItem.getTitle().equals(getString(R.string.create_new_watchlist)))
+        {
+            fragmentClass = EditWatchlistFragment.newInstance(null, new EditWatchlistFragment.WatchListUpdateListener() {
+                @Override
+                public void onUpdateComplete(Watchlist watchlist) {
+                    setupDrawerContent(nvDrawer);
+                    nvDrawer.getMenu().performIdentifierAction(watchlist.getId().intValue(), 0);
+                }
 
+                @Override
+                public void onCancel() {
+                    Toast.makeText(MainActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
+        else
+        {
+            Intent intent = menuItem.getIntent();
+            if(intent != null)
+            {
+                long watchlistId = intent.getLongExtra("watchlistId", 0);
+                fragmentClass = WatchlistFragment.newInstance(watchlistId);
+            }
+
+        }
         try {
             if(fragmentClass != null)
                 fragment = fragmentClass;

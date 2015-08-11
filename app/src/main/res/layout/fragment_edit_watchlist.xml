@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bootstrap="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" android:gravity="center" android:padding="16dp">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textSize="32sp"
+        android:text="Create new Watchlist"
+        />
+
+    <!-- rounded edit text -->
+    <com.beardedhen.androidbootstrap.BootstrapEditText
+        android:id="@+id/watchlist_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:hint="@string/enter_watchlist_name"
+        bootstrap:be_roundedCorners="true"
+        android:gravity="center"
+        bootstrap:be_state="success"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_horizontal">
+    <com.beardedhen.androidbootstrap.BootstrapButton
+        android:id="@+id/btn_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="Done"
+        bootstrap:bb_icon_right="fa-save"
+        bootstrap:bb_type="success"
+        />
+        <com.beardedhen.androidbootstrap.BootstrapButton
+            android:id="@+id/btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Cancel"
+            bootstrap:bb_icon_right="fa-undo"
+            bootstrap:bb_type="default"
+            />
+    </LinearLayout>
+</LinearLayout>

@@ -27,4 +27,16 @@ public class Watchlist extends SugarRecord<Watchlist> {
             return watchlistList.get(0);
         }
     }
+
+    public String getWatchlistName() {
+        return watchlistName;
+    }
+
+    public void setWatchlistName(String watchlistName) {
+        this.watchlistName = watchlistName;
+    }
+
+    public boolean isSystem() {
+        return isSystem;
+    }
 }

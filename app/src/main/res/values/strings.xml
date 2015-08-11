@@ -24,4 +24,6 @@
     <string name="date_added">Date Added</string>
     <string name="ticker">Ticker</string>
     <string name="refresh">Refresh</string>
+    <string name="enter_watchlist_name">Enter watchlist Name</string>
+    <string name="create_new_watchlist">Create new watchlist</string>
 </resources>
