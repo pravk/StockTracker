@@ -10,11 +10,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import mobile.pk.com.stocktracker.R;
+import mobile.pk.com.stocktracker.dao.Stock;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -67,7 +69,17 @@ public class WatchlistFragment extends Fragment {
 
     @OnClick(R.id.fab_add_new_stock)
     public void onAddNewStock(){
-        SelectStockDialog.newInstance("Add new Stock").show(getChildFragmentManager(), null);
+        SelectStockDialog.newInstance("Add new Stock", new SelectStockDialog.SelectStockDialogListener() {
+            @Override
+            public void onStockSelect(Stock stock) {
+                Toast.makeText(getActivity(), stock.getName(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancel() {
+                Toast.makeText(getActivity(),"Selection cancelled", Toast.LENGTH_SHORT).show();
+            }
+        }).show(getChildFragmentManager(), null);
     }
 
     /**

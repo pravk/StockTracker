@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:padding="16dp">
+    android:layout_height="match_parent" >
 
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:text="@string/search_stock" />
+        android:layout_height="match_parent" android:layout_marginBottom="50dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:padding="16dp" android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:text="@string/search_stock" />
 
-    <mobile.pk.com.stocktracker.utils.DelayAutoCompleteTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:id="@+id/ticker_search" />
-
+        <mobile.pk.com.stocktracker.utils.DelayAutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/ticker_search" />
+        </LinearLayout>
+    </ScrollView>
 
     <View
         android:layout_width="fill_parent"
@@ -21,6 +28,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_gravity="bottom"
         android:paddingTop="0dip"
         android:paddingLeft="2dip"
         android:paddingRight="2dip"
@@ -47,8 +55,8 @@
         style="?android:attr/progressBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|right"
+        android:layout_gravity="bottom|right"
         android:layout_marginRight="@dimen/margin_default"
         android:visibility="gone"/>
 
-</LinearLayout>
+</FrameLayout>

@@ -1,9 +1,11 @@
 package mobile.pk.com.stocktracker.common;
 
+import com.orm.SugarApp;
+
 /**
  * Created by hello on 8/1/2015.
  */
-public class Application extends android.app.Application {
+public class Application extends SugarApp {
 
     private RestClient restClient;
 

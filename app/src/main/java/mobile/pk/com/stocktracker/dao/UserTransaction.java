@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * Created by hello on 8/10/2015.
  */
-public class Transaction extends SugarRecord<Transaction> {
+public class UserTransaction extends SugarRecord<UserTransaction> {
 
     private Date transactionDate;
     private double quantity;

@@ -1,14 +1,20 @@
 package mobile.pk.com.stocktracker.dao;
 
+import com.orm.StringUtil;
 import com.orm.SugarRecord;
+
+import java.util.List;
+
+import mobile.pk.com.stocktracker.service.TickerSearchService;
 
 /**
  * Created by hello on 8/10/2015.
  */
 public class Stock extends SugarRecord<Stock> {
     private String name;
-    private String bseId;
-    private String nseId;
+    private String ticker;
+    private String exchange;
+    private String clientId;
 
     public String getName() {
         return name;
@@ -18,19 +24,42 @@ public class Stock extends SugarRecord<Stock> {
         this.name = name;
     }
 
-    public String getBseId() {
-        return bseId;
+    public static Stock from(TickerSearchService.Match match) {
+        List<Stock> stockList = find(Stock.class, StringUtil.toSQLName("clientId") + "=?", match.getId());
+        if(stockList == null || stockList.size()==0)
+        {
+            Stock stock = new Stock();
+            stock.setClientId(match.getId());
+            stock.setExchange(match.getExchange());
+            stock.setName(match.getName());
+            stock.setTicker(match.getTicker());
+            stock.save();
+            return stock;
+        }
+        return stockList.get(0);
     }
 
-    public void setBseId(String bseId) {
-        this.bseId = bseId;
+    public String getTicker() {
+        return ticker;
     }
 
-    public String getNseId() {
-        return nseId;
+    public void setTicker(String ticker) {
+        this.ticker = ticker;
     }
 
-    public void setNseId(String nseId) {
-        this.nseId = nseId;
+    public String getExchange() {
+        return exchange;
+    }
+
+    public void setExchange(String exchange) {
+        this.exchange = exchange;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 }

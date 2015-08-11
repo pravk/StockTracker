@@ -8,25 +8,38 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 
 import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.adapters.StockAutoCompleteAdapter;
 import mobile.pk.com.stocktracker.common.Application;
+import mobile.pk.com.stocktracker.dao.Stock;
 import mobile.pk.com.stocktracker.service.TickerSearchService;
 import mobile.pk.com.stocktracker.utils.DelayAutoCompleteTextView;
 
 /**
  * Created by hello on 8/10/2015.
  */
-public class SelectStockDialog extends DialogFragment {
+public class SelectStockDialog extends DialogFragment  {
+
+    public interface SelectStockDialogListener
+    {
+        void onStockSelect(Stock  stock);
+        void onCancel();
+
+    }
 
     private DelayAutoCompleteTextView tickerSearchView;
     private StockAutoCompleteAdapter adapter;
-    public static SelectStockDialog newInstance(String title) {
+    private SelectStockDialogListener listener;
+    private TickerSearchService.Match match;
+
+    public static SelectStockDialog newInstance(String title, SelectStockDialogListener listener) {
         SelectStockDialog frag = new SelectStockDialog();
         Bundle args = new Bundle();
         args.putString("title", title);
         frag.setArguments(args);
+        frag.listener = listener;
         return frag;
     }
 
@@ -49,11 +62,27 @@ public class SelectStockDialog extends DialogFragment {
         tickerSearchView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                TickerSearchService.Match match = (TickerSearchService.Match) adapterView.getItemAtPosition(position);
+                match = (TickerSearchService.Match) adapterView.getItemAtPosition(position);
                 tickerSearchView.setText(match.getName());
             }
         });
 
+        Button button = (Button)view.findViewById(R.id.ok);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Stock s = Stock.from(match);
+                listener.onStockSelect(s);
+                getDialog().dismiss();
+            }
+        });
+
+        Button cancel = (Button)view.findViewById(R.id.cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                listener.onCancel();
+                getDialog().dismiss();
+            }
+        });
         return view;
     }
 }
