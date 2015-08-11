@@ -1,13 +1,16 @@
 package mobile.pk.com.stocktracker.ui;
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -16,7 +19,10 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import mobile.pk.com.stocktracker.R;
+import mobile.pk.com.stocktracker.adapters.WatchListAdapter;
+import mobile.pk.com.stocktracker.common.Application;
 import mobile.pk.com.stocktracker.dao.Stock;
+import mobile.pk.com.stocktracker.dao.Watchlist;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,12 +38,13 @@ public class WatchlistFragment extends Fragment {
     private static final String WATCH_LIST_ID = "WATCH_LIST_ID";
 
     // TODO: Rename and change types of parameters
-   private String watchListId;
+   private long watchListId;
+    private WatchListAdapter watchlistAdapter;
 
-   public static WatchlistFragment newInstance(String watchListId) {
+    public static WatchlistFragment newInstance(Long watchListId) {
         WatchlistFragment fragment = new WatchlistFragment();
         Bundle args = new Bundle();
-        args.putString(WATCH_LIST_ID, watchListId);
+        args.putLong(WATCH_LIST_ID, watchListId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,9 +60,9 @@ public class WatchlistFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            watchListId = getArguments().getString(WATCH_LIST_ID);
+            watchListId = getArguments().getLong(WATCH_LIST_ID);
         }
-
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -64,6 +71,14 @@ public class WatchlistFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_watchlist, container, false);
         ButterKnife.inject(this, view);
+
+        final RecyclerView recyclerView =   (RecyclerView) view.findViewById(R.id.watchlist);
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(),2);
+        recyclerView.setLayoutManager(layoutManager);
+        Watchlist watchlist = Watchlist.findById(Watchlist.class, watchListId);
+        watchlistAdapter = new WatchListAdapter(getActivity(), watchlist, ((Application)getActivity().getApplication()).getRestClient().getPricingService() );
+        recyclerView.setAdapter(watchlistAdapter);
+
         return view;
     }
 
@@ -72,6 +87,7 @@ public class WatchlistFragment extends Fragment {
         SelectStockDialog.newInstance("Add new Stock", new SelectStockDialog.SelectStockDialogListener() {
             @Override
             public void onStockSelect(Stock stock) {
+                watchlistAdapter.addStock(stock);
                 Toast.makeText(getActivity(), stock.getName(), Toast.LENGTH_SHORT).show();
             }
 
@@ -80,6 +96,12 @@ public class WatchlistFragment extends Fragment {
                 Toast.makeText(getActivity(),"Selection cancelled", Toast.LENGTH_SHORT).show();
             }
         }).show(getChildFragmentManager(), null);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(
+        Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.watchlist_toolbar_menu, menu);
     }
 
     /**
@@ -95,6 +117,18 @@ public class WatchlistFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        switch (item.getItemId()) {
+            case R.id.refresh_view:
+                watchlistAdapter.refreshPrices(watchlistAdapter.getWatchListStocks());
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }

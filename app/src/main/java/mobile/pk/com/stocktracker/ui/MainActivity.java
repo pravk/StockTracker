@@ -24,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import mobile.pk.com.stocktracker.R;
+import mobile.pk.com.stocktracker.dao.Watchlist;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,12 +62,12 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
         // Associate searchable configuration with the SearchView
-        SearchManager searchManager =
+       /* SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView =
                 (SearchView) menu.findItem(R.id.search_tracker).getActionView();
         searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
+                searchManager.getSearchableInfo(getComponentName()));*/
 
         return true;
 
@@ -99,14 +100,13 @@ public class MainActivity extends AppCompatActivity {
         // Create a new fragment and specify the planet to show based on
         // position
         Fragment fragment = null;
-
         Fragment fragmentClass = null;
         switch(menuItem.getItemId()) {
             case R.id.new_portfolio:
-                fragmentClass = WatchlistFragment.newInstance("");
+                fragmentClass = WatchlistFragment.newInstance(Watchlist.getDefaultWatchList().getId());
                 break;
             case R.id.new_watchlist:
-                fragmentClass = WatchlistFragment.newInstance("");
+                fragmentClass = WatchlistFragment.newInstance(Watchlist.getDefaultWatchList().getId());
                 break;
             default:
                 //fragmentClass = MoviesFragment.class;
@@ -118,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();

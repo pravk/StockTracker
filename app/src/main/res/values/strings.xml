@@ -20,4 +20,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search_stock">Search stock</string>
     <string name="server_url">https://www.google.com/finance</string>
+    <string name="exchange">Exchange</string>
+    <string name="date_added">Date Added</string>
+    <string name="ticker">Ticker</string>
+    <string name="refresh">Refresh</string>
 </resources>

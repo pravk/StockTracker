@@ -2,6 +2,7 @@ package mobile.pk.com.stocktracker.dao;
 
 import com.orm.StringUtil;
 import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
 
 import java.util.List;
 
@@ -15,6 +16,8 @@ public class Stock extends SugarRecord<Stock> {
     private String ticker;
     private String exchange;
     private String clientId;
+    @Ignore
+    private StockPrice price;
 
     public String getName() {
         return name;
@@ -61,5 +64,13 @@ public class Stock extends SugarRecord<Stock> {
 
     public void setClientId(String clientId) {
         this.clientId = clientId;
+    }
+
+    public StockPrice getPrice() {
+        return price;
+    }
+
+    public void setPrice(StockPrice price) {
+        this.price = price;
     }
 }

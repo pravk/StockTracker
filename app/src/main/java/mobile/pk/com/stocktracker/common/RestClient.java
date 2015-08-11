@@ -3,6 +3,7 @@ package mobile.pk.com.stocktracker.common;
 import android.content.Context;
 
 import mobile.pk.com.stocktracker.R;
+import mobile.pk.com.stocktracker.service.PricingService;
 import mobile.pk.com.stocktracker.service.TickerSearchService;
 import retrofit.RestAdapter;
 
@@ -12,6 +13,7 @@ import retrofit.RestAdapter;
 public class RestClient {
 
     private TickerSearchService tickerSearchService;
+    private PricingService pricingService;
 
     public RestClient(Context context)
     {
@@ -21,10 +23,14 @@ public class RestClient {
                 .build();
 
         tickerSearchService = restAdapter.create(TickerSearchService.class);
-
+        pricingService = restAdapter.create(PricingService.class);
     }
 
     public TickerSearchService getTickerSearchService() {
         return tickerSearchService;
+    }
+
+    public PricingService getPricingService() {
+        return pricingService;
     }
 }

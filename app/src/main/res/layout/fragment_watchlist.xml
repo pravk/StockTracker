@@ -3,6 +3,10 @@
     android:layout_height="match_parent"
     tools:context="mobile.pk.com.stocktracker.ui.WatchlistFragment">
 
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/watchlist" android:layout_width="match_parent"
+        android:layout_height="match_parent" app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_add_new_stock"

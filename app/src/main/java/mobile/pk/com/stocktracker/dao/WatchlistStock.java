@@ -36,5 +36,14 @@ public class WatchlistStock extends SugarRecord<Watchlist> {
     public void setCreationTS(Date creationTS) {
         this.creationTS = creationTS;
     }
+
+    public static WatchlistStock from(Stock stock, Watchlist watchlist) {
+        WatchlistStock watchlistStock = new WatchlistStock();
+        watchlistStock.setStock(stock);
+        watchlistStock.setWatchlist(watchlist);
+        watchlistStock.setCreationTS(new Date());
+        watchlistStock.save();
+        return watchlistStock;
+    }
 }
 
