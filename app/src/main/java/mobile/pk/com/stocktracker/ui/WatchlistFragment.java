@@ -1,11 +1,12 @@
 package mobile.pk.com.stocktracker.ui;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,11 +19,13 @@ import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.adapters.WatchListAdapter;
 import mobile.pk.com.stocktracker.common.Application;
 import mobile.pk.com.stocktracker.dao.Stock;
 import mobile.pk.com.stocktracker.dao.Watchlist;
+import mobile.pk.com.stocktracker.event.WatchlistChangeEvent;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -125,9 +128,26 @@ public class WatchlistFragment extends Fragment {
             case R.id.refresh_view:
                 watchlistAdapter.refreshPrices(watchlistAdapter.getWatchListStocks());
                 return true;
+            case R.id.edit_view:
+                Intent intent = new Intent(getActivity(), EditWatchlistActivity.class);
+                intent.putExtra(EditWatchlistActivity.WATCH_LIST_ID, watchListId);
+                startActivityForResult(intent, BaseActivity.EDIT_WATCHLIST_REQUEST);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode,resultCode,data);
+        if (requestCode == BaseActivity.EDIT_WATCHLIST_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                Long watchlistId = data.getLongExtra(EditWatchlistActivity.WATCH_LIST_ID, 0);
+                Watchlist watchlist = Watchlist.findById(Watchlist.class, watchlistId);
+                EventBus.getDefault().post(new WatchlistChangeEvent(watchlist));
+            }
+        }
+    }
 }

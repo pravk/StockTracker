@@ -1,7 +1,6 @@
 package mobile.pk.com.stocktracker.ui;
 
 import android.app.Activity;
-import android.app.SearchManager;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -9,29 +8,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SubMenu;
-import android.view.View;
-import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.HashMap;
 import java.util.Iterator;
 
+import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.dao.Watchlist;
+import mobile.pk.com.stocktracker.event.WatchlistChangeEvent;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private DrawerLayout mDrawer;
     private NavigationView nvDrawer;
@@ -40,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        EventBus.getDefault().register(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbar);
 
@@ -127,19 +119,8 @@ public class MainActivity extends AppCompatActivity {
         Fragment fragmentClass = null;
         if(menuItem.getTitle().equals(getString(R.string.create_new_watchlist)))
         {
-            fragmentClass = EditWatchlistFragment.newInstance(null, new EditWatchlistFragment.WatchListUpdateListener() {
-                @Override
-                public void onUpdateComplete(Watchlist watchlist) {
-                    setupDrawerContent(nvDrawer);
-                    nvDrawer.getMenu().performIdentifierAction(watchlist.getId().intValue(), 0);
-                }
-
-                @Override
-                public void onCancel() {
-                    Toast.makeText(MainActivity.this, "Cancelled", Toast.LENGTH_SHORT).show();
-                }
-            });
-
+            Intent intent = new Intent(this, EditWatchlistActivity.class);
+            startActivityForResult(intent, EDIT_WATCHLIST_REQUEST );
         }
         else
         {
@@ -148,22 +129,55 @@ public class MainActivity extends AppCompatActivity {
             {
                 long watchlistId = intent.getLongExtra("watchlistId", 0);
                 fragmentClass = WatchlistFragment.newInstance(watchlistId);
+
+                try {
+                    if(fragmentClass != null)
+                        fragment = fragmentClass;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                // Insert the fragment by replacing any existing fragment
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+
+                // Highlight the selected item, update the title, and close the drawer
+                menuItem.setChecked(true);
+                setTitle(menuItem.getTitle());
             }
 
         }
-        try {
-            if(fragmentClass != null)
-                fragment = fragmentClass;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
 
-        // Highlight the selected item, update the title, and close the drawer
-        menuItem.setChecked(true);
-        setTitle(menuItem.getTitle());
         mDrawer.closeDrawers();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == BaseActivity.EDIT_WATCHLIST_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                Long watchlistId = data.getLongExtra(EditWatchlistActivity.WATCH_LIST_ID, 0);
+                Watchlist watchlist = Watchlist.findById(Watchlist.class, watchlistId);
+                EventBus.getDefault().post(new WatchlistChangeEvent(watchlist));
+            }
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    // This method will be called when a MessageEvent is posted
+    public void onEvent(WatchlistChangeEvent event){
+        setupDrawerContent(nvDrawer);
+        nvDrawer.getMenu().performIdentifierAction(event.getWatchlist().getId().intValue(), 0);
     }
 }

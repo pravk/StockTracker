@@ -7,4 +7,9 @@
         android:icon="@drawable/ic_refresh_white_24dp"
         app:showAsAction="withText|ifRoom"
         />
+    <item android:id="@+id/edit_view"
+        android:title="@string/edit"
+        android:icon="@drawable/ic_edit_white_24dp"
+        app:showAsAction="withText|ifRoom"
+        />
 </menu>
