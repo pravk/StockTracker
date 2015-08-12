@@ -8,7 +8,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapEditText;
 
 import butterknife.ButterKnife;
@@ -28,6 +30,10 @@ public class EditWatchlistActivity extends AppCompatActivity {
 
     @InjectView(R.id.watchlist_name)
     BootstrapEditText watchListName;
+    @InjectView(R.id.title)
+    TextView title;
+    @InjectView(R.id.btn_delete)
+    BootstrapButton deleteButton;
     //private EditWatchlistActivity.WatchListUpdateListener watchListUpdateListener;
 
 
@@ -50,11 +56,15 @@ public class EditWatchlistActivity extends AppCompatActivity {
         if(watchListId == 0) {
             watchlist = new Watchlist();
             watchlist.setWatchlistName("");
+            deleteButton.setVisibility(View.GONE);
         }
-        else
+        else {
             watchlist = Watchlist.findById(Watchlist.class, watchListId);
-
-        watchListName.setText(watchlist.getWatchlistName());
+            title.setText(getString(R.string.edit_watchlist));
+            deleteButton.setVisibility(View.VISIBLE);
+        }
+        if(watchlist != null)
+            watchListName.setText(watchlist.getWatchlistName());
 
     }
 
@@ -66,6 +76,16 @@ public class EditWatchlistActivity extends AppCompatActivity {
 
         watchlist.setWatchlistName(watchListName.getText().toString());
         watchlist.save();
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(WATCH_LIST_ID, watchlist.getId());
+        setResult(RESULT_OK, resultIntent);
+        finish();
+    }
+
+    @OnClick(R.id.btn_delete)
+    public void onDelete()
+    {
+        watchlist.delete();
         Intent resultIntent = new Intent();
         resultIntent.putExtra(WATCH_LIST_ID, watchlist.getId());
         setResult(RESULT_OK, resultIntent);

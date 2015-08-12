@@ -22,6 +22,7 @@ import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.dao.Watchlist;
 import mobile.pk.com.stocktracker.event.WatchlistChangeEvent;
+import mobile.pk.com.stocktracker.event.WatchlistDeleteEvent;
 
 public class MainActivity extends BaseActivity {
 
@@ -48,7 +49,7 @@ public class MainActivity extends BaseActivity {
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
         // Setup drawer view
         setupDrawerContent(nvDrawer);
-
+        showHome();
         //nvDrawer.getMenu().performIdentifierAction(R.id.default_watchlist, 0);
 
     }
@@ -157,8 +158,14 @@ public class MainActivity extends BaseActivity {
         if (requestCode == BaseActivity.EDIT_WATCHLIST_REQUEST) {
             if (resultCode == Activity.RESULT_OK) {
                 Long watchlistId = data.getLongExtra(EditWatchlistActivity.WATCH_LIST_ID, 0);
-                Watchlist watchlist = Watchlist.findById(Watchlist.class, watchlistId);
-                EventBus.getDefault().post(new WatchlistChangeEvent(watchlist));
+                if(watchlistId != 0) {
+                    Watchlist watchlist = Watchlist.findById(Watchlist.class, watchlistId);
+                    EventBus.getDefault().post(new WatchlistChangeEvent(watchlist));
+                }
+                else
+                {
+
+                }
             }
         }
     }
@@ -179,5 +186,18 @@ public class MainActivity extends BaseActivity {
     public void onEvent(WatchlistChangeEvent event){
         setupDrawerContent(nvDrawer);
         nvDrawer.getMenu().performIdentifierAction(event.getWatchlist().getId().intValue(), 0);
+    }
+    // This method will be called when a MessageEvent is posted
+    public void onEvent(WatchlistDeleteEvent event){
+        setupDrawerContent(nvDrawer);
+        showHome();
+    }
+
+    public void showHome()
+    {
+        HomeFragment fragment = HomeFragment.newInstance(null,null);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+        setTitle(R.string.app_name);
     }
 }

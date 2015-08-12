@@ -27,4 +27,5 @@
     <string name="enter_watchlist_name">Enter watchlist Name</string>
     <string name="create_new_watchlist">Create new watchlist</string>
     <string name="edit">Edit</string>
+    <string name="edit_watchlist">Edit watchlist</string>
 </resources>

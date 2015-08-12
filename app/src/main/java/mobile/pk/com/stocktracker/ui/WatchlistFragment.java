@@ -26,6 +26,7 @@ import mobile.pk.com.stocktracker.common.Application;
 import mobile.pk.com.stocktracker.dao.Stock;
 import mobile.pk.com.stocktracker.dao.Watchlist;
 import mobile.pk.com.stocktracker.event.WatchlistChangeEvent;
+import mobile.pk.com.stocktracker.event.WatchlistDeleteEvent;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -146,7 +147,10 @@ public class WatchlistFragment extends Fragment {
             if (resultCode == Activity.RESULT_OK) {
                 Long watchlistId = data.getLongExtra(EditWatchlistActivity.WATCH_LIST_ID, 0);
                 Watchlist watchlist = Watchlist.findById(Watchlist.class, watchlistId);
-                EventBus.getDefault().post(new WatchlistChangeEvent(watchlist));
+                if(watchlist != null)
+                    EventBus.getDefault().post(new WatchlistChangeEvent(watchlist));
+                else
+                    EventBus.getDefault().post(new WatchlistDeleteEvent(watchlistId));
             }
         }
     }
