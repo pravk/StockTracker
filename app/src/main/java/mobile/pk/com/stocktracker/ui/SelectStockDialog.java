@@ -16,6 +16,7 @@ import mobile.pk.com.stocktracker.common.Application;
 import mobile.pk.com.stocktracker.dao.Stock;
 import mobile.pk.com.stocktracker.service.TickerSearchService;
 import mobile.pk.com.stocktracker.utils.DelayAutoCompleteTextView;
+import mobile.pk.com.stocktracker.utils.StockSearchTextView;
 
 /**
  * Created by hello on 8/10/2015.
@@ -29,10 +30,9 @@ public class SelectStockDialog extends DialogFragment  {
 
     }
 
-    private DelayAutoCompleteTextView tickerSearchView;
+    private StockSearchTextView tickerSearchView;
     private StockAutoCompleteAdapter adapter;
     private SelectStockDialogListener listener;
-    private TickerSearchService.Match match;
 
     public static SelectStockDialog newInstance(String title, SelectStockDialogListener listener) {
         SelectStockDialog frag = new SelectStockDialog();
@@ -47,7 +47,7 @@ public class SelectStockDialog extends DialogFragment  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_stock_watchlist, container);
-        tickerSearchView = (DelayAutoCompleteTextView) view.findViewById(R.id.ticker_search);
+        tickerSearchView = (StockSearchTextView) view.findViewById(R.id.ticker_search);
         String title = getArguments().getString("title", "Add Stock");
         getDialog().setTitle(title);
         // Show soft keyboard automatically
@@ -55,23 +55,12 @@ public class SelectStockDialog extends DialogFragment  {
         getDialog().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
-        adapter = new StockAutoCompleteAdapter(getActivity(), ((Application)getActivity().getApplication()).getRestClient().getTickerSearchService());
-        tickerSearchView.setAdapter(adapter);
-
-        tickerSearchView.setLoadingIndicator((android.widget.ProgressBar) view.findViewById(R.id.pb_loading_indicator));
-        tickerSearchView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                match = (TickerSearchService.Match) adapterView.getItemAtPosition(position);
-                tickerSearchView.setText(match.getName());
-            }
-        });
 
         Button button = (Button)view.findViewById(R.id.ok);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if(match != null) {
-                    Stock s = Stock.from(match);
+                if(tickerSearchView.getMatch()!= null) {
+                    Stock s = Stock.from(tickerSearchView.getMatch());
                     listener.onStockSelect(s);
                     getDialog().dismiss();
                 }

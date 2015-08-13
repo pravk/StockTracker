@@ -9,31 +9,13 @@ import java.util.Date;
  */
 public class Portfolio extends SugarRecord<Portfolio>{
 
-    private String portfolioId;
-    private String portfolioName;
-    private Date creationTimeStamp;
-
-    public String getPortfolioId() {
-        return portfolioId;
-    }
-
-    public void setPortfolioId(String portfolioId) {
-        this.portfolioId = portfolioId;
-    }
-
-    public String getPortfolioName() {
+   private String portfolioName;
+   public String getPortfolioName() {
         return portfolioName;
     }
 
-    public void setPortfolioName(String portfolioName) {
+   public void setPortfolioName(String portfolioName) {
         this.portfolioName = portfolioName;
     }
 
-    public Date getCreationTimeStamp() {
-        return creationTimeStamp;
-    }
-
-    public void setCreationTimeStamp(Date creationTimeStamp) {
-        this.creationTimeStamp = creationTimeStamp;
-    }
 }

@@ -15,6 +15,8 @@ public class RestClient {
     private TickerSearchService tickerSearchService;
     private PricingService pricingService;
 
+    private static RestClient DEFAULT;
+
     public RestClient(Context context)
     {
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -24,6 +26,11 @@ public class RestClient {
 
         tickerSearchService = restAdapter.create(TickerSearchService.class);
         pricingService = restAdapter.create(PricingService.class);
+        DEFAULT = this;
+    }
+
+    public static RestClient getDefault() {
+        return DEFAULT;
     }
 
     public TickerSearchService getTickerSearchService() {

@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:text="@string/search_stock" />
 
-        <mobile.pk.com.stocktracker.utils.DelayAutoCompleteTextView
+        <mobile.pk.com.stocktracker.utils.StockSearchTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/ticker_search" />
         </LinearLayout>

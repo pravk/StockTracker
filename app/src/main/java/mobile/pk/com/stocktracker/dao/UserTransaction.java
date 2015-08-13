@@ -9,18 +9,18 @@ import java.util.Date;
  */
 public class UserTransaction extends SugarRecord<UserTransaction> {
 
-    private Date transactionDate;
+    private Long transactionDate;
     private double quantity;
     private double price;
     private Stock stock;
-    private int buySellInd;
+    private int longShortInd;
     private Portfolio portfolio;
 
-    public Date getTransactionDate() {
+    public Long getTransactionDate() {
         return transactionDate;
     }
 
-    public void setTransactionDate(Date transactionDate) {
+    public void setTransactionDate(Long transactionDate) {
         this.transactionDate = transactionDate;
     }
 
@@ -48,19 +48,26 @@ public class UserTransaction extends SugarRecord<UserTransaction> {
         this.stock = stock;
     }
 
-    public int getBuySellInd() {
-        return buySellInd;
-    }
-
-    public void setBuySellInd(int buySellInd) {
-        this.buySellInd = buySellInd;
-    }
-
     public Portfolio getPortfolio() {
         return portfolio;
     }
 
     public void setPortfolio(Portfolio portfolio) {
         this.portfolio = portfolio;
+    }
+
+    public int getLongShortInd() {
+        return longShortInd;
+    }
+
+    public void setLongShortInd(int longShortInd) {
+        this.longShortInd = longShortInd;
+    }
+
+    public boolean isLong() {
+        return getLongShortInd() == 1;
+    }
+    public boolean isShort() {
+        return getLongShortInd() == 2;
     }
 }

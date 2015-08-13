@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,14 +12,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.Toast;
-
-import java.util.HashMap;
-import java.util.Iterator;
 
 import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
+import mobile.pk.com.stocktracker.dao.Portfolio;
 import mobile.pk.com.stocktracker.dao.Watchlist;
+import mobile.pk.com.stocktracker.event.DrawerSelectionChangeEvent;
+import mobile.pk.com.stocktracker.event.PortfolioChangeEvent;
 import mobile.pk.com.stocktracker.event.WatchlistChangeEvent;
 import mobile.pk.com.stocktracker.event.WatchlistDeleteEvent;
 
@@ -28,6 +26,7 @@ public class MainActivity extends BaseActivity {
 
     private DrawerLayout mDrawer;
     private NavigationView nvDrawer;
+    private NavigationDrawerHelper navigationDrawerHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +46,7 @@ public class MainActivity extends BaseActivity {
 
         // Find our drawer view
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
+        navigationDrawerHelper = new NavigationDrawerHelper(this);
         // Setup drawer view
         setupDrawerContent(nvDrawer);
         showHome();
@@ -84,38 +84,13 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
-
-        Menu menu = navigationView.getMenu();
-        menu.clear();
-
-        Iterator<Watchlist> iterator = Watchlist.findAll(Watchlist.class);
-        while (iterator != null && iterator.hasNext())
-        {
-            Watchlist watchlist = iterator.next();
-            MenuItem subMenu = menu.add(R.id.watchlist_group, watchlist.getId().intValue(), 0, watchlist.getWatchlistName());
-            subMenu.setIcon(getResources().getDrawable(R.drawable.ic_menu_black_24dp));
-            Intent intent = new Intent();
-            intent.putExtra("watchlistId", watchlist.getId());
-            subMenu.setIntent(intent);
-        }
-
-        menu.add(R.id.watchlist_group, 0, 0, R.string.create_new_watchlist);
-
-        menu.setGroupCheckable(R.id.watchlist_group,true, true );
-
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        selectDrawerItem(menuItem);
-                        return true;
-                    }
-                });
+        navigationDrawerHelper.setupContent(navigationView);
     }
 
-    public void selectDrawerItem(MenuItem menuItem) {
-        // Create a new fragment and specify the planet to show based on
-        // position
+    public void onEvent(DrawerSelectionChangeEvent event) {
+
+        MenuItem menuItem = event.getMenuItem();
+
         Fragment fragment = null;
         Fragment fragmentClass = null;
         if(menuItem.getTitle().equals(getString(R.string.create_new_watchlist)))
@@ -123,13 +98,24 @@ public class MainActivity extends BaseActivity {
             Intent intent = new Intent(this, EditWatchlistActivity.class);
             startActivityForResult(intent, EDIT_WATCHLIST_REQUEST );
         }
+        else if(menuItem.getTitle().equals(getString(R.string.create_new_portfolio)))
+        {
+            Intent intent = new Intent(this, EditPortfolioActivity.class);
+            startActivityForResult(intent, EDIT_PORTFOLIO_REQUEST );
+        }
         else
         {
             Intent intent = menuItem.getIntent();
             if(intent != null)
             {
                 long watchlistId = intent.getLongExtra("watchlistId", 0);
-                fragmentClass = WatchlistFragment.newInstance(watchlistId);
+                if(watchlistId != 0)
+                    fragmentClass = WatchlistFragment.newInstance(watchlistId);
+                if(fragmentClass == null)
+                {
+                    long portfolioId = intent.getLongExtra("portfolioId", 0);
+                    fragmentClass = PortfolioFragment.newInstance(portfolioId);
+                }
 
                 try {
                     if(fragmentClass != null)
@@ -162,12 +148,18 @@ public class MainActivity extends BaseActivity {
                     Watchlist watchlist = Watchlist.findById(Watchlist.class, watchlistId);
                     EventBus.getDefault().post(new WatchlistChangeEvent(watchlist));
                 }
-                else
-                {
-
+            }
+        }
+        else if (requestCode == BaseActivity.EDIT_PORTFOLIO_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                Long portfolioId = data.getLongExtra(EditPortfolioActivity.PORTFOLIO_ID, 0);
+                if(portfolioId != 0) {
+                    Portfolio portfolio = Portfolio.findById(Portfolio.class, portfolioId);
+                    EventBus.getDefault().post(new PortfolioChangeEvent(portfolio));
                 }
             }
         }
+
     }
 
     @Override
@@ -182,12 +174,14 @@ public class MainActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    // This method will be called when a MessageEvent is posted
     public void onEvent(WatchlistChangeEvent event){
         setupDrawerContent(nvDrawer);
         nvDrawer.getMenu().performIdentifierAction(event.getWatchlist().getId().intValue(), 0);
     }
-    // This method will be called when a MessageEvent is posted
+    public void onEvent(PortfolioChangeEvent event){
+        setupDrawerContent(nvDrawer);
+        nvDrawer.getMenu().performIdentifierAction(event.getPortfolio().getId().intValue(), 0);
+    }
     public void onEvent(WatchlistDeleteEvent event){
         setupDrawerContent(nvDrawer);
         showHome();

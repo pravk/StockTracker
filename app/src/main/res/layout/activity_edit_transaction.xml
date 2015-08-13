@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bootstrap="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical" >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent" android:padding="16dp"
+            android:layout_height="match_parent" android:orientation="vertical">
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                style="@style/TextAppearance.AppCompat.Large"
+                android:text="New Transaction"
+                />
+
+            <mobile.pk.com.stocktracker.utils.StockSearchTextView
+                android:id="@+id/stock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:hint="@string/select_stock"
+                android:gravity="center"
+                android:inputType="textCapWords"
+                android:singleLine="true"
+                />
+
+            <EditText
+                android:id="@+id/quantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/quantity"
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                android:singleLine="true"
+                />
+            <EditText
+                android:id="@+id/price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/price"
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                android:singleLine="true"
+                />
+
+            <EditText
+                android:id="@+id/trade_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/trade_date_hint"
+                android:gravity="center"
+                android:singleLine="true"
+                android:inputType="date"
+                />
+
+            <TextView
+                android:layout_width="match_parent" android:gravity="center"
+                android:layout_height="wrap_content" android:text="@string/long_short"
+                style="@style/TextAppearance.AppCompat.Medium"/>
+            <RadioGroup android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:orientation="horizontal">
+
+                <RadioButton android:id="@+id/radio_long"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:text="@string/radio_long" />
+                <RadioButton android:id="@+id/radio_short"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:text="@string/radio_short" />
+
+            </RadioGroup>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_horizontal">
+                <com.beardedhen.androidbootstrap.BootstrapButton
+                    android:id="@+id/btn_done"
+                    android:layout_width="0dp" android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="Done"
+                    bootstrap:bb_icon_right="fa-save"
+                    bootstrap:bb_type="success"
+                    />
+                <com.beardedhen.androidbootstrap.BootstrapButton
+                    android:id="@+id/btn_cancel"
+                    android:layout_width="0dp" android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="Cancel"
+                    bootstrap:bb_icon_right="fa-undo"
+                    bootstrap:bb_type="default"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.beardedhen.androidbootstrap.BootstrapButton
+                    android:id="@+id/btn_delete"
+                    android:layout_width="0dp" android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="Delete"
+                    bootstrap:bb_icon_right="fa-remove"
+                    bootstrap:bb_type="danger"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>
