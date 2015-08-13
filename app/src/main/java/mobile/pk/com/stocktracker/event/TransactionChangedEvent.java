@@ -6,10 +6,10 @@ import mobile.pk.com.stocktracker.dao.UserTransaction;
 /**
  * Created by hello on 8/11/2015.
  */
-public class TransactionChangeEvent {
+public class TransactionChangedEvent {
     private UserTransaction transaction;
 
-    public TransactionChangeEvent(UserTransaction transaction) {
+    public TransactionChangedEvent(UserTransaction transaction) {
         this.transaction = transaction;
     }
 

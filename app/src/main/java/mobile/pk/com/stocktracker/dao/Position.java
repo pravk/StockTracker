@@ -1,5 +1,6 @@
 package mobile.pk.com.stocktracker.dao;
 
+import com.orm.StringUtil;
 import com.orm.SugarRecord;
 
 import java.util.List;
@@ -48,6 +49,10 @@ public class Position extends SugarRecord<Position> {
         this.portfolio = portfolio;
     }
 
+    public List<UserTransaction> getUserTransactions(){
+        return UserTransaction.find(UserTransaction.class, "stock=? and portfolio = ?", new String []{ String.valueOf(stock.getId()), String.valueOf(portfolio.getId())} ,null, StringUtil.toSQLName("transactionDate"), null );
+    }
+
     public static Position reeval(Stock stock, Portfolio portfolio) {
         List<Position> positionList = Position.find(Position.class, "stock=? and portfolio=?", String.valueOf(stock.getId()), String.valueOf(portfolio.getId()));
         Position position = null;
@@ -62,14 +67,29 @@ public class Position extends SugarRecord<Position> {
             position = positionList.get(0);
         }
 
-        List<UserTransaction> userTransactionList = UserTransaction.find(UserTransaction.class, "stock=? and portfolio = ?", String.valueOf(stock.getId()), String.valueOf(portfolio.getId()) );
+        List<UserTransaction> userTransactionList = position.getUserTransactions();
 
         position.setQuantity(0);
         position.setAveragePrice(0);
+        int sign = 1;
         for(UserTransaction userTransaction: userTransactionList)
         {
-            position.setQuantity(position.getQuantity() + userTransaction.getQuantity());
-            position.setAveragePrice ((position.getAveragePrice()*position.getQuantity() + userTransaction.getPrice()*userTransaction.getQuantity())/(position.getQuantity() + userTransaction.getQuantity()));
+            if(userTransaction.isShort())
+            {
+                position.setQuantity(position.getQuantity() - userTransaction.getQuantity());
+            }
+            else
+            {
+                position.setAveragePrice(
+                        (
+                                (position.getAveragePrice() * position.getQuantity())
+                                        + (userTransaction.getPrice() * userTransaction.getQuantity())
+                        )
+                                / (position.getQuantity() + userTransaction.getQuantity()));
+
+                position.setQuantity(position.getQuantity() + userTransaction.getQuantity());
+
+            }
         }
         position.setLongShortInd(position.getQuantity()<0?1:2);
         position.setTotalPrice(position.getQuantity()*position.getAveragePrice());

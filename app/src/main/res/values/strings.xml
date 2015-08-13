@@ -42,4 +42,6 @@
     <string name="edit_transaction">Edit Transaction</string>
     <string name="trade_date_hint">MM/dd/yyyy</string>
     <string name="avg_price">Average Price</string>
+    <string name="recompute_positions">Recompute Positions</string>
+    <string name="attherate">\@</string>
 </resources>

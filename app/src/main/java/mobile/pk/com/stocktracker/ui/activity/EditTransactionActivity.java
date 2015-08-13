@@ -1,5 +1,6 @@
 package mobile.pk.com.stocktracker.ui.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,11 +20,18 @@ import java.util.Date;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.dao.Portfolio;
 import mobile.pk.com.stocktracker.dao.Stock;
 import mobile.pk.com.stocktracker.dao.UserTransaction;
 import mobile.pk.com.stocktracker.dao.Watchlist;
+import mobile.pk.com.stocktracker.event.PortfolioChangeEvent;
+import mobile.pk.com.stocktracker.event.TransactionChangedEvent;
+import mobile.pk.com.stocktracker.event.WatchlistChangeEvent;
+import mobile.pk.com.stocktracker.ui.BaseActivity;
+import mobile.pk.com.stocktracker.ui.EditPortfolioActivity;
+import mobile.pk.com.stocktracker.ui.EditWatchlistActivity;
 import mobile.pk.com.stocktracker.utils.StockSearchTextView;
 
 /**
@@ -66,22 +74,23 @@ public class EditTransactionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_transaction);
         portfolioId = getIntent().getLongExtra(PORTFOLIO_ID, 0);
+        transactionId = getIntent().getLongExtra(TRANSACTION_ID, 0);
         ButterKnife.inject(this);
-        if(portfolioId == 0) {
+        if(portfolioId == 0 && transactionId ==0) {
             setResult(RESULT_CANCELED, new Intent());
             finish();
-        }
-        else {
-            portfolio = Watchlist.findById(Portfolio.class, portfolioId);
-            transactionId = getIntent().getLongExtra(TRANSACTION_ID, 0);
+        } else {
+
             if(transactionId == 0)
             {
+                portfolio = Watchlist.findById(Portfolio.class, portfolioId);
                 transaction = new UserTransaction();
                 transaction.setPortfolio(portfolio);
             }
             else
             {
                 transaction = UserTransaction.findById(UserTransaction.class, transactionId);
+                portfolio = transaction.getPortfolio();
                 title.setText(getString(R.string.edit_transaction));
                 deleteButton.setVisibility(View.VISIBLE);
                 stockSearchTextView.setText(transaction.getStock().getName());
@@ -91,6 +100,12 @@ public class EditTransactionActivity extends AppCompatActivity {
                 radioLong.setChecked(transaction.isLong());
                 radioShort.setChecked(transaction.isShort());
             }
+            if(transaction.getStock() == null)
+                stockSearchTextView.requestFocus();
+            else {
+                stockSearchTextView.setEnabled(false);
+                quantity.requestFocus();
+            }
         }
 
     }
@@ -98,8 +113,9 @@ public class EditTransactionActivity extends AppCompatActivity {
     @OnClick(R.id.btn_done)
     public void onDone()
     {
-
-        transaction.setStock( Stock.from(stockSearchTextView.getMatch()));
+        if(stockSearchTextView.isEnabled() && stockSearchTextView.getMatch() != null) {
+            transaction.setStock(Stock.from(stockSearchTextView.getMatch()));
+        }
         transaction.setPortfolio(portfolio);
         transaction.setLongShortInd(radioLong.isChecked() ? 1 : 2);
         transaction.setPrice(Double.parseDouble(price.getText().toString()));
@@ -129,4 +145,19 @@ public class EditTransactionActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+      super.onActivityResult(requestCode, resultCode, data);
+      if (requestCode == BaseActivity.EDIT_USER_TRANSACTION) {
+            if (resultCode == Activity.RESULT_OK) {
+                Long transactionId = data.getLongExtra(EditTransactionActivity.TRANSACTION_ID, 0);
+                if(transactionId != 0) {
+                    UserTransaction userTransaction = UserTransaction.findById(UserTransaction.class, transactionId);
+                    EventBus.getDefault().post(new TransactionChangedEvent(userTransaction));
+                }
+            }
+        }
+
+    }
 }

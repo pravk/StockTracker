@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,8 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -29,7 +26,7 @@ import mobile.pk.com.stocktracker.dao.Stock;
 import mobile.pk.com.stocktracker.dao.UserTransaction;
 import mobile.pk.com.stocktracker.event.PortfolioChangeEvent;
 import mobile.pk.com.stocktracker.event.PortfolioDeleteEvent;
-import mobile.pk.com.stocktracker.event.TransactionChangeEvent;
+import mobile.pk.com.stocktracker.event.TransactionChangedEvent;
 import mobile.pk.com.stocktracker.event.TransactionDeleteEvent;
 import mobile.pk.com.stocktracker.ui.activity.EditTransactionActivity;
 
@@ -151,7 +148,7 @@ public class PortfolioFragment extends Fragment {
                 Long transactionId = data.getLongExtra(EditTransactionActivity.TRANSACTION_ID, 0);
                 UserTransaction transaction = UserTransaction.findById(UserTransaction.class, transactionId);
                 if(transaction != null)
-                    EventBus.getDefault().post(new TransactionChangeEvent(transaction));
+                    EventBus.getDefault().post(new TransactionChangedEvent(transaction));
                 else {
                     Long stockId = data.getLongExtra(EditTransactionActivity.STOCK_ID, 0);
                     Long portfolioId= data.getLongExtra(EditTransactionActivity.PORTFOLIO_ID, 0);
@@ -164,7 +161,7 @@ public class PortfolioFragment extends Fragment {
 
     }
 
-    public void onEvent(TransactionChangeEvent transactionChangeEvent){
+    public void onEvent(TransactionChangedEvent transactionChangeEvent){
         Position.reeval(transactionChangeEvent.getTransaction().getStock(), transactionChangeEvent.getTransaction().getPortfolio());
         portfolioAdapter.reset();
     }

@@ -1,6 +1,7 @@
 package mobile.pk.com.stocktracker.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.adapters.viewholder.PortfolioViewHolder;
 import mobile.pk.com.stocktracker.adapters.viewholder.WatchlistStockViewHolder;
@@ -23,7 +25,9 @@ import mobile.pk.com.stocktracker.dao.Watchlist;
 import mobile.pk.com.stocktracker.dao.WatchlistStock;
 import mobile.pk.com.stocktracker.dao.tasks.PriceLoadTask;
 import mobile.pk.com.stocktracker.dao.tasks.ServerPriceRefreshTask;
+import mobile.pk.com.stocktracker.event.ShowPositionDetailEvent;
 import mobile.pk.com.stocktracker.service.PricingService;
+import mobile.pk.com.stocktracker.ui.activity.TransactionActivity;
 import mobile.pk.com.stocktracker.utils.NumberUtils;
 
 /**
@@ -128,6 +132,9 @@ public class PortfolioAdapter extends RecyclerView.Adapter<PortfolioViewHolder> 
                     case R.id.refresh:
                         Position.reeval(position.getStock(), position.getPortfolio());
                         reset();
+                        break;
+                    case R.id.transactions:
+                        EventBus.getDefault().post(new ShowPositionDetailEvent(position));
                         break;
                 }
                 return true;

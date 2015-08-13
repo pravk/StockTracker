@@ -16,11 +16,17 @@ import android.support.v4.widget.DrawerLayout;
 import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.dao.Portfolio;
+import mobile.pk.com.stocktracker.dao.UserTransaction;
 import mobile.pk.com.stocktracker.dao.Watchlist;
 import mobile.pk.com.stocktracker.event.DrawerSelectionChangeEvent;
+import mobile.pk.com.stocktracker.event.EditTransactionEvent;
 import mobile.pk.com.stocktracker.event.PortfolioChangeEvent;
+import mobile.pk.com.stocktracker.event.ShowPositionDetailEvent;
+import mobile.pk.com.stocktracker.event.TransactionChangedEvent;
 import mobile.pk.com.stocktracker.event.WatchlistChangeEvent;
 import mobile.pk.com.stocktracker.event.WatchlistDeleteEvent;
+import mobile.pk.com.stocktracker.ui.activity.EditTransactionActivity;
+import mobile.pk.com.stocktracker.ui.activity.TransactionActivity;
 
 public class MainActivity extends BaseActivity {
 
@@ -186,6 +192,12 @@ public class MainActivity extends BaseActivity {
         setupDrawerContent(nvDrawer);
         showHome();
     }
+    public void onEvent(ShowPositionDetailEvent event){
+        Intent intent = new Intent(this, TransactionActivity.class);
+        intent.putExtra(TransactionActivity.POSITION_ID, event.getPosition().getId());
+        startActivity(intent);
+    }
+
 
     public void showHome()
     {
