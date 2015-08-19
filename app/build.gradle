@@ -30,4 +30,5 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:22.2.1'
     compile 'com.beardedhen:androidbootstrap:+'
     compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'com.android.support:support-v4:22.2.1'
 }

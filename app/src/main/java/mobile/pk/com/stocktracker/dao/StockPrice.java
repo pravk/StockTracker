@@ -1,5 +1,7 @@
 package mobile.pk.com.stocktracker.dao;
 
+import android.text.TextUtils;
+
 import com.orm.StringUtil;
 import com.orm.SugarRecord;
 
@@ -101,9 +103,12 @@ public class StockPrice extends SugarRecord<PricingService.StockPrice> {
             stockPrice = stockPriceList.get(0);
 
         }
-        stockPrice.setChange(serverPrice.getChange());
-        stockPrice.setChangePercent(serverPrice.getChangePercent());
-        stockPrice.setLastPrice(serverPrice.getLastPrice());
+        if(!TextUtils.isEmpty( serverPrice.getChange()))
+            stockPrice.setChange( Double.parseDouble(serverPrice.getChange()));
+        if(!TextUtils.isEmpty( serverPrice.getChangePercent()))
+            stockPrice.setChangePercent( Double.parseDouble(serverPrice.getChangePercent()));
+        if(!TextUtils.isEmpty( serverPrice.getLastPrice()))
+            stockPrice.setLastPrice(Double.parseDouble(serverPrice.getLastPrice()));
         stockPrice.setLastPriceWithCurrency(serverPrice.getLastPriceWithCurrency());
         stockPrice.setLastTrade(serverPrice.getLastTrade());
 

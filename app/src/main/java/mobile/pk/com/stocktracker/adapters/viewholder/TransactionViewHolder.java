@@ -14,8 +14,6 @@ import mobile.pk.com.stocktracker.R;
  */
 public class TransactionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-    public TextView ticker;
-    public TextView name;
     public TextView quantity;
     public TextView price;
     public TextView transactionDate;
@@ -25,8 +23,6 @@ public class TransactionViewHolder extends RecyclerView.ViewHolder implements Vi
 
     public TransactionViewHolder(View itemView) {
         super(itemView);
-        ticker = (TextView) itemView.findViewById(R.id.ticker);
-        name = (TextView) itemView.findViewById(R.id.name);
         price = (TextView) itemView.findViewById(R.id.price);
         quantity = (TextView) itemView.findViewById(R.id.quantity);
         buySell = (TextView) itemView.findViewById(R.id.buy_sell);

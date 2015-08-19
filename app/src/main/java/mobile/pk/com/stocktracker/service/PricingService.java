@@ -24,14 +24,16 @@ public interface PricingService {
         private String ticker;
         @SerializedName("e")
         private String exchange;
+        @SerializedName("l")
+        private String lastPriceFormatted;
         @SerializedName("l_fix")
-        private double lastPrice;
+        private String lastPrice;
         @SerializedName("l_cur")
         private String lastPriceWithCurrency;
         @SerializedName("c")
-        private double change;
+        private String change;
         @SerializedName("cp")
-        private double changePercent;
+        private String changePercent;
         @SerializedName("lt")
         private String lastTrade;
 
@@ -59,11 +61,11 @@ public interface PricingService {
             this.exchange = exchange;
         }
 
-        public double getLastPrice() {
+        public String getLastPrice() {
             return lastPrice;
         }
 
-        public void setLastPrice(double lastPrice) {
+        public void setLastPrice(String lastPrice) {
             this.lastPrice = lastPrice;
         }
 
@@ -75,19 +77,19 @@ public interface PricingService {
             this.lastPriceWithCurrency = lastPriceWithCurrency;
         }
 
-        public double getChange() {
+        public String getChange() {
             return change;
         }
 
-        public void setChange(double change) {
+        public void setChange(String change) {
             this.change = change;
         }
 
-        public double getChangePercent() {
+        public String getChangePercent() {
             return changePercent;
         }
 
-        public void setChangePercent(double changePercent) {
+        public void setChangePercent(String changePercent) {
             this.changePercent = changePercent;
         }
 
@@ -97,6 +99,14 @@ public interface PricingService {
 
         public void setLastTrade(String lastTrade) {
             this.lastTrade = lastTrade;
+        }
+
+        public String getLastPriceFormatted() {
+            return lastPriceFormatted;
+        }
+
+        public void setLastPriceFormatted(String lastPriceFormatted) {
+            this.lastPriceFormatted = lastPriceFormatted;
         }
     }
 

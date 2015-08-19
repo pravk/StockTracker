@@ -21,69 +21,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:padding="16dp" android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent" android:layout_weight="3" android:orientation="vertical">
-                <LinearLayout android:visibility="gone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
-                <TextView
-                    android:id="@+id/name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" style="@style/TextAppearance.AppCompat.Medium" android:text="Title" />
 
-                    <TextView
-                        android:id="@+id/ticker" android:layout_marginLeft="10dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" style="@style/TextAppearance.AppCompat.Small" android:text="ticker" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:orientation="horizontal">
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:orientation="horizontal">
+                   <TextView
+                       android:id="@+id/transaction_date"
+                       android:layout_width="0dp" android:layout_weight="1"
+                       android:layout_height="wrap_content" style="@style/TextAppearance.AppCompat.Small"
+                       android:text="Date" />
 
                     <TextView
                         android:id="@+id/buy_sell"
-                        android:layout_width="wrap_content" android:layout_marginRight="10dp"
+                        android:layout_width="0dp" android:layout_weight="1"
                         android:layout_height="wrap_content" style="@style/TextAppearance.AppCompat.Small"
                         android:text="Purchased" />
 
-
                     <TextView
                         android:id="@+id/quantity"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp" android:layout_weight="1"
                         android:layout_height="wrap_content" style="@style/TextAppearance.AppCompat.Small"
                         android:text="Quantity" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:text="@string/attherate" />
-                    <TextView
+                   <TextView
                         android:id="@+id/price"
                         android:layout_width="0dp" android:layout_weight="1"
                         android:layout_height="wrap_content" style="@style/TextAppearance.AppCompat.Small" android:text="Price" />
 
-                    <TextView
-                        android:id="@+id/transaction_date"
-                        android:layout_width="0dp" android:layout_weight="1"
-                        android:layout_height="wrap_content" style="@style/TextAppearance.AppCompat.Small"
-                        android:text="Date" />
-
 
                 </LinearLayout>
-
-
-
-            </LinearLayout>
-
-        </LinearLayout>
 
 </android.support.v7.widget.CardView>

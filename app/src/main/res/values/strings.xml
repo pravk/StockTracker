@@ -44,4 +44,10 @@
     <string name="avg_price">Average Price</string>
     <string name="recompute_positions">Recompute Positions</string>
     <string name="attherate">\@</string>
+    <string name="refresh_interval">Refresh Interval</string>
+    <string name="default_refresh_interval">30</string>
+    <string name="auto_refresh_enabled">Auto Refresh</string>
+    <string name="auto_refresh_pref_summary">Refresh prices in background</string>
+    <string name="auto_refresh_interval_summary">Refresh time in minutes</string>
+    <string name="menu_settings">Settings</string>
 </resources>

@@ -101,12 +101,10 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionViewHold
 
         //Setting text view title
        // portfolioViewHolder.ticker.setText(position.getStock().getExchange() + ":"+ position.getStock().getTicker());
-        transactionViewHolder.name.setText(userTransaction.getStock().getName());
         transactionViewHolder.price.setText( NumberUtils.formatAsMoney(userTransaction.getPrice()) );
         transactionViewHolder.quantity.setText(  String.valueOf(userTransaction.getQuantity()));
-        transactionViewHolder.buySell.setText(userTransaction.isLong()?"Purchased":"Sold");
+        transactionViewHolder.buySell.setText(userTransaction.isLong()?"Buy":"Sell");
         transactionViewHolder.transactionDate.setText(DateUtils.formatDateTime(mContext, userTransaction.getTransactionDate(), DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_SHOW_YEAR));
-        transactionViewHolder.ticker.setText(userTransaction.getStock().getTicker() + "(" + userTransaction.getStock().getExchange() + ")");
         transactionViewHolder.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {

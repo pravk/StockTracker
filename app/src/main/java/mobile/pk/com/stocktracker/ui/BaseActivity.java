@@ -11,4 +11,5 @@ public class BaseActivity extends AppCompatActivity {
 
     public static final int ADD_PORTFOLIO_TRANSACTION = 3000;
     public static final int EDIT_USER_TRANSACTION = 4000;
+    public static final int RESULT_SETTINGS = 5000;
 }

@@ -16,16 +16,13 @@ import android.support.v4.widget.DrawerLayout;
 import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.dao.Portfolio;
-import mobile.pk.com.stocktracker.dao.UserTransaction;
 import mobile.pk.com.stocktracker.dao.Watchlist;
 import mobile.pk.com.stocktracker.event.DrawerSelectionChangeEvent;
-import mobile.pk.com.stocktracker.event.EditTransactionEvent;
 import mobile.pk.com.stocktracker.event.PortfolioChangeEvent;
 import mobile.pk.com.stocktracker.event.ShowPositionDetailEvent;
-import mobile.pk.com.stocktracker.event.TransactionChangedEvent;
 import mobile.pk.com.stocktracker.event.WatchlistChangeEvent;
 import mobile.pk.com.stocktracker.event.WatchlistDeleteEvent;
-import mobile.pk.com.stocktracker.ui.activity.EditTransactionActivity;
+import mobile.pk.com.stocktracker.ui.fragment.UserSettingsFragment;
 import mobile.pk.com.stocktracker.ui.activity.TransactionActivity;
 
 public class MainActivity extends BaseActivity {
@@ -109,6 +106,10 @@ public class MainActivity extends BaseActivity {
             Intent intent = new Intent(this, EditPortfolioActivity.class);
             startActivityForResult(intent, EDIT_PORTFOLIO_REQUEST );
         }
+        else if(menuItem.getTitle().equals(getString(R.string.settings)))
+        {
+            fragmentClass = UserSettingsFragment.newInstance(this,null);
+        }
         else
         {
             Intent intent = menuItem.getIntent();
@@ -123,22 +124,24 @@ public class MainActivity extends BaseActivity {
                     fragmentClass = PortfolioFragment.newInstance(portfolioId);
                 }
 
-                try {
-                    if(fragmentClass != null)
-                        fragment = fragmentClass;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                // Insert the fragment by replacing any existing fragment
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
 
-                // Highlight the selected item, update the title, and close the drawer
-                menuItem.setChecked(true);
-                setTitle(menuItem.getTitle());
             }
 
         }
+
+        try {
+            if(fragmentClass != null)
+                fragment = fragmentClass;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+
+        // Highlight the selected item, update the title, and close the drawer
+        menuItem.setChecked(true);
+        setTitle(menuItem.getTitle());
 
         mDrawer.closeDrawers();
     }

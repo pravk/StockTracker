@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/price" >
+
+
+        <CheckBoxPreference android:title="@string/auto_refresh_enabled" android:key="autoRefreshInterval"
+            android:defaultValue="true"
+            android:summary="@string/auto_refresh_pref_summary">
+
+        </CheckBoxPreference>
+        <ListPreference android:title="@string/refresh_interval" android:defaultValue="@string/default_refresh_interval"
+            android:key="priceRefreshInterval"
+            android:summary="@string/auto_refresh_interval_summary"
+            android:entryValues="@array/pref_refresh_interval_values"
+            android:entries="@array/pref_refresh_interval"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>
