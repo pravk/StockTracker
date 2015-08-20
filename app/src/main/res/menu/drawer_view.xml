@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single" android:id="@+id/watchlist_group">
+
+    <group android:checkableBehavior="none" android:id="@+id/app_group">
+        <item
+            android:id="@+id/drawer_watchlist"
+            android:icon="@drawable/ic_list_black_24dp"
+            android:title="@string/watchlist"/>
+        <item
+            android:id="@+id/drawer_portfolio"
+            android:icon="@drawable/ic_list_black_24dp"
+            android:title="@string/portfolio"/>
     </group>
-    <group android:checkableBehavior="single" android:id="@+id/portfolio_group">
-    </group>
-    <group android:checkableBehavior="single" android:id="@+id/extras_group">
+    <group android:checkableBehavior="none" android:id="@+id/extras_group">
+        <item
+            android:id="@+id/drawer_settings"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/settings"/>
+        <item
+            android:id="@+id/drawer_help"
+            android:icon="@drawable/ic_help_black_24dp"
+            android:title="@string/help"/>
     </group>
 </menu>

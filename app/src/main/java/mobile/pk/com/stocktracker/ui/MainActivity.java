@@ -22,8 +22,10 @@ import mobile.pk.com.stocktracker.event.PortfolioChangeEvent;
 import mobile.pk.com.stocktracker.event.ShowPositionDetailEvent;
 import mobile.pk.com.stocktracker.event.WatchlistChangeEvent;
 import mobile.pk.com.stocktracker.event.WatchlistDeleteEvent;
+import mobile.pk.com.stocktracker.ui.fragment.PortfolioFragment;
 import mobile.pk.com.stocktracker.ui.fragment.UserSettingsFragment;
 import mobile.pk.com.stocktracker.ui.activity.TransactionActivity;
+import mobile.pk.com.stocktracker.ui.fragment.WatchlistFragment;
 
 public class MainActivity extends BaseActivity {
 
@@ -96,12 +98,12 @@ public class MainActivity extends BaseActivity {
 
         Fragment fragment = null;
         Fragment fragmentClass = null;
-        if(menuItem.getTitle().equals(getString(R.string.create_new_watchlist)))
+        if(menuItem.getItemId() == R.id.drawer_watchlist)
         {
             Intent intent = new Intent(this, EditWatchlistActivity.class);
             startActivityForResult(intent, EDIT_WATCHLIST_REQUEST );
         }
-        else if(menuItem.getTitle().equals(getString(R.string.create_new_portfolio)))
+        else if(menuItem.getItemId() == R.id.drawer_portfolio)
         {
             Intent intent = new Intent(this, EditPortfolioActivity.class);
             startActivityForResult(intent, EDIT_PORTFOLIO_REQUEST );

@@ -18,6 +18,7 @@ import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.adapters.viewholder.PortfolioViewHolder;
 import mobile.pk.com.stocktracker.adapters.viewholder.WatchlistStockViewHolder;
+import mobile.pk.com.stocktracker.common.RestClient;
 import mobile.pk.com.stocktracker.dao.Portfolio;
 import mobile.pk.com.stocktracker.dao.Position;
 import mobile.pk.com.stocktracker.dao.Stock;
@@ -33,34 +34,31 @@ import mobile.pk.com.stocktracker.utils.NumberUtils;
 /**
  * Created by hello on 8/1/2015.
  */
-public class PortfolioAdapter extends RecyclerView.Adapter<PortfolioViewHolder> {
+public class PortfolioAdapter extends GenericRVAdapter<PortfolioViewHolder, Position> {
 
-    private Context mContext;
 
-    private List<Position> positionList;
     private Portfolio portfolio;
-    private PricingService service;
 
-    public PortfolioAdapter(Context context, Portfolio portfolio, PricingService service) {
-        this.mContext = context;
+    public PortfolioAdapter(Context context, Portfolio portfolio) {
+        super(context);
         this.portfolio = portfolio;
-        this.service = service;
         reset();
-        updateModelAndUI(positionList);
-        refreshPrices(positionList);
+        updateModelAndUI();
+        refreshPrices();
     }
 
-    public void refreshPrices(final List<Position> positionList){
+    public void refreshPrices(){
+        List<Position> positionList = getDataList();
         List<Stock> stockList = new ArrayList<>();
         for(Position position: positionList)
         {
             stockList.add(position.getStock());
         }
-            new ServerPriceRefreshTask(service) {
+            new ServerPriceRefreshTask(RestClient.getDefault().getPricingService()) {
                 @Override
                 protected void onPostExecute(Void result) {
                     if(getException() == null) {
-                        updateModelAndUI(positionList);
+                        updateModelAndUI();
                     }
                     else
                     {
@@ -72,7 +70,8 @@ public class PortfolioAdapter extends RecyclerView.Adapter<PortfolioViewHolder> 
        }
 
 
-    public void updateModelAndUI(List<Position> positionList){
+    public void updateModelAndUI(){
+        List<Position> positionList = getDataList();
         List<Stock> stockList = new ArrayList<>();
         for(Position position: positionList)
         {
@@ -88,7 +87,7 @@ public class PortfolioAdapter extends RecyclerView.Adapter<PortfolioViewHolder> 
     }
 
     @Override
-    public PortfolioViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public PortfolioViewHolder onCreateViewHolderInternal(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_portfolio_item, viewGroup, false);
 
         final PortfolioViewHolder viewHolder = new PortfolioViewHolder(view);
@@ -98,8 +97,7 @@ public class PortfolioAdapter extends RecyclerView.Adapter<PortfolioViewHolder> 
 
     @Override
     public void onBindViewHolder(final PortfolioViewHolder portfolioViewHolder, int i) {
-        final Position position = positionList.get(i);
-
+        final Position position = getDataList().get(i);
 
         //Setting text view title
        // portfolioViewHolder.ticker.setText(position.getStock().getExchange() + ":"+ position.getStock().getTicker());
@@ -142,12 +140,7 @@ public class PortfolioAdapter extends RecyclerView.Adapter<PortfolioViewHolder> 
         });
     }
 
-    @Override
-    public int getItemCount() {
-        if(positionList == null)
-            return 0;
-        return positionList.size();
-    }
+
 
     /*public void addStock(Stock stock) {
         if(stockWatchList == null)
@@ -160,14 +153,8 @@ public class PortfolioAdapter extends RecyclerView.Adapter<PortfolioViewHolder> 
         notifyDataSetChanged();
     }*/
 
-
-    public List<Position> getPositionList() {
-        return positionList;
-
-    }
-
-    public void reset() {
-        positionList = Position.find(Position.class,  "portfolio = ?", String.valueOf(portfolio.getId()) );
-        notifyDataSetChanged();
+    @Override
+    public List<Position> refreshDataInternal() {
+        return Position.find(Position.class,  "portfolio = ?", String.valueOf(portfolio.getId()) );
     }
 }

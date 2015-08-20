@@ -27,7 +27,7 @@ public class NavigationDrawerHelper {
 
     public void setupContent(NavigationView navigationView)
     {
-        Menu menu = navigationView.getMenu();
+        /*Menu menu = navigationView.getMenu();
         menu.clear();
 
         Iterator<Watchlist> iterator = Watchlist.findAll(Watchlist.class);
@@ -65,7 +65,7 @@ public class NavigationDrawerHelper {
         menu.setGroupCheckable(R.id.watchlist_group, true, true);
         menu.setGroupCheckable(R.id.portfolio_group,true, true );
         menu.setGroupCheckable(R.id.extras_group,true, true );
-
+*/
 
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {

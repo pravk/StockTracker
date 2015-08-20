@@ -1,4 +1,4 @@
-package mobile.pk.com.stocktracker.ui;
+package mobile.pk.com.stocktracker.ui.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,7 +19,7 @@ import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.adapters.PortfolioAdapter;
-import mobile.pk.com.stocktracker.common.RestClient;
+import mobile.pk.com.stocktracker.adapters.viewholder.PortfolioViewHolder;
 import mobile.pk.com.stocktracker.dao.Portfolio;
 import mobile.pk.com.stocktracker.dao.Position;
 import mobile.pk.com.stocktracker.dao.Stock;
@@ -28,10 +28,12 @@ import mobile.pk.com.stocktracker.event.PortfolioChangeEvent;
 import mobile.pk.com.stocktracker.event.PortfolioDeleteEvent;
 import mobile.pk.com.stocktracker.event.TransactionChangedEvent;
 import mobile.pk.com.stocktracker.event.TransactionDeleteEvent;
+import mobile.pk.com.stocktracker.ui.BaseActivity;
+import mobile.pk.com.stocktracker.ui.EditPortfolioActivity;
 import mobile.pk.com.stocktracker.ui.activity.EditTransactionActivity;
 
 
-public class PortfolioFragment extends Fragment {
+public class PortfolioFragment extends GenericRVFragment<PortfolioViewHolder> {
 
    private static final String PORTFOLIO_ID = "PORTFOLIO_ID";
 
@@ -47,48 +49,25 @@ public class PortfolioFragment extends Fragment {
         return fragment;
     }
 
-    public PortfolioFragment() {
-        // Required empty public constructor
+    @Override
+    protected boolean hasMenuOptions() {
+        return true;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            portfolioId = getArguments().getLong(PORTFOLIO_ID);
+    protected RecyclerView.Adapter<PortfolioViewHolder> getAdapter() {
+        if(portfolioAdapter == null) {
+            Portfolio portfolio = Portfolio.findById(Portfolio.class, portfolioId);
+            portfolioAdapter = new PortfolioAdapter(getActivity(), portfolio);
         }
-        setHasOptionsMenu(true);
-        EventBus.getDefault().register(this);
+        return portfolioAdapter;
     }
+
     @Override
-    public void onDestroy() {
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
-    }
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_portfolio, container, false);
-        ButterKnife.inject(this, view);
-
-        final RecyclerView recyclerView =   (RecyclerView) view.findViewById(R.id.watchlist);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
-        Portfolio portfolio = Portfolio.findById(Portfolio.class, portfolioId);
-        portfolioAdapter = new PortfolioAdapter(getActivity(), portfolio, RestClient.getDefault().getPricingService() );
-        recyclerView.setAdapter(portfolioAdapter);
-
-        return view;
-    }
-
-    @OnClick(R.id.fab_add_new_transaction)
-    public void onAddNewTransaction(){
-
+    protected void onAddNewClick() {
         Intent intent = new Intent(getActivity(),EditTransactionActivity.class );
         intent.putExtra(EditTransactionActivity.PORTFOLIO_ID, portfolioId);
         startActivityForResult(intent, BaseActivity.ADD_PORTFOLIO_TRANSACTION);
-
     }
 
     @Override
@@ -97,36 +76,28 @@ public class PortfolioFragment extends Fragment {
         inflater.inflate(R.menu.watchlist_toolbar_menu, menu);
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+    @Override
+    protected boolean showEditAction() {
+        return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // handle item selection
-        switch (item.getItemId()) {
-            case R.id.refresh_view:
-                portfolioAdapter.refreshPrices(portfolioAdapter.getPositionList());
-                return true;
-            case R.id.edit_view:
-                Intent intent = new Intent(getActivity(), EditPortfolioActivity.class);
-                intent.putExtra(EditPortfolioActivity.PORTFOLIO_ID, portfolioId);
-                startActivityForResult(intent, BaseActivity.EDIT_PORTFOLIO_REQUEST);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+    protected boolean showRefreshAction() {
+        return true;
+    }
+
+    @Override
+    protected boolean onEditView() {
+        Intent intent = new Intent(getActivity(), EditPortfolioActivity.class);
+        intent.putExtra(EditPortfolioActivity.PORTFOLIO_ID, portfolioId);
+        startActivityForResult(intent, BaseActivity.EDIT_PORTFOLIO_REQUEST);
+        return true;
+    }
+
+    @Override
+    protected boolean onRefreshView() {
+        portfolioAdapter.refreshPrices();
+        return true;
     }
 
     @Override

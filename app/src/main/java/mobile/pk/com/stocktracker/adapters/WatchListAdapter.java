@@ -4,6 +4,7 @@ import android.content.Context;
 
 import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.adapters.viewholder.WatchlistStockViewHolder;
+import mobile.pk.com.stocktracker.common.RestClient;
 import mobile.pk.com.stocktracker.dao.Stock;
 import mobile.pk.com.stocktracker.dao.Watchlist;
 import mobile.pk.com.stocktracker.dao.WatchlistStock;
@@ -27,34 +28,29 @@ import java.util.List;
 /**
  * Created by hello on 8/1/2015.
  */
-public class WatchListAdapter extends RecyclerView.Adapter<WatchlistStockViewHolder> {
+public class WatchListAdapter extends GenericRVAdapter<WatchlistStockViewHolder, WatchlistStock> {
 
-    private Context mContext;
-
-    private List<WatchlistStock> stockWatchList;
     private Watchlist watchlist;
-    private PricingService service;
 
-    public WatchListAdapter(Context context, Watchlist watchlist, PricingService service) {
-        this.mContext = context;
+    public WatchListAdapter(Context context, Watchlist watchlist) {
+        super(context);
         this.watchlist = watchlist;
-        stockWatchList = WatchlistStock.find(WatchlistStock.class,  "watchlist = ?", String.valueOf(watchlist.getId()) );
-        this.service = service;
-        updateModelAndUI(stockWatchList);
-        refreshPrices(stockWatchList);
+        updateModelAndUI();
+        refreshPrices();
     }
 
-    public void refreshPrices(final List<WatchlistStock> stockWatchList){
+    public void refreshPrices(){
+        List<WatchlistStock> stockWatchList = getDataList();
         List<Stock> stockList = new ArrayList<>();
         for(WatchlistStock watchlistStock: stockWatchList)
         {
             stockList.add(watchlistStock.getStock());
         }
-            new ServerPriceRefreshTask(service) {
+            new ServerPriceRefreshTask(RestClient.getDefault().getPricingService()) {
                 @Override
                 protected void onPostExecute(Void result) {
                     if(getException() == null) {
-                        updateModelAndUI(stockWatchList);
+                        updateModelAndUI();
                     }
                     else
                     {
@@ -66,7 +62,8 @@ public class WatchListAdapter extends RecyclerView.Adapter<WatchlistStockViewHol
        }
 
 
-    public void updateModelAndUI(List<WatchlistStock> stockWatchList){
+    public void updateModelAndUI(){
+        List<WatchlistStock> stockWatchList = getDataList();
         List<Stock> stockList = new ArrayList<>();
         for(WatchlistStock watchlistStock: stockWatchList)
         {
@@ -82,8 +79,8 @@ public class WatchListAdapter extends RecyclerView.Adapter<WatchlistStockViewHol
     }
 
     @Override
-    public WatchlistStockViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_watchlist_item,  viewGroup, false);
+    public WatchlistStockViewHolder onCreateViewHolderInternal(ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_watchlist_item, viewGroup, false);
 
         final WatchlistStockViewHolder viewHolder = new WatchlistStockViewHolder(view);
 
@@ -91,12 +88,17 @@ public class WatchListAdapter extends RecyclerView.Adapter<WatchlistStockViewHol
     }
 
     @Override
+    protected List<WatchlistStock> refreshDataInternal() {
+        return WatchlistStock.find(WatchlistStock.class,  "watchlist = ?", String.valueOf(watchlist.getId()) );
+    }
+
+    @Override
     public void onBindViewHolder(final WatchlistStockViewHolder stockViewHolder, int i) {
-        final WatchlistStock watchlistStock = stockWatchList.get(i);
+        final WatchlistStock watchlistStock = getDataList().get(i);
 
 
         //Setting text view title
-        stockViewHolder.ticker.setText(watchlistStock.getStock().getExchange() + ":"+ watchlistStock.getStock().getTicker());
+        stockViewHolder.ticker.setText(watchlistStock.getStock().getExchange() + ":" + watchlistStock.getStock().getTicker());
         stockViewHolder.name.setText(watchlistStock.getStock().getName());
         if(watchlistStock.getStock().getPrice() != null)
         {
@@ -117,7 +119,7 @@ public class WatchListAdapter extends RecyclerView.Adapter<WatchlistStockViewHol
                 switch (item.getItemId()) {
                     case R.id.remove:
                         watchlistStock.delete();
-                        stockWatchList.remove(watchlistStock);
+                        getDataList().remove(watchlistStock);
                         notifyDataSetChanged();
                         Toast.makeText(mContext, "Removed", Toast.LENGTH_SHORT).show();
                         break;
@@ -127,14 +129,7 @@ public class WatchListAdapter extends RecyclerView.Adapter<WatchlistStockViewHol
         });
     }
 
-    @Override
-    public int getItemCount() {
-        if(stockWatchList == null)
-            return 0;
-        return stockWatchList.size();
-    }
-
-    public void addStock(Stock stock) {
+    /*public void addStock(Stock stock) {
         if(stockWatchList == null)
             stockWatchList = new ArrayList<>();
 
@@ -143,11 +138,6 @@ public class WatchListAdapter extends RecyclerView.Adapter<WatchlistStockViewHol
         stockWatchList.add(watchlistStock);
         refreshPrices(Arrays.asList( new WatchlistStock[]{watchlistStock}));
         notifyDataSetChanged();
-    }
+    }*/
 
-
-    public List<WatchlistStock> getWatchListStocks() {
-        return stockWatchList;
-
-    }
 }

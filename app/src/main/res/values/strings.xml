@@ -50,4 +50,7 @@
     <string name="auto_refresh_pref_summary">Refresh prices in background</string>
     <string name="auto_refresh_interval_summary">Refresh time in minutes</string>
     <string name="menu_settings">Settings</string>
+    <string name="watchlist">Watchlist</string>
+    <string name="portfolio">Portfolio</string>
+    <string name="help">Help</string>
 </resources>
