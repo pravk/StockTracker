@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         card_view:cardCornerRadius="4dp"
-        card_view:cardElevation="5dp" android:layout_margin="5dp">
+        card_view:cardElevation="2dp" android:layout_margin="3dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -22,8 +22,8 @@
             android:layout_height="wrap_content" android:padding="16dp" android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent" android:layout_weight="3" android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:orientation="vertical" android:paddingRight="16dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
@@ -31,6 +31,11 @@
                     android:id="@+id/name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" style="@style/TextAppearance.AppCompat.Medium" android:text="Title" />
+                <TextView
+                    android:id="@+id/last_trade_price"
+                    android:layout_width="0dp" android:layout_weight="1"
+                    android:layout_height="wrap_content" style="@style/TextAppearance.AppCompat.Small"
+                    android:text="Price" android:gravity="right"/>
 
 
                 </LinearLayout>
@@ -43,27 +48,14 @@
                         android:layout_width="0dp" android:layout_weight="1"
                         android:layout_height="wrap_content" style="@style/TextAppearance.AppCompat.Small" android:text="ticker" />
 
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/last_trade_price"
-                        android:layout_width="0dp" android:layout_weight="1"
-                        android:layout_height="wrap_content" style="@style/TextAppearance.AppCompat.Small" android:text="Price" />
-
                     <TextView
                         android:id="@+id/change"
                         android:layout_width="0dp" android:layout_weight="1"
-                        android:layout_height="wrap_content" style="@style/TextAppearance.AppCompat.Small" android:text="Change" />
-
+                        android:layout_height="wrap_content" style="@style/TextAppearance.AppCompat.Small"
+                        android:text="Change"
+                        android:gravity="right"/>
 
                 </LinearLayout>
-
-
 
             </LinearLayout>
 

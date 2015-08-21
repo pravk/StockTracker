@@ -20,6 +20,8 @@ public class PortfolioPositionViewHolder extends RecyclerView.ViewHolder impleme
     public TextView quantity;
     public TextView avgPrice;
     public TextView change;
+    public TextView marketValue;
+    public TextView gainLoss;
     public Toolbar toolbar;
     public CardView cardView;
 
@@ -34,13 +36,13 @@ public class PortfolioPositionViewHolder extends RecyclerView.ViewHolder impleme
         cardView = (CardView) itemView.findViewById(R.id.card_view);
         quantity = (TextView) itemView.findViewById(R.id.quantity);
         avgPrice =(TextView) itemView.findViewById(R.id.avg_price);
+        marketValue = (TextView) itemView.findViewById(R.id.market_value);
+        gainLoss = (TextView) itemView.findViewById(R.id.gain_loss);
     }
 
-    public void setTextColor(int color)
+    public void setColor(int color)
     {
-        //ticker.setTextColor(color);
-        name.setTextColor(color);
-        lastTradePrice.setTextColor(color);
+        gainLoss.setTextColor(color);
         change.setTextColor(color);
     }
 

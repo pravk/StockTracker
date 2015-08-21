@@ -18,6 +18,7 @@ import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.adapters.viewholder.TransactionViewHolder;
 import mobile.pk.com.stocktracker.dao.Position;
 import mobile.pk.com.stocktracker.dao.Stock;
+import mobile.pk.com.stocktracker.dao.StockPrice;
 import mobile.pk.com.stocktracker.dao.UserTransaction;
 import mobile.pk.com.stocktracker.dao.tasks.PriceLoadTask;
 import mobile.pk.com.stocktracker.dao.tasks.ServerPriceRefreshTask;
@@ -75,7 +76,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionViewHold
         }
         new PriceLoadTask(){
             @Override
-            protected void onPostExecute(Void result) {
+            protected void onPostExecute(List<StockPrice> result) {
                 notifyDataSetChanged();
             }
 

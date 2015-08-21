@@ -12,6 +12,7 @@ import java.util.List;
 
 import mobile.pk.com.stocktracker.common.RestClient;
 import mobile.pk.com.stocktracker.dao.Stock;
+import mobile.pk.com.stocktracker.dao.StockPrice;
 import mobile.pk.com.stocktracker.dao.tasks.HasStock;
 import mobile.pk.com.stocktracker.dao.tasks.PriceLoadTask;
 import mobile.pk.com.stocktracker.dao.tasks.ServerPriceRefreshTask;
@@ -22,6 +23,9 @@ import mobile.pk.com.stocktracker.dao.tasks.ServerPriceRefreshTask;
 public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D extends SugarRecord> extends RecyclerView.Adapter<T> {
 
     protected Context mContext;
+
+    protected static final String PRICE_CHANGE_FORMAT = "%s (%s%%)";
+    protected static final String PRICE_FORMAT = "%s %s";
 
     private List<D> dataList;
 
@@ -40,9 +44,10 @@ public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D exte
         List<D> newData = refreshDataInternal();
         getDataList().clear();
         getDataList().addAll(newData);
-        notifyDataSetChanged();
         populatePrices();
-        refreshPrices();
+        //refreshPrices();
+        //notifyDataSetChanged();
+
     }
 
     public void addItem(D item) {
@@ -76,8 +81,11 @@ public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D exte
         }
         new PriceLoadTask(){
             @Override
-            protected void onPostExecute(Void result) {
-                notifyDataSetChanged();
+            protected void onPostExecute(List<StockPrice> result) {
+                if(result != null && result.size()==stockList.size())
+                    notifyDataSetChanged();
+                else
+                    refreshPrices();
             }
 
         }.execute(stockList.toArray(new Stock[stockList.size()]));

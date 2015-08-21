@@ -32,11 +32,8 @@ public class WatchlistStockViewHolder extends RecyclerView.ViewHolder implements
         cardView = (CardView) itemView.findViewById(R.id.card_view);
     }
 
-    public void setTextColor(int color)
+    public void setColor(int color)
     {
-        ticker.setTextColor(color);
-        name.setTextColor(color);
-        lastTradePrice.setTextColor(color);
         change.setTextColor(color);
     }
 

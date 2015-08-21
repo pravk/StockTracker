@@ -13,11 +13,11 @@ import mobile.pk.com.stocktracker.service.PricingService;
 /**
  * Created by hello on 8/11/2015.
  */
-public class PriceLoadTask extends AsyncTask<Stock, Void, Void> {
+public class PriceLoadTask extends AsyncTask<Stock, Void, List<StockPrice>> {
 
 
     @Override
-    protected Void doInBackground(Stock... params) {
+    protected List<StockPrice> doInBackground(Stock... params) {
 
         if(params == null || params.length==0)
             return null;
@@ -45,6 +45,6 @@ public class PriceLoadTask extends AsyncTask<Stock, Void, Void> {
                 }
             }
         }
-        return null;
+        return stockPriceList;
     }
 }

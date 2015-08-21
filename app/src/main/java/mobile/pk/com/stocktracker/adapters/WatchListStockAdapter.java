@@ -58,15 +58,13 @@ public class WatchListStockAdapter extends GenericRVAdapter<WatchlistStockViewHo
         stockViewHolder.name.setText(watchlistStock.getStock().getName());
         if(watchlistStock.getStock().getPrice() != null)
         {
-            stockViewHolder.lastTradePrice.setText(String.valueOf(watchlistStock.getStock().getPrice().getLastPrice()));
-            stockViewHolder.change.setText(String.valueOf(watchlistStock.getStock().getPrice().getChange()));
+            stockViewHolder.lastTradePrice.setText(String.valueOf(watchlistStock.getStock().getPrice().getLastPriceWithCurrency()));
+            stockViewHolder.change.setText(String.format(PRICE_CHANGE_FORMAT, watchlistStock.getStock().getPrice().getChange(), watchlistStock.getStock().getPrice().getChangePercent()));
             if(watchlistStock.getStock().getPrice().getChange()<0) {
-                stockViewHolder.cardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.red));
-                stockViewHolder.setTextColor(mContext.getResources().getColor(R.color.white));
+                stockViewHolder.setColor(mContext.getResources().getColor(R.color.red));
             }
             else {
-                stockViewHolder.cardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.green));
-                stockViewHolder.setTextColor(mContext.getResources().getColor(R.color.white));
+                stockViewHolder.setColor(mContext.getResources().getColor(R.color.green));
             }
         }
         stockViewHolder.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {

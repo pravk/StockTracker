@@ -117,6 +117,14 @@ public class Position extends SugarRecord<Position> implements HasStock {
         this.totalPrice = totalPrice;
     }
 
+    public double getGainLoss() {
+        return getQuantity() * (getStock().getPrice().getLastPrice() - averagePrice);
+    }
+
+    public double getMarketValue() {
+        return getQuantity() * getStock().getPrice().getLastPrice();
+    }
+
     public static class PositionChangeEvent {
         private final Position position;
 

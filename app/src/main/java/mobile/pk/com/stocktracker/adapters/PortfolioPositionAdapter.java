@@ -48,19 +48,31 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
         //Setting text view title
        // portfolioViewHolder.ticker.setText(position.getStock().getExchange() + ":"+ position.getStock().getTicker());
         portfolioViewHolder.name.setText(position.getStock().getName());
-        portfolioViewHolder.avgPrice.setText( mContext.getString(R.string.avg_price) + ": " + NumberUtils.formatAsMoney(position.getAveragePrice()) );
-        portfolioViewHolder.quantity.setText( mContext.getString(R.string.quantity) + ": " + position.getQuantity() );
+        portfolioViewHolder.ticker.setText(position.getStock().getTicker());
+
+        portfolioViewHolder.quantity.setText( String.valueOf(position.getQuantity()) );
         if(position.getStock().getPrice() != null)
         {
-            portfolioViewHolder.lastTradePrice.setText(String.valueOf(position.getStock().getPrice().getLastPrice()));
-            portfolioViewHolder.change.setText(String.valueOf(position.getStock().getPrice().getChange()));
+            double gainLoss = position.getGainLoss();
+            double marketValue = position.getMarketValue();
+            portfolioViewHolder.avgPrice.setText( String.format(PRICE_FORMAT, position.getStock().getPrice().getCurrency(),position.getAveragePrice()));
+            portfolioViewHolder.lastTradePrice.setText( String.format(PRICE_FORMAT, position.getStock().getPrice().getCurrency(), position.getStock().getPrice().getLastPrice()));
+            portfolioViewHolder.change.setText(String.format(PRICE_CHANGE_FORMAT, position.getStock().getPrice().getChange(), position.getStock().getPrice().getChangePercent()));
+            portfolioViewHolder.gainLoss.setText( String.format(PRICE_FORMAT, position.getStock().getPrice().getCurrency(), gainLoss));
+            portfolioViewHolder.marketValue.setText(String.format(PRICE_FORMAT, position.getStock().getPrice().getCurrency(), marketValue));
+            //portfolioViewHolder.lastTradePrice.setText(String.valueOf(position.getStock().getPrice().getLastPrice()));
+            //portfolioViewHolder.change.setText(String.valueOf(position.getStock().getPrice().getChange()));
             if(position.getStock().getPrice().getChange()<0) {
-                portfolioViewHolder.cardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.red));
-                portfolioViewHolder.setTextColor(mContext.getResources().getColor(R.color.white));
+                portfolioViewHolder.change.setTextColor(mContext.getResources().getColor(R.color.red));
             }
             else {
-                portfolioViewHolder.cardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.green));
-                portfolioViewHolder.setTextColor(mContext.getResources().getColor(R.color.white));
+                portfolioViewHolder.change.setTextColor(mContext.getResources().getColor(R.color.green));
+            }
+            if(gainLoss<0) {
+                portfolioViewHolder.gainLoss.setTextColor(mContext.getResources().getColor(R.color.red));
+            }
+            else {
+                portfolioViewHolder.gainLoss.setTextColor(mContext.getResources().getColor(R.color.green));
             }
         }
         portfolioViewHolder.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {

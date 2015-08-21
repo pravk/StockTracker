@@ -23,6 +23,7 @@ public class StockPrice extends SugarRecord<PricingService.StockPrice>{
     private double change;
     private double changePercent;
     private String lastTrade;
+    private String currency;
 
     public String getClientId() {
         return clientId;
@@ -112,10 +113,18 @@ public class StockPrice extends SugarRecord<PricingService.StockPrice>{
             stockPrice.setLastPrice(Double.parseDouble(serverPrice.getLastPrice()));
         stockPrice.setLastPriceWithCurrency(serverPrice.getLastPriceWithCurrency());
         stockPrice.setLastTrade(serverPrice.getLastTrade());
-
+        stockPrice.setCurrency(serverPrice.getLastPriceWithCurrency().replace(serverPrice.getLastPriceFormatted(), ""));
         stockPrice.save();
 
         return stockPrice;
 
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 }
