@@ -32,7 +32,8 @@ public class PortfolioPositionViewHolder extends RecyclerView.ViewHolder impleme
         lastTradePrice = (TextView) itemView.findViewById(R.id.last_trade_price);
         change = (TextView) itemView.findViewById(R.id.change);
         toolbar = (Toolbar) itemView.findViewById(R.id.toolbar);
-        toolbar.inflateMenu(R.menu.portfolio_item_menu);
+        if(toolbar != null)
+            toolbar.inflateMenu(R.menu.portfolio_item_menu);
         cardView = (CardView) itemView.findViewById(R.id.card_view);
         quantity = (TextView) itemView.findViewById(R.id.quantity);
         avgPrice =(TextView) itemView.findViewById(R.id.avg_price);
@@ -49,5 +50,25 @@ public class PortfolioPositionViewHolder extends RecyclerView.ViewHolder impleme
     @Override
     public void onClick(View v) {
 
+    }
+
+    public static class PortfolioPositionViewHolderHeader extends PortfolioPositionViewHolder{
+
+        public PortfolioPositionViewHolderHeader(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        public void setColor(int color)
+        {
+            ticker.setTextColor(color);
+            name.setTextColor(color);
+            lastTradePrice.setTextColor(color);
+            change.setTextColor(color);
+            quantity.setTextColor(color);
+            avgPrice.setTextColor(color);
+            marketValue.setTextColor(color);
+            gainLoss.setTextColor(color);
+        }
     }
 }

@@ -23,7 +23,8 @@ import mobile.pk.com.stocktracker.dao.tasks.ServerPriceRefreshTask;
 public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D extends SugarRecord> extends RecyclerView.Adapter<T> {
 
     protected Context mContext;
-
+    private static final int TYPE_HEADER = 0;
+    private static final int TYPE_ITEM = 1;
     protected static final String PRICE_CHANGE_FORMAT = "%s (%s%%)";
     protected static final String PRICE_FORMAT = "%s %2$,.2f";
 
@@ -35,9 +36,40 @@ public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D exte
     }
 
     @Override
-    public T onCreateViewHolder(ViewGroup viewGroup, int i) {
-        return onCreateViewHolderInternal(viewGroup, i);
+    public T onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        if(viewType == TYPE_HEADER)
+        {
+            return onCreateViewHolderHeaderInternal(viewGroup, viewType);
+        }
+        else
+        {
+            return onCreateViewHolderInternal(viewGroup, viewType);
+        }
     }
+
+    protected T onCreateViewHolderHeaderInternal(ViewGroup viewGroup, int viewType){
+        throw new RuntimeException("Not supported by this class");
+    }
+
+    @Override
+    public void onBindViewHolder(T holder, int position) {
+        if(isPositionHeader(position))
+        {
+            onBindViewHolderHeaderInternal(holder, position);
+        }
+        else
+        {
+            if(hasHeader())
+                position = position-1;
+            onBindViewHolderInternal(holder,position);
+        }
+    }
+
+    protected void onBindViewHolderHeaderInternal(T holder, int i){
+        //Do nothing
+    }
+
+    protected abstract void onBindViewHolderInternal(T holder, int i);
 
     public void reset()
     {
@@ -45,9 +77,6 @@ public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D exte
         getDataList().clear();
         getDataList().addAll(newData);
         populatePrices();
-        //refreshPrices();
-        //notifyDataSetChanged();
-
     }
 
     public void addItem(D item) {
@@ -57,7 +86,10 @@ public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D exte
 
     @Override
     public int getItemCount() {
-        return getDataList().size();
+        if(hasHeader())
+            return getDataList().size() + 1;
+        else
+            return getDataList().size();
     }
 
     public List<D> getDataList(){
@@ -115,5 +147,22 @@ public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D exte
             }
 
         }.execute(stockList.toArray(new Stock[stockList.size()]));
+    }
+
+    //    need to override this method
+    @Override
+    public int getItemViewType(int position) {
+        if(hasHeader() && isPositionHeader(position))
+            return TYPE_HEADER;
+        return TYPE_ITEM;
+    }
+
+    protected boolean hasHeader(){
+        return false;
+    }
+
+    protected boolean isPositionHeader(int position)
+    {
+        return hasHeader() && position == 0;
     }
 }

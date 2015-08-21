@@ -40,7 +40,7 @@ public class WatchlistAdapter extends GenericRVAdapter<WatchlistViewHolder, Watc
     }
 
     @Override
-    public void onBindViewHolder(WatchlistViewHolder holder, int position) {
+    public void onBindViewHolderInternal(WatchlistViewHolder holder, int position) {
         final Watchlist watchlist = getDataList().get(position);
 
         holder.watchlistName.setText(watchlist.getWatchlistName());
@@ -90,5 +90,9 @@ public class WatchlistAdapter extends GenericRVAdapter<WatchlistViewHolder, Watc
         public Watchlist getWatchlist() {
             return watchlist;
         }
+    }
+    protected boolean isPositionHeader(int position)
+    {
+        return false;
     }
 }

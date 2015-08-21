@@ -114,6 +114,8 @@ public class StockPrice extends SugarRecord<PricingService.StockPrice>{
         stockPrice.setLastPriceWithCurrency(serverPrice.getLastPriceWithCurrency());
         stockPrice.setLastTrade(serverPrice.getLastTrade());
         stockPrice.setCurrency(serverPrice.getLastPriceWithCurrency().replace(serverPrice.getLastPriceFormatted(), ""));
+        if( TextUtils.isEmpty(stockPrice.getCurrency()))
+            stockPrice.setCurrency("$");
         stockPrice.save();
 
         return stockPrice;

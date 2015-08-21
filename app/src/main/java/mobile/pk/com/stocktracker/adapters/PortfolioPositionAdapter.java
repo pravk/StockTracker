@@ -31,7 +31,6 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
 
     }
 
-
     @Override
     public PortfolioPositionViewHolder onCreateViewHolderInternal(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_portfolio_position_item, viewGroup, false);
@@ -42,7 +41,31 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
     }
 
     @Override
-    public void onBindViewHolder(final PortfolioPositionViewHolder portfolioViewHolder, int i) {
+    protected PortfolioPositionViewHolder onCreateViewHolderHeaderInternal(ViewGroup viewGroup, int viewType) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_portfolio_position_item, viewGroup, false);
+
+        PortfolioPositionViewHolder.PortfolioPositionViewHolderHeader viewHolder = new PortfolioPositionViewHolder.PortfolioPositionViewHolderHeader(view);
+
+        return viewHolder;
+    }
+
+    @Override
+    protected void onBindViewHolderHeaderInternal(PortfolioPositionViewHolder holder, int i) {
+        holder.gainLoss.setText("Gain/Loss");
+        holder.lastTradePrice.setText("Last Price");
+        holder.ticker.setText("Ticker /");
+        holder.avgPrice.setText("Avg Price");
+        holder.change.setText("Change (%)");
+        holder.marketValue.setText("Mkt Value");
+        holder.name.setText("Company Name");
+        holder.quantity.setText("Quantity x");
+        holder.cardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.green));
+        holder.setColor(mContext.getResources().getColor(R.color.white));
+        holder.toolbar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onBindViewHolderInternal(final PortfolioPositionViewHolder portfolioViewHolder, int i) {
         final Position position = getDataList().get(i);
 
         //Setting text view title
@@ -50,7 +73,7 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
         portfolioViewHolder.name.setText(position.getStock().getName());
         portfolioViewHolder.ticker.setText(position.getStock().getTicker());
 
-        portfolioViewHolder.quantity.setText( String.valueOf(position.getQuantity()) );
+        portfolioViewHolder.quantity.setText(String.valueOf(position.getQuantity()) + " x");
         if(position.getStock().getPrice() != null)
         {
             double gainLoss = position.getGainLoss();
@@ -98,21 +121,12 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
         });
     }
 
-
-
-    /*public void addStock(Stock stock) {
-        if(stockWatchList == null)
-            stockWatchList = new ArrayList<>();
-
-        WatchlistStock watchlistStock = WatchlistStock.from(stock, watchlist);
-
-        stockWatchList.add(watchlistStock);
-        refreshPrices(Arrays.asList( new WatchlistStock[]{watchlistStock}));
-        notifyDataSetChanged();
-    }*/
-
     @Override
     public List<Position> refreshDataInternal() {
         return Position.find(Position.class,  "portfolio = ?", String.valueOf(portfolio.getId()) );
     }
+    protected boolean hasHeader(){
+        return true;
+    }
+
 }
