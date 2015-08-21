@@ -4,16 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.beardedhen.androidbootstrap.BootstrapEditText;
 
 import java.util.Date;
 
@@ -26,12 +23,8 @@ import mobile.pk.com.stocktracker.dao.Portfolio;
 import mobile.pk.com.stocktracker.dao.Stock;
 import mobile.pk.com.stocktracker.dao.UserTransaction;
 import mobile.pk.com.stocktracker.dao.Watchlist;
-import mobile.pk.com.stocktracker.event.PortfolioChangeEvent;
 import mobile.pk.com.stocktracker.event.TransactionChangedEvent;
-import mobile.pk.com.stocktracker.event.WatchlistChangeEvent;
 import mobile.pk.com.stocktracker.ui.BaseActivity;
-import mobile.pk.com.stocktracker.ui.EditPortfolioActivity;
-import mobile.pk.com.stocktracker.ui.EditWatchlistActivity;
 import mobile.pk.com.stocktracker.utils.StockSearchTextView;
 
 /**

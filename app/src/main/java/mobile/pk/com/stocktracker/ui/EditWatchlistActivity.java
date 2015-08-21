@@ -87,7 +87,7 @@ public class EditWatchlistActivity extends AppCompatActivity {
     {
         watchlist.delete();
         Intent resultIntent = new Intent();
-        resultIntent.putExtra(WATCH_LIST_ID, watchlist.getId());
+        resultIntent.putExtra(WATCH_LIST_ID, 0);
         setResult(RESULT_OK, resultIntent);
         finish();
     }

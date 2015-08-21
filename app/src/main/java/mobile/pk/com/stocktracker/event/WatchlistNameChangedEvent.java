@@ -5,10 +5,10 @@ import mobile.pk.com.stocktracker.dao.Watchlist;
 /**
  * Created by hello on 8/11/2015.
  */
-public class WatchlistChangeEvent {
+public class WatchlistNameChangedEvent {
     private Watchlist watchlist;
 
-    public WatchlistChangeEvent(Watchlist watchlist)
+    public WatchlistNameChangedEvent(Watchlist watchlist)
     {
         this.watchlist = watchlist;
     }

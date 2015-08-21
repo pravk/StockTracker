@@ -11,14 +11,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
-import mobile.pk.com.stocktracker.adapters.viewholder.PortfolioViewHolder;
 import mobile.pk.com.stocktracker.adapters.viewholder.TransactionViewHolder;
-import mobile.pk.com.stocktracker.dao.Portfolio;
 import mobile.pk.com.stocktracker.dao.Position;
 import mobile.pk.com.stocktracker.dao.Stock;
 import mobile.pk.com.stocktracker.dao.UserTransaction;

@@ -1,9 +1,6 @@
 package mobile.pk.com.stocktracker.ui.fragment;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,29 +12,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.orm.SugarRecord;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
-import mobile.pk.com.stocktracker.adapters.PortfolioAdapter;
-import mobile.pk.com.stocktracker.adapters.viewholder.PortfolioViewHolder;
-import mobile.pk.com.stocktracker.common.RestClient;
-import mobile.pk.com.stocktracker.dao.Portfolio;
-import mobile.pk.com.stocktracker.dao.Position;
-import mobile.pk.com.stocktracker.dao.Stock;
-import mobile.pk.com.stocktracker.dao.UserTransaction;
-import mobile.pk.com.stocktracker.event.PortfolioChangeEvent;
-import mobile.pk.com.stocktracker.event.PortfolioDeleteEvent;
-import mobile.pk.com.stocktracker.event.TransactionChangedEvent;
-import mobile.pk.com.stocktracker.event.TransactionDeleteEvent;
-import mobile.pk.com.stocktracker.ui.BaseActivity;
-import mobile.pk.com.stocktracker.ui.EditPortfolioActivity;
-import mobile.pk.com.stocktracker.ui.activity.EditTransactionActivity;
+import mobile.pk.com.stocktracker.adapters.GenericRVAdapter;
 
 
 public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> extends Fragment {
 
-   private RecyclerView.Adapter<T> adapter;
+    private Context context;
 
     /*public static GenericRVFragment newInstance(Long portfolioId) {
         GenericRVFragment fragment = new GenericRVFragment();
@@ -50,7 +36,12 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(hasMenuOptions());
-        EventBus.getDefault().register(this);
+        /*try {
+            EventBus.getDefault().register(this);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }*/
     }
 
     protected abstract boolean hasMenuOptions();
@@ -69,8 +60,9 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
         final RecyclerView recyclerView =   (RecyclerView) view.findViewById(R.id.recyler_view);
         recyclerView.setLayoutManager(getLayoutManager(getActivity()));
 
-        recyclerView.setAdapter(getAdapter());
-
+        GenericRVAdapter adapter = getAdapter();
+        recyclerView.setAdapter(adapter);
+        adapter.reset();
         return view;
     }
 
@@ -84,6 +76,12 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
         inflater.inflate(R.menu.generic_toolbar_menu, menu);
         menu.findItem(R.id.refresh_view).setVisible(showRefreshAction());
         menu.findItem(R.id.edit_view).setVisible(showEditAction());
+        menu.findItem(R.id.create_new).setVisible(showCreateAction());
+
+    }
+
+    protected boolean showCreateAction() {
+        return false;
     }
 
     @Override
@@ -95,10 +93,20 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
 
             case R.id.edit_view:
                 return onEditView();
+            case R.id.create_new:
+                return onCreateNew();
 
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    protected  boolean onCreateNew(){
+        return true;
+    }
+
+    protected void refreshData(){
+        this.getAdapter().reset();
     }
 
     protected abstract boolean onEditView();
@@ -109,7 +117,7 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
 
     protected abstract boolean showRefreshAction();
 
-    protected abstract RecyclerView.Adapter<T> getAdapter();
+    protected abstract <D extends SugarRecord> GenericRVAdapter<T,D> getAdapter();
 
     @OnClick(R.id.fab_add_new)
     public void onAddNewTransaction(){
@@ -118,4 +126,36 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
 
     protected abstract void onAddNewClick();
 
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public class OnCreateEvent<T> {
+        private final T data;
+
+        public OnCreateEvent(T data)
+        {
+            this.data = data;
+        }
+    }
+    public class OnEditEvent<T> {
+        private final T data;
+
+        public OnEditEvent(T data)
+        {
+            this.data = data;
+        }
+    }
+    public class OnDeleteEvent<T> {
+        private final T data;
+
+        public OnDeleteEvent(T data)
+        {
+            this.data = data;
+        }
+    }
 }

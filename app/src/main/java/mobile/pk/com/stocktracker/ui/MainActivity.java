@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
+import android.view.View;
 
 import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
@@ -19,13 +20,17 @@ import mobile.pk.com.stocktracker.dao.Portfolio;
 import mobile.pk.com.stocktracker.dao.Watchlist;
 import mobile.pk.com.stocktracker.event.DrawerSelectionChangeEvent;
 import mobile.pk.com.stocktracker.event.PortfolioChangeEvent;
+import mobile.pk.com.stocktracker.event.PortfolioDeleteEvent;
+import mobile.pk.com.stocktracker.event.PortfolioNameChangedEvent;
 import mobile.pk.com.stocktracker.event.ShowPositionDetailEvent;
-import mobile.pk.com.stocktracker.event.WatchlistChangeEvent;
+import mobile.pk.com.stocktracker.event.WatchlistNameChangedEvent;
 import mobile.pk.com.stocktracker.event.WatchlistDeleteEvent;
 import mobile.pk.com.stocktracker.ui.fragment.PortfolioFragment;
+import mobile.pk.com.stocktracker.ui.fragment.PortfolioPositionFragment;
 import mobile.pk.com.stocktracker.ui.fragment.UserSettingsFragment;
 import mobile.pk.com.stocktracker.ui.activity.TransactionActivity;
 import mobile.pk.com.stocktracker.ui.fragment.WatchlistFragment;
+import mobile.pk.com.stocktracker.ui.fragment.WatchlistStockFragment;
 
 public class MainActivity extends BaseActivity {
 
@@ -94,19 +99,20 @@ public class MainActivity extends BaseActivity {
 
     public void onEvent(DrawerSelectionChangeEvent event) {
 
+        resetUI();
         MenuItem menuItem = event.getMenuItem();
 
         Fragment fragment = null;
         Fragment fragmentClass = null;
         if(menuItem.getItemId() == R.id.drawer_watchlist)
         {
-            Intent intent = new Intent(this, EditWatchlistActivity.class);
-            startActivityForResult(intent, EDIT_WATCHLIST_REQUEST );
+            fragmentClass = WatchlistFragment.newInstance(this);
+            /*Intent intent = new Intent(this, EditWatchlistActivity.class);
+            startActivityForResult(intent, EDIT_WATCHLIST_REQUEST );*/
         }
         else if(menuItem.getItemId() == R.id.drawer_portfolio)
         {
-            Intent intent = new Intent(this, EditPortfolioActivity.class);
-            startActivityForResult(intent, EDIT_PORTFOLIO_REQUEST );
+            fragmentClass = PortfolioFragment.newInstance(this);
         }
         else if(menuItem.getTitle().equals(getString(R.string.settings)))
         {
@@ -119,11 +125,11 @@ public class MainActivity extends BaseActivity {
             {
                 long watchlistId = intent.getLongExtra("watchlistId", 0);
                 if(watchlistId != 0)
-                    fragmentClass = WatchlistFragment.newInstance(watchlistId);
+                    fragmentClass = WatchlistStockFragment.newInstance(watchlistId);
                 if(fragmentClass == null)
                 {
                     long portfolioId = intent.getLongExtra("portfolioId", 0);
-                    fragmentClass = PortfolioFragment.newInstance(portfolioId);
+                    fragmentClass = PortfolioPositionFragment.newInstance(portfolioId);
                 }
 
 
@@ -152,16 +158,16 @@ public class MainActivity extends BaseActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == BaseActivity.EDIT_WATCHLIST_REQUEST) {
+        /*if (requestCode == BaseActivity.EDIT_WATCHLIST_REQUEST) {
             if (resultCode == Activity.RESULT_OK) {
                 Long watchlistId = data.getLongExtra(EditWatchlistActivity.WATCH_LIST_ID, 0);
                 if(watchlistId != 0) {
                     Watchlist watchlist = Watchlist.findById(Watchlist.class, watchlistId);
-                    EventBus.getDefault().post(new WatchlistChangeEvent(watchlist));
+                    EventBus.getDefault().post(new WatchlistNameChangedEvent(watchlist));
                 }
             }
         }
-        else if (requestCode == BaseActivity.EDIT_PORTFOLIO_REQUEST) {
+        else */if (requestCode == BaseActivity.EDIT_PORTFOLIO_REQUEST) {
             if (resultCode == Activity.RESULT_OK) {
                 Long portfolioId = data.getLongExtra(EditPortfolioActivity.PORTFOLIO_ID, 0);
                 if(portfolioId != 0) {
@@ -173,6 +179,10 @@ public class MainActivity extends BaseActivity {
 
     }
 
+    public void resetUI()
+    {
+        findViewById(R.id.sliding_tabs).setVisibility(View.GONE);
+    }
     @Override
     public void onStart() {
         super.onStart();
@@ -185,18 +195,31 @@ public class MainActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    public void onEvent(WatchlistChangeEvent event){
-        setupDrawerContent(nvDrawer);
-        nvDrawer.getMenu().performIdentifierAction(event.getWatchlist().getId().intValue(), 0);
+    public void onEvent(WatchlistNameChangedEvent event){
+        Fragment fragment = WatchlistFragment.newInstance(this);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+    }
+    public void onEvent(WatchlistDeleteEvent event){
+        Fragment fragment = WatchlistFragment.newInstance(this);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+    }
+    public void onEvent(PortfolioNameChangedEvent event){
+        Fragment fragment = PortfolioFragment.newInstance(this);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+    }
+    public void onEvent(PortfolioDeleteEvent event){
+        Fragment fragment = PortfolioFragment.newInstance(this);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
     }
     public void onEvent(PortfolioChangeEvent event){
         setupDrawerContent(nvDrawer);
         nvDrawer.getMenu().performIdentifierAction(event.getPortfolio().getId().intValue(), 0);
     }
-    public void onEvent(WatchlistDeleteEvent event){
-        setupDrawerContent(nvDrawer);
-        showHome();
-    }
+
     public void onEvent(ShowPositionDetailEvent event){
         Intent intent = new Intent(this, TransactionActivity.class);
         intent.putExtra(TransactionActivity.POSITION_ID, event.getPosition().getId());

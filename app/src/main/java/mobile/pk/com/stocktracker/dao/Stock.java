@@ -6,12 +6,13 @@ import com.orm.dsl.Ignore;
 
 import java.util.List;
 
+import mobile.pk.com.stocktracker.dao.tasks.HasStock;
 import mobile.pk.com.stocktracker.service.TickerSearchService;
 
 /**
  * Created by hello on 8/10/2015.
  */
-public class Stock extends SugarRecord<Stock> {
+public class Stock extends SugarRecord<Stock>{
     private String name;
     private String ticker;
     private String exchange;

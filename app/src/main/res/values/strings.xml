@@ -53,4 +53,6 @@
     <string name="watchlist">Watchlist</string>
     <string name="portfolio">Portfolio</string>
     <string name="help">Help</string>
+    <string name="default_watchlist_name">Default Watchlist</string>
+    <string name="default_portfolio_name">Default Portfolio</string>
 </resources>

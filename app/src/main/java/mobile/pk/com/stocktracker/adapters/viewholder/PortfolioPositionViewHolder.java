@@ -12,7 +12,7 @@ import mobile.pk.com.stocktracker.R;
 /**
  * Created by hello on 8/1/2015.
  */
-public class PortfolioViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+public class PortfolioPositionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
     public TextView ticker;
     public TextView name;
@@ -23,7 +23,7 @@ public class PortfolioViewHolder extends RecyclerView.ViewHolder implements View
     public Toolbar toolbar;
     public CardView cardView;
 
-    public PortfolioViewHolder(View itemView) {
+    public PortfolioPositionViewHolder(View itemView) {
         super(itemView);
         ticker = (TextView) itemView.findViewById(R.id.ticker);
         name = (TextView) itemView.findViewById(R.id.name);

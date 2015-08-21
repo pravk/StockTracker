@@ -7,4 +7,4 @@
         android:fitsSystemWindows="true"
         android:background="@color/primary"
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
-        android:elevation="4dp"/>
+        />

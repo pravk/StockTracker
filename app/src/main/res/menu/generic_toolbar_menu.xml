@@ -12,5 +12,9 @@
         android:icon="@drawable/ic_edit_white_24dp"
         app:showAsAction="withText|ifRoom"
         />
-
+    <item android:id="@+id/create_new"
+        android:title="@string/edit"
+        android:icon="@drawable/ic_add_white_24dp"
+        app:showAsAction="withText|ifRoom"
+        />
 </menu>

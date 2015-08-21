@@ -4,10 +4,7 @@ package mobile.pk.com.stocktracker.adapters.viewholder;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.ContextMenu;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import mobile.pk.com.stocktracker.R;
@@ -31,7 +28,7 @@ public class WatchlistStockViewHolder extends RecyclerView.ViewHolder implements
         lastTradePrice = (TextView) itemView.findViewById(R.id.last_trade_price);
         change = (TextView) itemView.findViewById(R.id.change);
         toolbar = (Toolbar) itemView.findViewById(R.id.toolbar);
-        toolbar.inflateMenu(R.menu.watchlist_item_menu);
+        toolbar.inflateMenu(R.menu.watchlist_stock_item_menu);
         cardView = (CardView) itemView.findViewById(R.id.card_view);
     }
 

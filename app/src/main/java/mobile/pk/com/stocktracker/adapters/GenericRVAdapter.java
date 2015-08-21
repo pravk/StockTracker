@@ -2,21 +2,19 @@ package mobile.pk.com.stocktracker.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.orm.SugarRecord;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import mobile.pk.com.stocktracker.R;
-import mobile.pk.com.stocktracker.adapters.viewholder.PortfolioViewHolder;
-import mobile.pk.com.stocktracker.dao.Position;
+import mobile.pk.com.stocktracker.common.RestClient;
 import mobile.pk.com.stocktracker.dao.Stock;
-import mobile.pk.com.stocktracker.dao.WatchlistStock;
+import mobile.pk.com.stocktracker.dao.tasks.HasStock;
+import mobile.pk.com.stocktracker.dao.tasks.PriceLoadTask;
+import mobile.pk.com.stocktracker.dao.tasks.ServerPriceRefreshTask;
 
 /**
  * Created by hello on 8/20/2015.
@@ -64,4 +62,35 @@ public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D exte
     protected abstract T onCreateViewHolderInternal(ViewGroup viewGroup, int i);
 
     protected abstract List<D> refreshDataInternal();
+
+    public void refreshPrices(){
+        List<D> dataList = getDataList();
+        final List<Stock> stockList = new ArrayList<>();
+        for(D data : dataList)
+        {
+            if(data instanceof HasStock)
+                stockList.add(((HasStock) data).getStock());
+
+        }
+        new ServerPriceRefreshTask(RestClient.getDefault().getPricingService()) {
+            @Override
+            protected void onPostExecute(Void result) {
+                if(getException() == null) {
+                    new PriceLoadTask(){
+                        @Override
+                        protected void onPostExecute(Void result) {
+                            notifyDataSetChanged();
+                        }
+
+                    }.execute(stockList.toArray(new Stock[stockList.size()]));
+                }
+                else
+                {
+                    Toast.makeText(mContext, getException().getMessage(), Toast.LENGTH_SHORT);
+                }
+            }
+
+        }.execute(stockList.toArray(new Stock[stockList.size()]));
+    }
+
 }

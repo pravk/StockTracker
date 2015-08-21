@@ -1,102 +1,48 @@
 package mobile.pk.com.stocktracker.adapters;
 
 import android.content.Context;
-import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
-import mobile.pk.com.stocktracker.adapters.viewholder.PortfolioViewHolder;
-import mobile.pk.com.stocktracker.adapters.viewholder.WatchlistStockViewHolder;
-import mobile.pk.com.stocktracker.common.RestClient;
+import mobile.pk.com.stocktracker.adapters.viewholder.PortfolioPositionViewHolder;
 import mobile.pk.com.stocktracker.dao.Portfolio;
 import mobile.pk.com.stocktracker.dao.Position;
-import mobile.pk.com.stocktracker.dao.Stock;
-import mobile.pk.com.stocktracker.dao.Watchlist;
-import mobile.pk.com.stocktracker.dao.WatchlistStock;
-import mobile.pk.com.stocktracker.dao.tasks.PriceLoadTask;
-import mobile.pk.com.stocktracker.dao.tasks.ServerPriceRefreshTask;
 import mobile.pk.com.stocktracker.event.ShowPositionDetailEvent;
-import mobile.pk.com.stocktracker.service.PricingService;
-import mobile.pk.com.stocktracker.ui.activity.TransactionActivity;
 import mobile.pk.com.stocktracker.utils.NumberUtils;
 
 /**
  * Created by hello on 8/1/2015.
  */
-public class PortfolioAdapter extends GenericRVAdapter<PortfolioViewHolder, Position> {
-
+public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPositionViewHolder, Position> {
 
     private Portfolio portfolio;
 
-    public PortfolioAdapter(Context context, Portfolio portfolio) {
+    public PortfolioPositionAdapter(Context context, Portfolio portfolio) {
         super(context);
         this.portfolio = portfolio;
         reset();
-        updateModelAndUI();
         refreshPrices();
     }
 
-    public void refreshPrices(){
-        List<Position> positionList = getDataList();
-        List<Stock> stockList = new ArrayList<>();
-        for(Position position: positionList)
-        {
-            stockList.add(position.getStock());
-        }
-            new ServerPriceRefreshTask(RestClient.getDefault().getPricingService()) {
-                @Override
-                protected void onPostExecute(Void result) {
-                    if(getException() == null) {
-                        updateModelAndUI();
-                    }
-                    else
-                    {
-                        Toast.makeText(mContext,getException().getMessage(), Toast.LENGTH_SHORT);
-                    }
-                }
-
-            }.execute(stockList.toArray(new Stock[stockList.size()]));
-       }
-
-
-    public void updateModelAndUI(){
-        List<Position> positionList = getDataList();
-        List<Stock> stockList = new ArrayList<>();
-        for(Position position: positionList)
-        {
-            stockList.add(position.getStock());
-        }
-        new PriceLoadTask(){
-            @Override
-            protected void onPostExecute(Void result) {
-                notifyDataSetChanged();
-            }
-
-        }.execute(stockList.toArray(new Stock[stockList.size()]));
-    }
 
     @Override
-    public PortfolioViewHolder onCreateViewHolderInternal(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_portfolio_item, viewGroup, false);
+    public PortfolioPositionViewHolder onCreateViewHolderInternal(ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_portfolio_position_item, viewGroup, false);
 
-        final PortfolioViewHolder viewHolder = new PortfolioViewHolder(view);
+        final PortfolioPositionViewHolder viewHolder = new PortfolioPositionViewHolder(view);
 
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(final PortfolioViewHolder portfolioViewHolder, int i) {
+    public void onBindViewHolder(final PortfolioPositionViewHolder portfolioViewHolder, int i) {
         final Position position = getDataList().get(i);
 
         //Setting text view title

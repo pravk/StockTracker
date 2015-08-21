@@ -5,10 +5,12 @@ import com.orm.SugarRecord;
 
 import java.util.List;
 
+import mobile.pk.com.stocktracker.dao.tasks.HasStock;
+
 /**
  * Created by hello on 8/10/2015.
  */
-public class Position extends SugarRecord<Position> {
+public class Position extends SugarRecord<Position> implements HasStock {
 
     private Portfolio portfolio;
     private Stock stock;
