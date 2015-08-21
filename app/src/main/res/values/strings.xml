@@ -40,7 +40,7 @@
     <string name="radio_long">Long</string>
     <string name="radio_short">Short</string>
     <string name="edit_transaction">Edit Transaction</string>
-    <string name="trade_date_hint">MM/dd/yyyy</string>
+    <string name="trade_date_hint">Transaction date</string>
     <string name="avg_price">Average Price</string>
     <string name="recompute_positions">Recompute Positions</string>
     <string name="attherate">\@</string>

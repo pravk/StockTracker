@@ -58,7 +58,7 @@ public class WatchListStockAdapter extends GenericRVAdapter<WatchlistStockViewHo
         stockViewHolder.name.setText(watchlistStock.getStock().getName());
         if(watchlistStock.getStock().getPrice() != null)
         {
-            stockViewHolder.lastTradePrice.setText(String.valueOf(watchlistStock.getStock().getPrice().getLastPriceWithCurrency()));
+            stockViewHolder.lastTradePrice.setText(String.format(PRICE_FORMAT, watchlistStock.getStock().getPrice().getCurrency(), watchlistStock.getStock().getPrice().getLastPrice()));
             stockViewHolder.change.setText(String.format(PRICE_CHANGE_FORMAT, watchlistStock.getStock().getPrice().getChange(), watchlistStock.getStock().getPrice().getChangePercent()));
             if(watchlistStock.getStock().getPrice().getChange()<0) {
                 stockViewHolder.setColor(mContext.getResources().getColor(R.color.red));

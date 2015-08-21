@@ -1,17 +1,20 @@
 package mobile.pk.com.stocktracker.ui.activity;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import butterknife.ButterKnife;
@@ -78,8 +81,11 @@ public class EditTransactionActivity extends BaseActivity {
             if(transactionId == 0)
             {
                 setTitle(getString(R.string.create_new_transaction));
+                deleteButton.setVisibility(View.GONE);
+                radioLong.setChecked(true);
                 portfolio = Watchlist.findById(Portfolio.class, portfolioId);
                 transaction = new UserTransaction();
+                transaction.setTransactionDate(Calendar.getInstance().getTimeInMillis());
                 transaction.setPortfolio(portfolio);
             }
             else
@@ -92,7 +98,8 @@ public class EditTransactionActivity extends BaseActivity {
                 stockSearchTextView.setText(transaction.getStock().getName());
                 quantity.setText(String.valueOf(transaction.getQuantity()));
                 price.setText(String.valueOf(transaction.getPrice()));
-                tradeDate.setText(DateUtils.formatDateTime(this, transaction.getTransactionDate(), DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_SHOW_YEAR) );
+
+                //tradeDate.setText(DateUtils.formatDateTime(this, transaction.getTransactionDate(), DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_SHOW_YEAR) );
                 radioLong.setChecked(transaction.isLong());
                 radioShort.setChecked(transaction.isShort());
             }
@@ -102,8 +109,38 @@ public class EditTransactionActivity extends BaseActivity {
                 stockSearchTextView.setEnabled(false);
                 quantity.requestFocus();
             }
+            setTradeDate(transaction.getTransactionDate());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(transaction.getTransactionDate());
+
+            final int year = calendar.get(Calendar.YEAR);
+            final int month = calendar.get(Calendar.MONTH);
+            final int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            tradeDate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DatePickerDialog datePickerDialog = new DatePickerDialog(EditTransactionActivity.this, new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                            Calendar calendar1 = Calendar.getInstance();
+                            calendar1.set(year,monthOfYear,dayOfMonth);
+                            setTradeDate(calendar1.getTimeInMillis());
+
+                        }
+                    },  year, month, day);
+                    datePickerDialog.show();
+                }
+            });
+
         }
 
+    }
+
+    protected void setTradeDate(long timeInMillis)
+    {
+        tradeDate.setText(DateUtils.formatDateTime(this, timeInMillis, DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_SHOW_YEAR) );
+        transaction.setTransactionDate(timeInMillis);
     }
 
     @OnClick(R.id.btn_done)
@@ -116,7 +153,7 @@ public class EditTransactionActivity extends BaseActivity {
         transaction.setLongShortInd(radioLong.isChecked() ? 1 : 2);
         transaction.setPrice(Double.parseDouble(price.getText().toString()));
         transaction.setQuantity(Double.parseDouble(quantity.getText().toString()));
-        transaction.setTransactionDate(Date.parse(tradeDate.getText().toString()));
+        //transaction.setTransactionDate(Date.parse(tradeDate.getText().toString()));
         transaction.save();
         Intent resultIntent = new Intent();
         resultIntent.putExtra(TRANSACTION_ID, transaction.getId());
