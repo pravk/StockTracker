@@ -2,12 +2,8 @@ package mobile.pk.com.stocktracker.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
@@ -22,7 +18,7 @@ import mobile.pk.com.stocktracker.dao.Watchlist;
 /**
  * Created by hello on 8/11/2015.
  */
-public class EditWatchlistActivity extends AppCompatActivity {
+public class EditWatchlistActivity extends BaseActivity {
 
     public static final String WATCH_LIST_ID = "WATCH_LIST_ID";
     private Long watchListId;
@@ -50,16 +46,19 @@ public class EditWatchlistActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_edit_watchlist);
+        setContentView(R.layout.activity_edit_watchlist);
+        setupToolbar();
         watchListId = getIntent().getLongExtra(WATCH_LIST_ID, 0);
         ButterKnife.inject(this);
         if(watchListId == 0) {
             watchlist = new Watchlist();
             watchlist.setWatchlistName("");
             deleteButton.setVisibility(View.GONE);
+            setTitle(getString(R.string.create_new_watchlist));
         }
         else {
             watchlist = Watchlist.findById(Watchlist.class, watchListId);
+            setTitle(getString(R.string.edit_watchlist));
             title.setText(getString(R.string.edit_watchlist));
             deleteButton.setVisibility(View.VISIBLE);
         }

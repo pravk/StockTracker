@@ -42,9 +42,7 @@ public class TransactionActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); // Attaching the layout to the toolbar object
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setupToolbar();
         positionId = getIntent().getLongExtra(POSITION_ID, 0);
         ButterKnife.inject(this);
 

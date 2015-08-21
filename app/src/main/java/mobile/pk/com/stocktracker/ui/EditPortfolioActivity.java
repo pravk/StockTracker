@@ -20,7 +20,7 @@ import mobile.pk.com.stocktracker.dao.Watchlist;
 /**
  * Created by hello on 8/11/2015.
  */
-public class EditPortfolioActivity extends AppCompatActivity {
+public class EditPortfolioActivity extends BaseActivity {
 
     public static final String PORTFOLIO_ID = "PORTFOLIO_ID";
     private Long portfolioId;
@@ -49,15 +49,18 @@ public class EditPortfolioActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_portfolio);
+        setupToolbar();
         portfolioId = getIntent().getLongExtra(PORTFOLIO_ID, 0);
         ButterKnife.inject(this);
         if(portfolioId == 0) {
             portfolio = new Portfolio();
             portfolio.setPortfolioName("");
             deleteButton.setVisibility(View.GONE);
+            setTitle(getString(R.string.create_new_portfolio));
         }
         else {
             portfolio = Watchlist.findById(Portfolio.class, portfolioId);
+            setTitle(getString(R.string.edit_portfolio));
             title.setText(getString(R.string.edit_portfolio));
             deleteButton.setVisibility(View.VISIBLE);
         }

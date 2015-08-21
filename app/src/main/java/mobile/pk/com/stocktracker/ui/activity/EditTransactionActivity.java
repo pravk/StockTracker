@@ -30,7 +30,7 @@ import mobile.pk.com.stocktracker.utils.StockSearchTextView;
 /**
  * Created by hello on 8/11/2015.
  */
-public class EditTransactionActivity extends AppCompatActivity {
+public class EditTransactionActivity extends BaseActivity {
 
     public static final String PORTFOLIO_ID = "PORTFOLIO_ID";
     public static final String TRANSACTION_ID = "TRANSACTION_ID";
@@ -69,6 +69,7 @@ public class EditTransactionActivity extends AppCompatActivity {
         portfolioId = getIntent().getLongExtra(PORTFOLIO_ID, 0);
         transactionId = getIntent().getLongExtra(TRANSACTION_ID, 0);
         ButterKnife.inject(this);
+        setupToolbar();
         if(portfolioId == 0 && transactionId ==0) {
             setResult(RESULT_CANCELED, new Intent());
             finish();
@@ -76,12 +77,14 @@ public class EditTransactionActivity extends AppCompatActivity {
 
             if(transactionId == 0)
             {
+                setTitle(getString(R.string.create_new_transaction));
                 portfolio = Watchlist.findById(Portfolio.class, portfolioId);
                 transaction = new UserTransaction();
                 transaction.setPortfolio(portfolio);
             }
             else
             {
+                setTitle(getString(R.string.edit_transaction));
                 transaction = UserTransaction.findById(UserTransaction.class, transactionId);
                 portfolio = transaction.getPortfolio();
                 title.setText(getString(R.string.edit_transaction));
