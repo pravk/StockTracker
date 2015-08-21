@@ -44,7 +44,7 @@ public class TransactionActivity extends BaseActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); // Attaching the layout to the toolbar object
         setSupportActionBar(toolbar);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         positionId = getIntent().getLongExtra(POSITION_ID, 0);
         ButterKnife.inject(this);
 
@@ -107,13 +107,20 @@ public class TransactionActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == BaseActivity.EDIT_USER_TRANSACTION) {
-        if (resultCode == Activity.RESULT_OK) {
-            Long transactionId = data.getLongExtra(EditTransactionActivity.TRANSACTION_ID, 0);
-            if(transactionId != 0) {
-                UserTransaction userTransaction = UserTransaction.findById(UserTransaction.class, transactionId);
-                EventBus.getDefault().post(new TransactionChangedEvent(userTransaction));
+            if (resultCode == Activity.RESULT_OK) {
+                Long transactionId = data.getLongExtra(EditTransactionActivity.TRANSACTION_ID, 0);
+                if(transactionId != 0) {
+                    UserTransaction userTransaction = UserTransaction.findById(UserTransaction.class, transactionId);
+                    EventBus.getDefault().post(new TransactionChangedEvent(userTransaction));
+                }
+                else
+                {
+                    long stockId = data.getLongExtra(EditTransactionActivity.STOCK_ID, 0);
+                    long portfolioId = data.getLongExtra(EditTransactionActivity.PORTFOLIO_ID, 0);
+                    EventBus.getDefault().post(new TransactionDeleteEvent(Stock.findById(Stock.class, stockId), Portfolio.findById(Portfolio.class, portfolioId)));
+                }
+
             }
-        }
         }
 
     }

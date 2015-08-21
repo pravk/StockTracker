@@ -121,10 +121,10 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
 
     @OnClick(R.id.fab_add_new)
     public void onAddNewTransaction(){
-        onAddNewClick();
+        onAddNewItem();
     }
 
-    protected abstract void onAddNewClick();
+    protected abstract void onAddNewItem();
 
     public Context getContext() {
         return context;

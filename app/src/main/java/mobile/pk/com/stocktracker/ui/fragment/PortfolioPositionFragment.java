@@ -50,6 +50,13 @@ public class PortfolioPositionFragment extends GenericRVFragment<PortfolioPositi
             portfolioId = getArguments().getLong(PORTFOLIO_ID);
             portfolio = Portfolio.findById(Portfolio.class, portfolioId);
         }
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
     @Override
@@ -67,13 +74,6 @@ public class PortfolioPositionFragment extends GenericRVFragment<PortfolioPositi
     }
 
     @Override
-    protected void onAddNewClick() {
-        Intent intent = new Intent(getActivity(),EditTransactionActivity.class );
-        intent.putExtra(EditTransactionActivity.PORTFOLIO_ID, portfolioId);
-        startActivityForResult(intent, BaseActivity.ADD_PORTFOLIO_TRANSACTION);
-    }
-
-    @Override
     protected boolean showEditAction() {
         return true;
     }
@@ -82,6 +82,15 @@ public class PortfolioPositionFragment extends GenericRVFragment<PortfolioPositi
     protected boolean showRefreshAction() {
         return true;
     }
+
+    @Override
+    protected void onAddNewItem() {
+        EventBus.getDefault().post(new CreatePortfolioTransactionEvent(portfolio));
+        /*Intent intent = new Intent(getActivity(),EditTransactionActivity.class );
+        intent.putExtra(EditTransactionActivity.PORTFOLIO_ID, portfolioId);
+        startActivityForResult(intent, BaseActivity.ADD_PORTFOLIO_TRANSACTION);*/
+    }
+
     @Override
     protected boolean showCreateAction() {
         return true;
@@ -91,10 +100,6 @@ public class PortfolioPositionFragment extends GenericRVFragment<PortfolioPositi
     protected boolean onEditView() {
         EventBus.getDefault().post(new OnEditEvent(portfolio));
         return true;
-        /*Intent intent = new Intent(getActivity(), EditPortfolioActivity.class);
-        intent.putExtra(EditPortfolioActivity.PORTFOLIO_ID, portfolioId);
-        startActivityForResult(intent, BaseActivity.EDIT_PORTFOLIO_REQUEST);
-        return true;*/
     }
     @Override
     protected  boolean onCreateNew(){
@@ -108,37 +113,9 @@ public class PortfolioPositionFragment extends GenericRVFragment<PortfolioPositi
         return true;
     }
 
-    /*@Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == BaseActivity.EDIT_PORTFOLIO_REQUEST) {
-            if (resultCode == Activity.RESULT_OK) {
-                Long portfolioId = data.getLongExtra(EditPortfolioActivity.PORTFOLIO_ID, 0);
-                Portfolio portfolio = Portfolio.findById(Portfolio.class, portfolioId);
-                if(portfolio != null)
-                    EventBus.getDefault().post(new PortfolioChangeEvent(portfolio));
-                else
-                    EventBus.getDefault().post(new PortfolioDeleteEvent(portfolioId));
-            }
-        }
-        else if (requestCode == BaseActivity.ADD_PORTFOLIO_TRANSACTION) {
-            if (resultCode == Activity.RESULT_OK) {
-                Long transactionId = data.getLongExtra(EditTransactionActivity.TRANSACTION_ID, 0);
-                UserTransaction transaction = UserTransaction.findById(UserTransaction.class, transactionId);
-                if(transaction != null)
-                    EventBus.getDefault().post(new TransactionChangedEvent(transaction));
-                else {
-                    Long stockId = data.getLongExtra(EditTransactionActivity.STOCK_ID, 0);
-                    Long portfolioId= data.getLongExtra(EditTransactionActivity.PORTFOLIO_ID, 0);
-                    Stock stock = Stock.findById(Stock.class, stockId);
-                    Portfolio portfolio = Portfolio.findById(Portfolio.class, portfolioId);
-                    EventBus.getDefault().post(new TransactionDeleteEvent(stock,portfolio));
-                }
-            }
-        }
-
-    }*/
+    public void onEvent(Position.PositionChangeEvent event){
+        getAdapter().reset();
+    }
 
     public class OnCreateEvent {
 
@@ -163,6 +140,18 @@ public class PortfolioPositionFragment extends GenericRVFragment<PortfolioPositi
         public OnDeleteEvent(Portfolio data)
         {
             this.data = data;
+        }
+    }
+
+    public class CreatePortfolioTransactionEvent {
+        private final Portfolio portfolio;
+
+        public CreatePortfolioTransactionEvent(Portfolio portfolio) {
+            this.portfolio = portfolio;
+        }
+
+        public Portfolio getPortfolio() {
+            return portfolio;
         }
     }
 }

@@ -9,10 +9,17 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.adapters.PagerAdapter.PortfolioFragmentPagerAdapter;
 import mobile.pk.com.stocktracker.dao.Portfolio;
+import mobile.pk.com.stocktracker.dao.PortfolioPosition;
+import mobile.pk.com.stocktracker.dao.Position;
+import mobile.pk.com.stocktracker.dao.Stock;
+import mobile.pk.com.stocktracker.dao.UserTransaction;
 import mobile.pk.com.stocktracker.event.PortfolioNameChangedEvent;
 import mobile.pk.com.stocktracker.event.PortfolioDeleteEvent;
+import mobile.pk.com.stocktracker.event.TransactionChangedEvent;
+import mobile.pk.com.stocktracker.event.TransactionDeleteEvent;
 import mobile.pk.com.stocktracker.ui.BaseActivity;
 import mobile.pk.com.stocktracker.ui.EditPortfolioActivity;
+import mobile.pk.com.stocktracker.ui.activity.EditTransactionActivity;
 
 /**
  * Created by hello on 8/20/2015.
@@ -39,6 +46,13 @@ public class PortfolioFragment extends ContainerFragment {
                 else
                     EventBus.getDefault().post(new PortfolioDeleteEvent(portfolioId));
             }
+
+        } else if (requestCode == BaseActivity.ADD_PORTFOLIO_TRANSACTION) {
+            if (resultCode == Activity.RESULT_OK) {
+                Long transactionId = data.getLongExtra(EditTransactionActivity.TRANSACTION_ID, 0);
+                UserTransaction transaction = UserTransaction.findById(UserTransaction.class, transactionId);
+                Position.reEvaluate(transaction.getStock(), transaction.getPortfolio());
+            }
         }
     }
 
@@ -52,6 +66,19 @@ public class PortfolioFragment extends ContainerFragment {
         startActivityForResult(intent, BaseActivity.EDIT_PORTFOLIO_REQUEST);
     }
 
+    public void onEvent(PortfolioPositionFragment.CreatePortfolioTransactionEvent event){
+        Intent intent = new Intent(getActivity(),EditTransactionActivity.class );
+        intent.putExtra(EditTransactionActivity.PORTFOLIO_ID, event.getPortfolio().getId());
+        startActivityForResult(intent, BaseActivity.ADD_PORTFOLIO_TRANSACTION);
+    }
+
+    public void onEvent(TransactionChangedEvent event){
+        Position.reEvaluate(event.getTransaction().getStock(), event.getTransaction().getPortfolio());
+    }
+
+    public void onEvent(TransactionDeleteEvent event){
+        Position.reEvaluate(event.getStock(), event.getPortfolio());
+    }
 
     @Override
     protected FragmentStatePagerAdapter getAdapter(FragmentManager fragmentManager, Context context) {

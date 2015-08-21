@@ -5,6 +5,7 @@ import com.orm.SugarRecord;
 
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.dao.tasks.HasStock;
 
 /**
@@ -55,7 +56,7 @@ public class Position extends SugarRecord<Position> implements HasStock {
         return UserTransaction.find(UserTransaction.class, "stock=? and portfolio = ?", new String []{ String.valueOf(stock.getId()), String.valueOf(portfolio.getId())} ,null, StringUtil.toSQLName("transactionDate"), null );
     }
 
-    public static Position reeval(Stock stock, Portfolio portfolio) {
+    public static Position reEvaluate(Stock stock, Portfolio portfolio) {
         List<Position> positionList = Position.find(Position.class, "stock=? and portfolio=?", String.valueOf(stock.getId()), String.valueOf(portfolio.getId()));
         Position position = null;
         if(positionList == null || positionList.size()==0)
@@ -94,8 +95,9 @@ public class Position extends SugarRecord<Position> implements HasStock {
             }
         }
         position.setLongShortInd(position.getQuantity()<0?1:2);
-        position.setTotalPrice(position.getQuantity()*position.getAveragePrice());
+        position.setTotalPrice(position.getQuantity() * position.getAveragePrice());
         position.save();
+        EventBus.getDefault().post(new PositionChangeEvent(position));
         return position;
     }
 
@@ -113,5 +115,17 @@ public class Position extends SugarRecord<Position> implements HasStock {
 
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public static class PositionChangeEvent {
+        private final Position position;
+
+        public PositionChangeEvent(Position position) {
+            this.position = position;
+        }
+
+        public Position getPosition() {
+            return position;
+        }
     }
 }

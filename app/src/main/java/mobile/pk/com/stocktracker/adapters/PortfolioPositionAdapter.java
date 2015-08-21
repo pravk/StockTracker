@@ -74,7 +74,7 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
                         Toast.makeText(mContext, "Removed", Toast.LENGTH_SHORT).show();
                         break;*/
                     case R.id.refresh:
-                        Position.reeval(position.getStock(), position.getPortfolio());
+                        Position.reEvaluate(position.getStock(), position.getPortfolio());
                         reset();
                         break;
                     case R.id.transactions:

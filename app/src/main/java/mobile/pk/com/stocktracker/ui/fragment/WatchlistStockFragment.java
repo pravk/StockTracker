@@ -88,17 +88,7 @@ public class WatchlistStockFragment extends GenericRVFragment<WatchlistStockView
     }
 
     @Override
-    protected GenericRVAdapter getAdapter() {
-        if(watchlistAdapter == null)
-        {
-            watchlist = Watchlist.findById(Watchlist.class, watchListId);
-            watchlistAdapter = new WatchListStockAdapter(getActivity(), watchlist );
-        }
-        return watchlistAdapter;
-    }
-
-    @Override
-    protected void onAddNewClick() {
+    protected void onAddNewItem() {
         SelectStockDialog.newInstance("Add new Stock", new SelectStockDialog.SelectStockDialogListener() {
             @Override
             public void onStockSelect(Stock stock) {
@@ -113,6 +103,16 @@ public class WatchlistStockFragment extends GenericRVFragment<WatchlistStockView
                 Toast.makeText(getActivity(), "Selection cancelled", Toast.LENGTH_SHORT).show();
             }
         }).show(getChildFragmentManager(), null);
+    }
+
+    @Override
+    protected GenericRVAdapter getAdapter() {
+        if(watchlistAdapter == null)
+        {
+            watchlist = Watchlist.findById(Watchlist.class, watchListId);
+            watchlistAdapter = new WatchListStockAdapter(getActivity(), watchlist );
+        }
+        return watchlistAdapter;
     }
 
     public class OnCreateEvent {
