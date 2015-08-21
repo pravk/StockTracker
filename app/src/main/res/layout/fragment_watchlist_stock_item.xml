@@ -30,11 +30,11 @@
                 <TextView
                     android:id="@+id/name"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" style="@style/TextAppearance.AppCompat.Medium" android:text="Title" />
+                    android:layout_height="wrap_content" style="@style/MediumFont" android:text="Title" />
                 <TextView
                     android:id="@+id/last_trade_price"
                     android:layout_width="0dp" android:layout_weight="1"
-                    android:layout_height="wrap_content" style="@style/TextAppearance.AppCompat.Small"
+                    android:layout_height="wrap_content" style="@style/MediumFont"
                     android:text="Price" android:gravity="right"/>
 
 
@@ -46,12 +46,12 @@
                     <TextView
                         android:id="@+id/ticker"
                         android:layout_width="0dp" android:layout_weight="1"
-                        android:layout_height="wrap_content" style="@style/TextAppearance.AppCompat.Small" android:text="ticker" />
+                        android:layout_height="wrap_content" style="@style/MediumFont" android:text="ticker" />
 
                     <TextView
                         android:id="@+id/change"
                         android:layout_width="0dp" android:layout_weight="1"
-                        android:layout_height="wrap_content" style="@style/TextAppearance.AppCompat.Small"
+                        android:layout_height="wrap_content" style="@style/MediumFont"
                         android:text="Change"
                         android:gravity="right"/>
 

@@ -27,12 +27,12 @@
                     android:id="@+id/ticker"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/TextAppearance.AppCompat.Medium" android:text="ticker" />
+                    style="@style/MediumFont" android:text="ticker" />
 
                 <TextView
                     android:id="@+id/name"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" style="@style/TextAppearance.AppCompat.Small" android:text="Title" />
+                    android:layout_height="wrap_content" style="@style/SmallFont" android:text="Title" />
             </LinearLayout>
            <LinearLayout
                android:layout_width="0dp"
@@ -40,12 +40,12 @@
                <TextView
                    android:id="@+id/quantity"
                    android:layout_width="wrap_content"
-                   android:layout_height="wrap_content" style="@style/TextAppearance.AppCompat.Small" android:text="@string/quantity" />
+                   android:layout_height="wrap_content" style="@style/MediumFont" android:text="@string/quantity" />
 
                <TextView
                    android:id="@+id/avg_price"
                    android:layout_width="wrap_content"
-                   android:layout_height="wrap_content" style="@style/TextAppearance.AppCompat.Small" android:text="@string/avg_price" />
+                   android:layout_height="wrap_content" style="@style/MediumFont" android:text="@string/avg_price" />
 
            </LinearLayout>
            <LinearLayout
@@ -54,12 +54,12 @@
                <TextView
                    android:id="@+id/last_trade_price"
                    android:layout_width="wrap_content"
-                   android:layout_height="wrap_content" style="@style/TextAppearance.AppCompat.Small" android:text="Price" />
+                   android:layout_height="wrap_content" style="@style/MediumFont" android:text="Price" />
 
                <TextView
                    android:id="@+id/change"
                    android:layout_width="wrap_content"
-                   android:layout_height="wrap_content" style="@style/TextAppearance.AppCompat.Small" android:text="Change" />
+                   android:layout_height="wrap_content" style="@style/MediumFont" android:text="Change" />
 
            </LinearLayout>
            <LinearLayout
@@ -68,13 +68,13 @@
                <TextView
                    android:id="@+id/market_value"
                    android:layout_width="wrap_content"
-                   android:layout_height="wrap_content" style="@style/TextAppearance.AppCompat.Small"
+                   android:layout_height="wrap_content" style="@style/MediumFont"
                    android:text="Market Value" />
 
                <TextView
                    android:id="@+id/gain_loss"
                    android:layout_width="wrap_content"
-                   android:layout_height="wrap_content" style="@style/TextAppearance.AppCompat.Small"
+                   android:layout_height="wrap_content" style="@style/MediumFont"
                    android:text="Gain/Loss" />
            </LinearLayout>
 
