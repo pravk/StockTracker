@@ -31,47 +31,7 @@ public class WatchListStockAdapter extends GenericRVAdapter<WatchlistStockViewHo
     public WatchListStockAdapter(Context context, Watchlist watchlist) {
         super(context);
         this.watchlist = watchlist;
-        updateModelAndUI();
-        refreshPrices();
-    }
-
-    public void refreshPrices(){
-        List<WatchlistStock> stockWatchList = getDataList();
-        List<Stock> stockList = new ArrayList<>();
-        for(WatchlistStock watchlistStock: stockWatchList)
-        {
-            stockList.add(watchlistStock.getStock());
-        }
-            new ServerPriceRefreshTask(RestClient.getDefault().getPricingService()) {
-                @Override
-                protected void onPostExecute(Void result) {
-                    if(getException() == null) {
-                        updateModelAndUI();
-                    }
-                    else
-                    {
-                        Toast.makeText(mContext,getException().getMessage(), Toast.LENGTH_SHORT);
-                    }
-                }
-
-            }.execute(stockList.toArray(new Stock[stockList.size()]));
-       }
-
-
-    public void updateModelAndUI(){
-        List<WatchlistStock> stockWatchList = getDataList();
-        List<Stock> stockList = new ArrayList<>();
-        for(WatchlistStock watchlistStock: stockWatchList)
-        {
-            stockList.add(watchlistStock.getStock());
-        }
-        new PriceLoadTask(){
-            @Override
-            protected void onPostExecute(Void result) {
-                notifyDataSetChanged();
-            }
-
-        }.execute(stockList.toArray(new Stock[stockList.size()]));
+       reset();
     }
 
     @Override

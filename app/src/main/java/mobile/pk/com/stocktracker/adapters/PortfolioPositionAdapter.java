@@ -28,7 +28,7 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
         super(context);
         this.portfolio = portfolio;
         reset();
-        refreshPrices();
+
     }
 
 

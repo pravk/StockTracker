@@ -41,6 +41,8 @@ public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D exte
         getDataList().clear();
         getDataList().addAll(newData);
         notifyDataSetChanged();
+        populatePrices();
+        refreshPrices();
     }
 
     public void addItem(D item) {
@@ -63,6 +65,25 @@ public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D exte
 
     protected abstract List<D> refreshDataInternal();
 
+    public void populatePrices(){
+        List<D> dataList = getDataList();
+        final List<Stock> stockList = new ArrayList<>();
+        for(D data : dataList)
+        {
+            if(data instanceof HasStock)
+                stockList.add(((HasStock) data).getStock());
+
+        }
+        new PriceLoadTask(){
+            @Override
+            protected void onPostExecute(Void result) {
+                notifyDataSetChanged();
+            }
+
+        }.execute(stockList.toArray(new Stock[stockList.size()]));
+
+    }
+
     public void refreshPrices(){
         List<D> dataList = getDataList();
         final List<Stock> stockList = new ArrayList<>();
@@ -72,17 +93,12 @@ public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D exte
                 stockList.add(((HasStock) data).getStock());
 
         }
+
         new ServerPriceRefreshTask(RestClient.getDefault().getPricingService()) {
             @Override
             protected void onPostExecute(Void result) {
                 if(getException() == null) {
-                    new PriceLoadTask(){
-                        @Override
-                        protected void onPostExecute(Void result) {
-                            notifyDataSetChanged();
-                        }
-
-                    }.execute(stockList.toArray(new Stock[stockList.size()]));
+                    populatePrices();
                 }
                 else
                 {
@@ -92,5 +108,4 @@ public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D exte
 
         }.execute(stockList.toArray(new Stock[stockList.size()]));
     }
-
 }
