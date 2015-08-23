@@ -14,7 +14,10 @@ import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.adapters.viewholder.PortfolioPositionViewHolder;
 import mobile.pk.com.stocktracker.dao.Portfolio;
 import mobile.pk.com.stocktracker.dao.Position;
+import mobile.pk.com.stocktracker.event.RefreshPositionEvent;
 import mobile.pk.com.stocktracker.event.ShowPositionDetailEvent;
+import mobile.pk.com.stocktracker.event.TransactionChangedEvent;
+import mobile.pk.com.stocktracker.processor.TransactionProcessor;
 import mobile.pk.com.stocktracker.utils.NumberUtils;
 
 /**
@@ -109,7 +112,7 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
                         Toast.makeText(mContext, "Removed", Toast.LENGTH_SHORT).show();
                         break;*/
                     case R.id.refresh:
-                        Position.reEvaluate(position.getStock(), position.getPortfolio());
+                        EventBus.getDefault().post(new RefreshPositionEvent(position));
                         reset();
                         break;
                     case R.id.transactions:

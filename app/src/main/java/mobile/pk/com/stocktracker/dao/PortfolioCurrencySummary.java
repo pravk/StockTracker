@@ -22,44 +22,6 @@ public class PortfolioCurrencySummary {
     private double netAsset;
     private double returnPercent;
 
-
-    private static final String PORTFOLIO_SUMMARY_QUERY = "SELECT port.id as portfolioId, port.portfolio_name as portfolioName, sp.currency as currency, " +
-                                                            " SUM(pos.quantity*sp.last_price) as netAsset, " +
-                                                            " SUM(pos.quantity*pos.average_price) as investmentAmount," +
-                                                            " SUM(pos.net_realized_gain_loss) as realizedGainLoss" +
-                                                            " FROM Portfolio port " +
-                                                            " JOIN Position pos on pos.portfolio = port.id " +
-                                                            " JOIN Stock s on pos.stock = s.id  " +
-                                                            " JOIN Stock_price sp on s.client_id = sp.client_id " +
-                                                            " GROUP BY port.id, sp.currency " +
-                                                            " HAVING SUM(pos.quantity*pos.average_price)>0      ";
-
-    public static List<PortfolioCurrencySummary> getAll(){
-
-        Cursor c = Application.getInstance().executeQuery(PORTFOLIO_SUMMARY_QUERY,null);
-        List<PortfolioCurrencySummary> portfolioCurrencySummaryList = new ArrayList<>();
-        try {
-            while(c.moveToNext()) {
-                PortfolioCurrencySummary portfolioCurrencySummary = new PortfolioCurrencySummary();
-                portfolioCurrencySummary.setPortfolioId(c.getString(c.getColumnIndex("portfolioId")));
-                portfolioCurrencySummary.setPortfolioName(c.getString(c.getColumnIndex("portfolioName")));
-                portfolioCurrencySummary.setCurrency(c.getString(c.getColumnIndex("currency")));
-                portfolioCurrencySummary.setInvestmentAmount(c.getDouble(c.getColumnIndex("investmentAmount")));
-                portfolioCurrencySummary.setNetAsset(c.getDouble(c.getColumnIndex("netAsset")));
-                portfolioCurrencySummary.setUnrealizedGainLoss(portfolioCurrencySummary.netAsset - portfolioCurrencySummary.getInvestmentAmount());
-                portfolioCurrencySummary.setRealizedGainLoss(c.getDouble(c.getColumnIndex("realizedGainLoss")));
-                portfolioCurrencySummary.setReturnPercent(portfolioCurrencySummary.getUnrealizedGainLoss()*100/portfolioCurrencySummary.getInvestmentAmount());
-                portfolioCurrencySummaryList.add(portfolioCurrencySummary);
-
-            }
-        } catch (Exception var12) {
-            var12.printStackTrace();
-        } finally {
-            c.close();
-        }
-        return portfolioCurrencySummaryList;
-    }
-
     public String getPortfolioId() {
         return portfolioId;
     }

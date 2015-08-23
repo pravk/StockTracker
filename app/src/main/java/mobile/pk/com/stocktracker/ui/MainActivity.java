@@ -136,9 +136,11 @@ public class MainActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+        if(fragment != null) {
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+        }
 
         // Highlight the selected item, update the title, and close the drawer
         menuItem.setChecked(true);

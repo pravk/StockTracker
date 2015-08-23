@@ -17,6 +17,7 @@ import mobile.pk.com.stocktracker.event.PortfolioNameChangedEvent;
 import mobile.pk.com.stocktracker.event.PortfolioDeleteEvent;
 import mobile.pk.com.stocktracker.event.TransactionChangedEvent;
 import mobile.pk.com.stocktracker.event.TransactionDeleteEvent;
+import mobile.pk.com.stocktracker.processor.TransactionProcessor;
 import mobile.pk.com.stocktracker.ui.BaseActivity;
 import mobile.pk.com.stocktracker.ui.EditPortfolioActivity;
 import mobile.pk.com.stocktracker.ui.activity.EditTransactionActivity;
@@ -51,7 +52,7 @@ public class PortfolioFragment extends ContainerFragment {
             if (resultCode == Activity.RESULT_OK) {
                 Long transactionId = data.getLongExtra(EditTransactionActivity.TRANSACTION_ID, 0);
                 UserTransaction transaction = UserTransaction.findById(UserTransaction.class, transactionId);
-                Position.reEvaluate(transaction.getStock(), transaction.getPortfolio());
+                EventBus.getDefault().post(new TransactionChangedEvent(transaction));
             }
         }
     }
@@ -72,13 +73,7 @@ public class PortfolioFragment extends ContainerFragment {
         startActivityForResult(intent, BaseActivity.ADD_PORTFOLIO_TRANSACTION);
     }
 
-    public void onEvent(TransactionChangedEvent event){
-        Position.reEvaluate(event.getTransaction().getStock(), event.getTransaction().getPortfolio());
-    }
 
-    public void onEvent(TransactionDeleteEvent event){
-        Position.reEvaluate(event.getStock(), event.getPortfolio());
-    }
 
     @Override
     protected FragmentStatePagerAdapter getAdapter(FragmentManager fragmentManager, Context context) {

@@ -87,19 +87,4 @@ public class UserTransaction extends SugarRecord<UserTransaction> implements Has
         this.realizedGainLoss = realizedGainLoss;
     }
 
-    @Override
-    public void save() {
-        if (this.isShort()) {
-            double[] avgPriceAndQuantity = Position.getAveragePurchasePrice(stock, portfolio, getTransactionDate());
-            double avgPrice = avgPriceAndQuantity[0];
-            //double quantity = avgPriceAndQuantity[1];
-
-            realizedGainLoss = this.quantity * (price - avgPrice);
-        }
-        else
-        {
-            realizedGainLoss = 0;
-        }
-        super.save();
-    }
 }
