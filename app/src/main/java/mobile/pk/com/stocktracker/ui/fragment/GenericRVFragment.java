@@ -35,7 +35,7 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(hasMenuOptions());
+        setHasOptionsMenu(true);
         /*try {
             EventBus.getDefault().register(this);
         }catch (Exception e)
@@ -43,8 +43,6 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
             e.printStackTrace();
         }*/
     }
-
-    protected abstract boolean hasMenuOptions();
 
     @Override
     public void onDestroy() {
@@ -60,10 +58,16 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
         final RecyclerView recyclerView =   (RecyclerView) view.findViewById(R.id.recyler_view);
         recyclerView.setLayoutManager(getLayoutManager(getActivity()));
 
+        view.findViewById(R.id.fab_add_new).setVisibility(showAddNewItem()?View.VISIBLE:View.GONE);
+
         GenericRVAdapter adapter = getAdapter();
         recyclerView.setAdapter(adapter);
         adapter.reset();
         return view;
+    }
+
+    protected boolean showAddNewItem(){
+        return true;
     }
 
     protected RecyclerView.LayoutManager getLayoutManager(Context context){
@@ -117,7 +121,7 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
 
     protected abstract boolean showRefreshAction();
 
-    protected abstract <D extends SugarRecord> GenericRVAdapter<T,D> getAdapter();
+    protected abstract <D> GenericRVAdapter<T,D> getAdapter();
 
     @OnClick(R.id.fab_add_new)
     public void onAddNewTransaction(){

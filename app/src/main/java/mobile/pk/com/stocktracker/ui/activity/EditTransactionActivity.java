@@ -150,7 +150,7 @@ public class EditTransactionActivity extends BaseActivity {
             transaction.setStock(Stock.from(stockSearchTextView.getMatch()));
         }
         transaction.setPortfolio(portfolio);
-        transaction.setLongShortInd(radioLong.isChecked() ? 1 : 2);
+        transaction.setLongShortInd(radioLong.isChecked() ? UserTransaction.LONG : UserTransaction.SHORT);
         transaction.setPrice(Double.parseDouble(price.getText().toString()));
         transaction.setQuantity(Double.parseDouble(quantity.getText().toString()));
         //transaction.setTransactionDate(Date.parse(tradeDate.getText().toString()));

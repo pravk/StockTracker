@@ -3,6 +3,8 @@ package mobile.pk.com.stocktracker.dao;
 import com.orm.StringUtil;
 import com.orm.SugarRecord;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -19,6 +21,7 @@ public class Position extends SugarRecord<Position> implements HasStock {
     private double averagePrice;
     private double totalPrice;
     private int longShortInd;
+    private double netRealizedGainLoss;
 
     public Stock getStock() {
         return stock;
@@ -57,48 +60,70 @@ public class Position extends SugarRecord<Position> implements HasStock {
     }
 
     public static Position reEvaluate(Stock stock, Portfolio portfolio) {
-        List<Position> positionList = Position.find(Position.class, "stock=? and portfolio=?", String.valueOf(stock.getId()), String.valueOf(portfolio.getId()));
-        Position position = null;
-        if(positionList == null || positionList.size()==0)
+        Position position = getPosition(stock, portfolio);
+        if(position == null)
         {
             position = new Position();
             position.setStock(stock);
             position.setPortfolio(portfolio);
         }
-        else
-        {
-            position = positionList.get(0);
-        }
+        double[] avgPriceAndQuantity = getAveragePurchasePrice(stock, portfolio, Calendar.getInstance().getTimeInMillis());
 
-        List<UserTransaction> userTransactionList = position.getUserTransactions();
-
-        position.setQuantity(0);
-        position.setAveragePrice(0);
-        int sign = 1;
-        for(UserTransaction userTransaction: userTransactionList)
-        {
-            if(userTransaction.isShort())
-            {
-                position.setQuantity(position.getQuantity() - userTransaction.getQuantity());
-            }
-            else
-            {
-                position.setAveragePrice(
-                        (
-                                (position.getAveragePrice() * position.getQuantity())
-                                        + (userTransaction.getPrice() * userTransaction.getQuantity())
-                        )
-                                / (position.getQuantity() + userTransaction.getQuantity()));
-
-                position.setQuantity(position.getQuantity() + userTransaction.getQuantity());
-
-            }
-        }
+        position.setQuantity(avgPriceAndQuantity[1]);
+        position.setAveragePrice(avgPriceAndQuantity[0]);
+        position.setNetRealizedGainLoss(avgPriceAndQuantity[2]);
         position.setLongShortInd(position.getQuantity()<0?1:2);
         position.setTotalPrice(position.getQuantity() * position.getAveragePrice());
         position.save();
         EventBus.getDefault().post(new PositionChangeEvent(position));
         return position;
+    }
+
+    public static double[] getAveragePurchasePrice(Stock stock, Portfolio portfolio, Long date){
+        double avgPrice = 0;
+        double quantity = 0;
+        double realizedGainLoss = 0;
+        List<UserTransaction> userTransactionList = getUserTransactions(stock,portfolio);
+        if(userTransactionList == null || userTransactionList.size()==0)
+            return new double[]{0,0,0};
+        for(UserTransaction userTransaction: userTransactionList)
+        {
+           if(userTransaction.getTransactionDate() < date)
+           {
+               if(userTransaction.isShort())
+               {
+                   quantity = quantity - userTransaction.getQuantity();
+                   realizedGainLoss = realizedGainLoss + userTransaction.getRealizedGainLoss();
+               }
+               else
+               {
+
+                   avgPrice = ((avgPrice * quantity)  + (userTransaction.getPrice() * userTransaction.getQuantity()))/ (quantity + userTransaction.getQuantity());
+                   quantity = quantity + userTransaction.getQuantity();
+
+               }
+           }
+        }
+        return new double[] {avgPrice, quantity, realizedGainLoss};
+    }
+
+    public static List<UserTransaction> getUserTransactions(Stock stock, Portfolio portfolio)
+    {
+        return UserTransaction.find(UserTransaction.class, "stock=? and portfolio = ?", new String[]{String.valueOf(stock.getId()), String.valueOf(portfolio.getId())}, null, StringUtil.toSQLName("transactionDate"), null);
+    }
+
+    public static Position getPosition(Stock stock, Portfolio portfolio)
+    {
+        List<Position> positionList = Position.find(Position.class, "stock=? and portfolio=?", String.valueOf(stock.getId()), String.valueOf(portfolio.getId()));
+        Position position = null;
+        if(positionList == null || positionList.size()==0)
+        {
+            return null;
+        }
+        else
+        {
+           return positionList.get(0);
+        }
     }
 
     public double getAveragePrice() {
@@ -123,6 +148,14 @@ public class Position extends SugarRecord<Position> implements HasStock {
 
     public double getMarketValue() {
         return getQuantity() * getStock().getPrice().getLastPrice();
+    }
+
+    public double getNetRealizedGainLoss() {
+        return netRealizedGainLoss;
+    }
+
+    public void setNetRealizedGainLoss(double netRealizedGainLoss) {
+        this.netRealizedGainLoss = netRealizedGainLoss;
     }
 
     public static class PositionChangeEvent {

@@ -60,11 +60,6 @@ public class PortfolioPositionFragment extends GenericRVFragment<PortfolioPositi
     }
 
     @Override
-    protected boolean hasMenuOptions() {
-        return true;
-    }
-
-    @Override
     protected GenericRVAdapter getAdapter() {
         if(portfolioAdapter == null) {
 

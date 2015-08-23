@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:fontawesometext="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="210dp"
+    card_view:cardCornerRadius="4dp"
+    card_view:cardElevation="3dp"
+    android:layout_margin="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp" android:layout_weight="1" android:orientation="horizontal">
+
+            <TextView android:gravity="center" android:id="@+id/portfolio_name"
+                android:layout_width="0dp" android:layout_weight="1"
+                android:layout_height="match_parent" android:text="Portfolio Name(Currency)" style="@style/XXLFont" />
+
+            <LinearLayout
+                android:layout_width="0dp" android:layout_weight="1" android:gravity="center"
+                android:layout_height="match_parent" android:orientation="horizontal">
+
+                <com.beardedhen.androidbootstrap.FontAwesomeText
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    fontawesometext:fa_icon="fa-sort-up"
+                    android:gravity="center"
+                    android:textColor="@color/green"
+                    android:layout_marginTop="10dp"
+                    style="@style/AwesomeFont"
+                    android:id="@+id/up_icon"
+                    />
+                <com.beardedhen.androidbootstrap.FontAwesomeText
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    fontawesometext:fa_icon="fa-sort-down"
+                    android:gravity="center"
+                    android:layout_marginBottom="8dp"
+                    android:textColor="@color/red"
+                    style="@style/AwesomeFont"
+                    android:id="@+id/down_icon"
+                    />
+                <TextView android:gravity="center" android:id="@+id/change_percent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" android:text="Change Percent" style="@style/XXLFont.Bold" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent" android:orientation="horizontal"
+            android:layout_height="0dp" android:layout_weight="1"  >
+
+            <LinearLayout
+                android:layout_width="0dp" android:layout_weight="1" android:layout_margin="5dp" android:background="@drawable/rounded_corner_textview"
+                android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:text="Realized Gains" style="@style/MediumFont" />
+                <TextView android:id="@+id/realized_gain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:text="Realized Gains" style="@style/LargeFont.Bold" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp" android:layout_weight="1"
+                android:layout_height="match_parent" android:orientation="vertical" android:gravity="center" android:layout_margin="5dp" android:background="@drawable/rounded_corner_textview">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:text="Unrealized Gains" style="@style/MediumFont"/>
+                <TextView android:id="@+id/unrealized_gain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:text="UnRealized Gains" style="@style/LargeFont.Bold" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp" android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="0dp" android:layout_weight="1" android:layout_margin="5dp" android:background="@drawable/rounded_corner_textview"
+                android:layout_height="match_parent" android:orientation="vertical" android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:text="Net Asset" style="@style/MediumFont" />
+
+                <TextView android:id="@+id/net_asset"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:text="Net Asset" style="@style/LargeFont.Bold" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp" android:layout_weight="1" android:layout_margin="5dp" android:background="@drawable/rounded_corner_textview"
+                android:layout_height="match_parent" android:orientation="vertical" android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content" android:layout_weight="1" android:gravity="center"
+                android:layout_height="match_parent" style="@style/MediumFont"/>
+                </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

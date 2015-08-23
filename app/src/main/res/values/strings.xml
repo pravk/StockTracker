@@ -56,4 +56,6 @@
     <string name="default_watchlist_name">Default Watchlist</string>
     <string name="default_portfolio_name">Default Portfolio</string>
     <string name="create_new_transaction">New Transaction</string>
+    <string name="home">Home</string>
+    <string name="porfolio_summary">Portfolio Summary</string>
 </resources>

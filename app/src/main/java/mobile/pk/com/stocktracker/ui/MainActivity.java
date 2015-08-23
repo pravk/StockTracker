@@ -27,6 +27,7 @@ import mobile.pk.com.stocktracker.event.WatchlistNameChangedEvent;
 import mobile.pk.com.stocktracker.event.WatchlistDeleteEvent;
 import mobile.pk.com.stocktracker.ui.fragment.PortfolioFragment;
 import mobile.pk.com.stocktracker.ui.fragment.PortfolioPositionFragment;
+import mobile.pk.com.stocktracker.ui.fragment.PortfolioSummaryFragment;
 import mobile.pk.com.stocktracker.ui.fragment.UserSettingsFragment;
 import mobile.pk.com.stocktracker.ui.activity.TransactionActivity;
 import mobile.pk.com.stocktracker.ui.fragment.WatchlistFragment;
@@ -92,7 +93,11 @@ public class MainActivity extends BaseActivity {
 
         Fragment fragment = null;
         Fragment fragmentClass = null;
-        if(menuItem.getItemId() == R.id.drawer_watchlist)
+        if(menuItem.getItemId() == R.id.drawer_summary)
+        {
+           showHome();
+        }
+        else if(menuItem.getItemId() == R.id.drawer_watchlist)
         {
             fragmentClass = WatchlistFragment.newInstance(this);
             /*Intent intent = new Intent(this, EditWatchlistActivity.class);
@@ -217,9 +222,10 @@ public class MainActivity extends BaseActivity {
 
     public void showHome()
     {
-        HomeFragment fragment = HomeFragment.newInstance(null,null);
+        Fragment fragment = PortfolioSummaryFragment.newInstance(this);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
-        setTitle(R.string.app_name);
+        setTitle(R.string.porfolio_summary);
+        mDrawer.closeDrawers();
     }
 }

@@ -20,7 +20,7 @@ import mobile.pk.com.stocktracker.dao.tasks.ServerPriceRefreshTask;
 /**
  * Created by hello on 8/20/2015.
  */
-public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D extends SugarRecord> extends RecyclerView.Adapter<T> {
+public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D> extends RecyclerView.Adapter<T> {
 
     protected Context mContext;
     private static final int TYPE_HEADER = 0;

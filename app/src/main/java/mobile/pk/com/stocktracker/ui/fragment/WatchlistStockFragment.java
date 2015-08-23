@@ -45,11 +45,6 @@ public class WatchlistStockFragment extends GenericRVFragment<WatchlistStockView
     }
 
     @Override
-    protected boolean hasMenuOptions() {
-        return true;
-    }
-
-    @Override
     protected boolean onEditView() {
         EventBus.getDefault().post(new OnEditEvent(watchlist));
         return true;
