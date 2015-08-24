@@ -34,8 +34,8 @@ public class WatchlistStockViewHolder extends RecyclerView.ViewHolder implements
 
     public void setTextColor(int color)
     {
-        ticker.setTextColor(color);
-        name.setTextColor(color);
+       // ticker.setTextColor(color);
+       // name.setTextColor(color);
         lastTradePrice.setTextColor(color);
         change.setTextColor(color);
     }
