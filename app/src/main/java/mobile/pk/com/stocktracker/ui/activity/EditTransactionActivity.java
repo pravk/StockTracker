@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.DatePicker;
@@ -13,6 +14,8 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+
+import org.w3c.dom.Text;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -139,13 +142,15 @@ public class EditTransactionActivity extends BaseActivity {
 
     protected void setTradeDate(long timeInMillis)
     {
-        tradeDate.setText(DateUtils.formatDateTime(this, timeInMillis, DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_SHOW_YEAR) );
+        tradeDate.setText(DateUtils.formatDateTime(this, timeInMillis, DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_SHOW_YEAR));
         transaction.setTransactionDate(timeInMillis);
     }
 
     @OnClick(R.id.btn_done)
     public void onDone()
     {
+        if(!validate())
+            return;
         if(stockSearchTextView.isEnabled() && stockSearchTextView.getMatch() != null) {
             transaction.setStock(Stock.from(stockSearchTextView.getMatch()));
         }
@@ -159,6 +164,36 @@ public class EditTransactionActivity extends BaseActivity {
         resultIntent.putExtra(TRANSACTION_ID, transaction.getId());
         setResult(RESULT_OK, resultIntent);
         finish();
+    }
+
+    private boolean validate()
+    {
+        boolean isValid = true;
+
+        if(stockSearchTextView.isEnabled() && stockSearchTextView.getMatch() == null)
+        {
+            stockSearchTextView.setError("Please select a stock");
+            return false;
+        }
+        else
+        {
+            stockSearchTextView.setError(null);
+        }
+        if(TextUtils.isEmpty(quantity.getText().toString())){
+            quantity.setError("Please enter quantity");
+            return false;
+        }
+        else
+            quantity.setError(null);
+
+        if(TextUtils.isEmpty(price.getText().toString())){
+            price.setError("Please enter price");
+            return false;
+        }
+        else
+            price.setError(null);
+
+        return true;
     }
 
     @OnClick(R.id.btn_delete)

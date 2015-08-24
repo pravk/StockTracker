@@ -26,6 +26,25 @@
         <LinearLayout
             android:layout_width="match_parent" android:padding="16dp"
             android:layout_height="match_parent" android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:text="@string/buy_sell"
+                style="@style/LargeFont" android:layout_margin="@dimen/form_field_margin"
+                />
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:orientation="horizontal" android:layout_margin="@dimen/form_field_margin" >
+
+                <RadioButton android:id="@+id/radio_long"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:text="@string/radio_buy" style="@style/LargeFont"/>
+                <RadioButton android:id="@+id/radio_short"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:text="@string/radio_sell" style="@style/LargeFont" />
+
+            </RadioGroup>
+
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
@@ -81,23 +100,7 @@
                 android:layout_margin="@dimen/form_field_margin"
                 />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:text="@string/long_short"
-                style="@style/LargeFont" android:layout_margin="@dimen/form_field_margin"
-                />
-            <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:orientation="horizontal" android:layout_margin="@dimen/form_field_margin" >
 
-                <RadioButton android:id="@+id/radio_long"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:text="@string/radio_long" style="@style/LargeFont"/>
-                <RadioButton android:id="@+id/radio_short"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:text="@string/radio_short" style="@style/LargeFont" />
-
-            </RadioGroup>
 
             <LinearLayout
                 android:layout_width="match_parent" android:layout_margin="@dimen/form_field_margin"

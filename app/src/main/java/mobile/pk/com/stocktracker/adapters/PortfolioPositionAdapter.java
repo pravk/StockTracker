@@ -36,16 +36,16 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
 
     @Override
     public PortfolioPositionViewHolder onCreateViewHolderInternal(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_portfolio_position_item, viewGroup, false);
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_portfolio_position_item, viewGroup, false);
 
-        final PortfolioPositionViewHolder viewHolder = new PortfolioPositionViewHolder(view);
+            final PortfolioPositionViewHolder viewHolder = new PortfolioPositionViewHolder(view);
 
-        return viewHolder;
+            return viewHolder;
     }
 
     @Override
     protected PortfolioPositionViewHolder onCreateViewHolderHeaderInternal(ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_portfolio_position_item, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_portfolio_position_item_header, viewGroup, false);
 
         PortfolioPositionViewHolder.PortfolioPositionViewHolderHeader viewHolder = new PortfolioPositionViewHolder.PortfolioPositionViewHolderHeader(view);
 
@@ -64,7 +64,7 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
         holder.quantity.setText("Quantity x");
         holder.cardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.green));
         holder.setColor(mContext.getResources().getColor(R.color.white));
-        holder.toolbar.setVisibility(View.GONE);
+        //holder.toolbar.setVisibility(View.GONE);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
         portfolioViewHolder.name.setText(position.getStock().getName());
         portfolioViewHolder.ticker.setText(position.getStock().getTicker());
 
-        portfolioViewHolder.quantity.setText(String.valueOf(position.getQuantity()) + " x");
+        portfolioViewHolder.quantity.setText(String.format("%d x", (int)position.getQuantity()));
         if(position.getStock().getPrice() != null)
         {
             double gainLoss = position.getGainLoss();
@@ -101,32 +101,33 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
                 portfolioViewHolder.gainLoss.setTextColor(mContext.getResources().getColor(R.color.green));
             }
         }
-        portfolioViewHolder.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    /*case R.id.remove:
-                        watchlistStock.delete();
-                        positionList.remove(watchlistStock);
-                        notifyDataSetChanged();
-                        Toast.makeText(mContext, "Removed", Toast.LENGTH_SHORT).show();
-                        break;*/
-                    case R.id.refresh:
-                        EventBus.getDefault().post(new RefreshPositionEvent(position));
-                        reset();
-                        break;
-                    case R.id.transactions:
-                        EventBus.getDefault().post(new ShowPositionDetailEvent(position));
-                        break;
+        if(portfolioViewHolder.toolbar != null)
+            portfolioViewHolder.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()) {
+                        /*case R.id.remove:
+                            watchlistStock.delete();
+                            positionList.remove(watchlistStock);
+                            notifyDataSetChanged();
+                            Toast.makeText(mContext, "Removed", Toast.LENGTH_SHORT).show();
+                            break;*/
+                        case R.id.refresh:
+                            EventBus.getDefault().post(new RefreshPositionEvent(position));
+                            reset();
+                            break;
+                        case R.id.transactions:
+                            EventBus.getDefault().post(new ShowPositionDetailEvent(position));
+                            break;
+                    }
+                    return true;
                 }
-                return true;
-            }
-        });
+            });
     }
 
     @Override
     public List<Position> refreshDataInternal() {
-        return Position.find(Position.class,  "portfolio = ?", String.valueOf(portfolio.getId()) );
+        return Position.find(Position.class,  "portfolio = ? and quantity != 0", String.valueOf(portfolio.getId()) );
     }
     protected boolean hasHeader(){
         return true;

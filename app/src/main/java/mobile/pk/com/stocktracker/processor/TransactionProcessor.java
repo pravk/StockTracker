@@ -117,8 +117,10 @@ public class TransactionProcessor {
                 }
                 else
                 {
-
-                    avgPrice = ((avgPrice * quantity)  + (userTransaction.getPrice() * userTransaction.getQuantity()))/ (quantity + userTransaction.getQuantity());
+                    if(quantity + userTransaction.getQuantity() >0)
+                        avgPrice = ((avgPrice * quantity)  + (userTransaction.getPrice() * userTransaction.getQuantity()))/ (quantity + userTransaction.getQuantity());
+                    else
+                        avgPrice = 0;
                     quantity = quantity + userTransaction.getQuantity();
 
                 }
