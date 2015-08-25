@@ -17,6 +17,7 @@ import mobile.pk.com.stocktracker.dao.Portfolio;
 import mobile.pk.com.stocktracker.dao.Position;
 import mobile.pk.com.stocktracker.event.RefreshPositionEvent;
 import mobile.pk.com.stocktracker.event.ShowPositionDetailEvent;
+import mobile.pk.com.stocktracker.transaction.processor.TransactionProcessor;
 
 /**
  * Created by hello on 8/1/2015.
@@ -131,7 +132,7 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
 
     @Override
     public List<Position> refreshDataInternal() {
-        return Position.find(Position.class,  "portfolio = ? and quantity != 0", String.valueOf(portfolio.getId()) );
+        return TransactionProcessor.getInstance().getOpenPositions(portfolio);
     }
     protected boolean hasHeader(){
         return true;

@@ -3,6 +3,8 @@ package mobile.pk.com.stocktracker.transaction.processor;
 import android.database.Cursor;
 import android.text.TextUtils;
 
+import com.orm.StringUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +27,7 @@ import mobile.pk.com.stocktracker.transaction.handler.TransactionHandler;
 public class TransactionProcessor {
     private static TransactionProcessor instance;
     private static final String PORTFOLIO_SUMMARY_QUERY = "SELECT port.id as portfolioId, port.portfolio_name as portfolioName, sp.currency as currency, " +
-            " SUM(pos.quantity*sp.last_price) as netAsset, " +
+            " SUM( pos.quantity*sp.last_price) as netAsset, " +
             " SUM(pos.quantity*pos.average_price) as investmentAmount," +
             " SUM(pos.net_realized_gain_loss) as realizedGainLoss" +
             " FROM Portfolio port " +
@@ -33,7 +35,7 @@ public class TransactionProcessor {
             " JOIN Stock s on pos.stock = s.id  " +
             " JOIN Stock_price sp on s.client_id = sp.client_id " +
             " GROUP BY port.id, sp.currency " +
-            " HAVING SUM(pos.quantity*pos.average_price)>0      ";
+            " --HAVING SUM(pos.quantity*pos.average_price)>0      ";
     public TransactionProcessor()
     {
         EventBus.getDefault().register(this);
@@ -44,11 +46,11 @@ public class TransactionProcessor {
     }
 
     public void onEvent(TransactionChangedEvent event){
-        refreshPosition(getPosition(event.getTransaction().getStock(), event.getTransaction().getPortfolio()));
+        refreshPosition(getOpenPosition(event.getTransaction().getStock(), event.getTransaction().getPortfolio()));
     }
 
     public void onEvent(TransactionDeleteEvent event){
-        refreshPosition(getPosition(event.getStock(), event.getPortfolio()));
+        refreshPosition(getOpenPosition(event.getStock(), event.getPortfolio()));
     }
 
     public void onEvent(RefreshPositionEvent event){
@@ -56,7 +58,7 @@ public class TransactionProcessor {
     }
 
     protected void refreshPosition(Position position){
-        List<UserTransaction> userTransactionList = position.getUserTransactions();
+        List<UserTransaction> userTransactionList = getUserTransactions(position);
         position.reset();
         for(UserTransaction userTransaction: userTransactionList)
         {
@@ -74,11 +76,12 @@ public class TransactionProcessor {
             if(!TextUtils.isEmpty(position.getError()))
                 break;
         }
+
         position.save();
         EventBus.getDefault().post(new Position.PositionChangeEvent(position));
     }
 
-    public Position getPosition(Stock stock, Portfolio portfolio)
+    public Position getOpenPosition(Stock stock, Portfolio portfolio)
     {
         List<Position> positionList = Position.find(Position.class, "stock=? and portfolio=?", String.valueOf(stock.getId()), String.valueOf(portfolio.getId()));
         Position position = null;
@@ -94,6 +97,19 @@ public class TransactionProcessor {
             return positionList.get(0);
         }
         return position;
+    }
+
+    public List<Position> getOpenPositions(Portfolio portfolio){
+        return Position.find(Position.class,  "portfolio = ? and (quantity != 0 OR error is not null)", String.valueOf(portfolio.getId()) );
+    }
+
+    public List<UserTransaction> getUserTransactions(Position position){
+        return UserTransaction.find(UserTransaction.class, "stock=? and portfolio = ?", new String []{ String.valueOf(position.getStock().getId()), String.valueOf(position.getPortfolio().getId())} ,null, StringUtil.toSQLName("transactionDate"), null );
+    }
+
+    public List<UserTransaction> getOpenUserTransactions(Position position, String transactionType, long before){
+        return UserTransaction.find(UserTransaction.class, "stock=? and portfolio = ? and transaction_type=? and transaction_date<?"
+                , new String []{ String.valueOf(position.getStock().getId()), String.valueOf(position.getPortfolio().getId()), transactionType, String.valueOf(before)} ,null, StringUtil.toSQLName("transactionDate"), null );
     }
 
     public List<PortfolioCurrencySummary> getPortfolioSummary(){

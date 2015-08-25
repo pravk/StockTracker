@@ -12,6 +12,10 @@ public class TransactionFactory {
                 return new BuyTransactionHandler();
             case "SELL":
                 return new SellTransactionHandler();
+            case "BUY-TO-COVER":
+                return new BuyToCoverTransactionHandler();
+            case "SHORT-SELL":
+                return new ShortSellTransactionHandler();
         }
         return null;
     }

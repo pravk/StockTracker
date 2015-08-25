@@ -27,9 +27,13 @@
     <string-array name="transaction_types">
         <item>Buy</item>
         <item>Sell</item>
+        <item>Short Sell</item>
+        <item>Buy to Cover</item>
     </string-array>
     <string-array name="transaction_types_values">
         <item>BUY</item>
         <item>SELL</item>
+        <item>SHORT-SELL</item>
+        <item>BUY-TO-COVER</item>
     </string-array>
 </resources>

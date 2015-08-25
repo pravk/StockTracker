@@ -47,10 +47,6 @@ public class Position extends SugarRecord<Position> implements HasStock {
         this.portfolio = portfolio;
     }
 
-    public List<UserTransaction> getUserTransactions(){
-        return UserTransaction.find(UserTransaction.class, "stock=? and portfolio = ?", new String []{ String.valueOf(stock.getId()), String.valueOf(portfolio.getId())} ,null, StringUtil.toSQLName("transactionDate"), null );
-    }
-
     public double getAveragePrice() {
         return averagePrice;
     }

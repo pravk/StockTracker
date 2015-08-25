@@ -24,6 +24,7 @@ import mobile.pk.com.stocktracker.dao.tasks.PriceLoadTask;
 import mobile.pk.com.stocktracker.dao.tasks.ServerPriceRefreshTask;
 import mobile.pk.com.stocktracker.event.EditTransactionEvent;
 import mobile.pk.com.stocktracker.service.PricingService;
+import mobile.pk.com.stocktracker.transaction.processor.TransactionProcessor;
 import mobile.pk.com.stocktracker.utils.NumberUtils;
 
 /**
@@ -133,7 +134,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionViewHold
 
 
     public void reset() {
-        transactionList = position1.getUserTransactions();
+        transactionList = TransactionProcessor.getInstance().getUserTransactions(position1);
         notifyDataSetChanged();
     }
 

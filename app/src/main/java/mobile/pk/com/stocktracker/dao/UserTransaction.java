@@ -19,6 +19,7 @@ public class UserTransaction extends SugarRecord<UserTransaction> implements Has
     private Portfolio portfolio;
     private double realizedGainLoss;
     private String transactionType;
+    private boolean closed;
 
     public Long getTransactionDate() {
         return transactionDate;
@@ -79,5 +80,13 @@ public class UserTransaction extends SugarRecord<UserTransaction> implements Has
     @Override
     public String toString(){
         return String.format("%s,%s", getTransactionType(), DateUtils.getRelativeTimeSpanString(getTransactionDate()));
+    }
+
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
     }
 }
