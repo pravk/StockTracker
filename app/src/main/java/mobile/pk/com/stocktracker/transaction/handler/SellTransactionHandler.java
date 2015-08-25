@@ -22,7 +22,7 @@ public class SellTransactionHandler implements TransactionHandler{
             totalLongQantity = totalLongQantity + shortTransaction.getQuantity();
         }
 
-        if(totalLongQantity <0)
+        if(totalLongQantity < userTransaction.getQuantity())
             position.setError("Incorrect transaction " + userTransaction);
 
         double realizedGainLoss = (userTransaction.getPrice() - position.getAveragePrice())*userTransaction.getQuantity();
