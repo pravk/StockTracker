@@ -9,15 +9,10 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.adapters.PagerAdapter.PortfolioFragmentPagerAdapter;
 import mobile.pk.com.stocktracker.dao.Portfolio;
-import mobile.pk.com.stocktracker.dao.PortfolioPosition;
-import mobile.pk.com.stocktracker.dao.Position;
-import mobile.pk.com.stocktracker.dao.Stock;
 import mobile.pk.com.stocktracker.dao.UserTransaction;
 import mobile.pk.com.stocktracker.event.PortfolioNameChangedEvent;
 import mobile.pk.com.stocktracker.event.PortfolioDeleteEvent;
 import mobile.pk.com.stocktracker.event.TransactionChangedEvent;
-import mobile.pk.com.stocktracker.event.TransactionDeleteEvent;
-import mobile.pk.com.stocktracker.processor.TransactionProcessor;
 import mobile.pk.com.stocktracker.ui.BaseActivity;
 import mobile.pk.com.stocktracker.ui.EditPortfolioActivity;
 import mobile.pk.com.stocktracker.ui.activity.EditTransactionActivity;
@@ -72,8 +67,6 @@ public class PortfolioFragment extends ContainerFragment {
         intent.putExtra(EditTransactionActivity.PORTFOLIO_ID, event.getPortfolio().getId());
         startActivityForResult(intent, BaseActivity.ADD_PORTFOLIO_TRANSACTION);
     }
-
-
 
     @Override
     protected FragmentStatePagerAdapter getAdapter(FragmentManager fragmentManager, Context context) {

@@ -2,6 +2,7 @@ package mobile.pk.com.stocktracker.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,9 +17,6 @@ import mobile.pk.com.stocktracker.dao.Portfolio;
 import mobile.pk.com.stocktracker.dao.Position;
 import mobile.pk.com.stocktracker.event.RefreshPositionEvent;
 import mobile.pk.com.stocktracker.event.ShowPositionDetailEvent;
-import mobile.pk.com.stocktracker.event.TransactionChangedEvent;
-import mobile.pk.com.stocktracker.processor.TransactionProcessor;
-import mobile.pk.com.stocktracker.utils.NumberUtils;
 
 /**
  * Created by hello on 8/1/2015.
@@ -75,30 +73,36 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
        // portfolioViewHolder.ticker.setText(position.getStock().getExchange() + ":"+ position.getStock().getTicker());
         portfolioViewHolder.name.setText(position.getStock().getName());
         portfolioViewHolder.ticker.setText(position.getStock().getTicker());
-
-        portfolioViewHolder.quantity.setText(String.format("%d x", (int)position.getQuantity()));
-        if(position.getStock().getPrice() != null)
+        portfolioViewHolder.error.setText(position.getError());
+        if(!TextUtils.isEmpty(position.getError()))
         {
-            double gainLoss = position.getGainLoss();
-            double marketValue = position.getMarketValue();
-            portfolioViewHolder.avgPrice.setText( String.format(PRICE_FORMAT, position.getStock().getPrice().getCurrency(),position.getAveragePrice()));
-            portfolioViewHolder.lastTradePrice.setText( String.format(PRICE_FORMAT, position.getStock().getPrice().getCurrency(), position.getStock().getPrice().getLastPrice()));
-            portfolioViewHolder.change.setText(String.format(PRICE_CHANGE_FORMAT, position.getStock().getPrice().getChange(), position.getStock().getPrice().getChangePercent()));
-            portfolioViewHolder.gainLoss.setText( String.format(PRICE_FORMAT, position.getStock().getPrice().getCurrency(), gainLoss));
-            portfolioViewHolder.marketValue.setText(String.format(PRICE_FORMAT, position.getStock().getPrice().getCurrency(), marketValue));
-            //portfolioViewHolder.lastTradePrice.setText(String.valueOf(position.getStock().getPrice().getLastPrice()));
-            //portfolioViewHolder.change.setText(String.valueOf(position.getStock().getPrice().getChange()));
-            if(position.getStock().getPrice().getChange()<0) {
-                portfolioViewHolder.change.setTextColor(mContext.getResources().getColor(R.color.red));
-            }
-            else {
-                portfolioViewHolder.change.setTextColor(mContext.getResources().getColor(R.color.green));
-            }
-            if(gainLoss<0) {
-                portfolioViewHolder.gainLoss.setTextColor(mContext.getResources().getColor(R.color.red));
-            }
-            else {
-                portfolioViewHolder.gainLoss.setTextColor(mContext.getResources().getColor(R.color.green));
+            portfolioViewHolder.errorLayout.setVisibility(View.VISIBLE);
+            portfolioViewHolder.detailLayout.setVisibility(View.GONE);
+        }
+        else {
+            portfolioViewHolder.errorLayout.setVisibility(View.GONE);
+            portfolioViewHolder.detailLayout.setVisibility(View.VISIBLE);
+            portfolioViewHolder.quantity.setText(String.format("%d x", (int) position.getQuantity()));
+            if (position.getStock().getPrice() != null) {
+                double gainLoss = position.getGainLoss();
+                double marketValue = position.getMarketValue();
+                portfolioViewHolder.avgPrice.setText(String.format(PRICE_FORMAT, position.getStock().getPrice().getCurrency(), position.getAveragePrice()));
+                portfolioViewHolder.lastTradePrice.setText(String.format(PRICE_FORMAT, position.getStock().getPrice().getCurrency(), position.getStock().getPrice().getLastPrice()));
+                portfolioViewHolder.change.setText(String.format(PRICE_CHANGE_FORMAT, position.getStock().getPrice().getChange(), position.getStock().getPrice().getChangePercent()));
+                portfolioViewHolder.gainLoss.setText(String.format(PRICE_FORMAT, position.getStock().getPrice().getCurrency(), gainLoss));
+                portfolioViewHolder.marketValue.setText(String.format(PRICE_FORMAT, position.getStock().getPrice().getCurrency(), marketValue));
+                //portfolioViewHolder.lastTradePrice.setText(String.valueOf(position.getStock().getPrice().getLastPrice()));
+                //portfolioViewHolder.change.setText(String.valueOf(position.getStock().getPrice().getChange()));
+                if (position.getStock().getPrice().getChange() < 0) {
+                    portfolioViewHolder.change.setTextColor(mContext.getResources().getColor(R.color.red));
+                } else {
+                    portfolioViewHolder.change.setTextColor(mContext.getResources().getColor(R.color.green));
+                }
+                if (gainLoss < 0) {
+                    portfolioViewHolder.gainLoss.setTextColor(mContext.getResources().getColor(R.color.red));
+                } else {
+                    portfolioViewHolder.gainLoss.setTextColor(mContext.getResources().getColor(R.color.green));
+                }
             }
         }
         if(portfolioViewHolder.toolbar != null)

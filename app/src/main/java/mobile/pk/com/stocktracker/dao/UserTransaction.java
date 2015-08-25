@@ -1,27 +1,24 @@
 package mobile.pk.com.stocktracker.dao;
 
+import android.text.format.DateUtils;
+
 import com.orm.SugarRecord;
 
-import java.util.Date;
-import java.util.List;
-
 import mobile.pk.com.stocktracker.dao.tasks.HasStock;
+import mobile.pk.com.stocktracker.utils.NumberUtils;
 
 /**
  * Created by hello on 8/10/2015.
  */
 public class UserTransaction extends SugarRecord<UserTransaction> implements HasStock {
 
-    public static final int LONG = 1;
-    public static final int SHORT = -1;
-
     private Long transactionDate;
     private double quantity;
     private double price;
     private Stock stock;
-    private int longShortInd;
     private Portfolio portfolio;
     private double realizedGainLoss;
+    private String transactionType;
 
     public Long getTransactionDate() {
         return transactionDate;
@@ -63,22 +60,6 @@ public class UserTransaction extends SugarRecord<UserTransaction> implements Has
         this.portfolio = portfolio;
     }
 
-    public int getLongShortInd() {
-        return longShortInd;
-    }
-
-    public void setLongShortInd(int longShortInd) {
-        this.longShortInd = longShortInd;
-    }
-
-    public boolean isLong() {
-        return getLongShortInd() == LONG;
-    }
-
-    public boolean isShort() {
-        return getLongShortInd() == SHORT;
-    }
-
     public double getRealizedGainLoss() {
         return realizedGainLoss;
     }
@@ -87,4 +68,16 @@ public class UserTransaction extends SugarRecord<UserTransaction> implements Has
         this.realizedGainLoss = realizedGainLoss;
     }
 
+    public String getTransactionType() {
+        return transactionType;
+    }
+
+    public void setTransactionType(String transactionType) {
+        this.transactionType = transactionType;
+    }
+
+    @Override
+    public String toString(){
+        return String.format("%s,%s", getTransactionType(), DateUtils.getRelativeTimeSpanString(getTransactionDate()));
+    }
 }

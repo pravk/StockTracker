@@ -4,21 +4,19 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 
-import org.w3c.dom.Text;
-
+import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -52,11 +50,8 @@ public class EditTransactionActivity extends BaseActivity {
     @InjectView(R.id.price)
     TextView price;
 
-    @InjectView(R.id.radio_long)
-    RadioButton radioLong;
-
-    @InjectView(R.id.radio_short)
-    RadioButton radioShort;
+    @InjectView(R.id.transaction_type)
+    Spinner transactionType;
 
     @InjectView(R.id.title)
     TextView title;
@@ -67,6 +62,7 @@ public class EditTransactionActivity extends BaseActivity {
     BootstrapButton deleteButton;
     private long transactionId;
     private UserTransaction transaction;
+    private List<String> transactionTypeArray;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,6 +72,9 @@ public class EditTransactionActivity extends BaseActivity {
         transactionId = getIntent().getLongExtra(TRANSACTION_ID, 0);
         ButterKnife.inject(this);
         setupToolbar();
+
+        transactionTypeArray = Arrays.asList(getResources().getStringArray(R.array.transaction_types_values));
+
         if(portfolioId == 0 && transactionId ==0) {
             setResult(RESULT_CANCELED, new Intent());
             finish();
@@ -85,7 +84,6 @@ public class EditTransactionActivity extends BaseActivity {
             {
                 setTitle(getString(R.string.create_new_transaction));
                 deleteButton.setVisibility(View.GONE);
-                radioLong.setChecked(true);
                 portfolio = Watchlist.findById(Portfolio.class, portfolioId);
                 transaction = new UserTransaction();
                 transaction.setTransactionDate(Calendar.getInstance().getTimeInMillis());
@@ -103,8 +101,7 @@ public class EditTransactionActivity extends BaseActivity {
                 price.setText(String.valueOf(transaction.getPrice()));
 
                 //tradeDate.setText(DateUtils.formatDateTime(this, transaction.getTransactionDate(), DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_SHOW_YEAR) );
-                radioLong.setChecked(transaction.isLong());
-                radioShort.setChecked(transaction.isShort());
+                transactionType.setSelection(transactionTypeArray.indexOf(transaction.getTransactionType()));
             }
             if(transaction.getStock() == null)
                 stockSearchTextView.requestFocus();
@@ -155,7 +152,7 @@ public class EditTransactionActivity extends BaseActivity {
             transaction.setStock(Stock.from(stockSearchTextView.getMatch()));
         }
         transaction.setPortfolio(portfolio);
-        transaction.setLongShortInd(radioLong.isChecked() ? UserTransaction.LONG : UserTransaction.SHORT);
+        transaction.setTransactionType( transactionTypeArray.get(transactionType.getSelectedItemPosition()) );
         transaction.setPrice(Double.parseDouble(price.getText().toString()));
         transaction.setQuantity(Double.parseDouble(quantity.getText().toString()));
         //transaction.setTransactionDate(Date.parse(tradeDate.getText().toString()));

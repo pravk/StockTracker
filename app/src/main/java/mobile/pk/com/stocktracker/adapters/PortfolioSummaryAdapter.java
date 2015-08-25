@@ -10,7 +10,7 @@ import java.util.List;
 import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.adapters.viewholder.PortfolioSummaryViewHolder;
 import mobile.pk.com.stocktracker.dao.PortfolioCurrencySummary;
-import mobile.pk.com.stocktracker.processor.TransactionProcessor;
+import mobile.pk.com.stocktracker.transaction.processor.TransactionProcessor;
 
 /**
  * Created by hello on 8/21/2015.

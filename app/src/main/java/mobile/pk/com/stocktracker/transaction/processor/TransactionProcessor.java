@@ -1,11 +1,9 @@
-package mobile.pk.com.stocktracker.processor;
+package mobile.pk.com.stocktracker.transaction.processor;
 
 import android.database.Cursor;
-
-import com.orm.StringUtil;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -18,6 +16,8 @@ import mobile.pk.com.stocktracker.dao.UserTransaction;
 import mobile.pk.com.stocktracker.event.RefreshPositionEvent;
 import mobile.pk.com.stocktracker.event.TransactionChangedEvent;
 import mobile.pk.com.stocktracker.event.TransactionDeleteEvent;
+import mobile.pk.com.stocktracker.transaction.handler.TransactionFactory;
+import mobile.pk.com.stocktracker.transaction.handler.TransactionHandler;
 
 /**
  * Created by hello on 8/24/2015.
@@ -44,45 +44,38 @@ public class TransactionProcessor {
     }
 
     public void onEvent(TransactionChangedEvent event){
-        if(event.getTransaction().isShort())
-        {
-            event.getTransaction().setRealizedGainLoss(computeUnrealizedGain(event.getTransaction()));
-            event.getTransaction().save();
-        }
-        updatePosition(event.getTransaction().getStock(), event.getTransaction().getPortfolio());
+        refreshPosition(getPosition(event.getTransaction().getStock(), event.getTransaction().getPortfolio()));
     }
 
     public void onEvent(TransactionDeleteEvent event){
-        updatePosition(event.getStock(), event.getPortfolio());
+        refreshPosition(getPosition(event.getStock(), event.getPortfolio()));
     }
+
     public void onEvent(RefreshPositionEvent event){
-        updatePosition(event.getPosition().getStock(), event.getPosition().getPortfolio());
+        refreshPosition(event.getPosition());
     }
 
-    protected double computeUnrealizedGain(UserTransaction userTransaction){
-        double[] avgPriceAndQuantity = computeAveragePurchasePrice(userTransaction.getStock(), userTransaction.getPortfolio(), userTransaction.getTransactionDate());
-        double avgPrice = avgPriceAndQuantity[0];
-        return userTransaction.getQuantity() * (userTransaction.getPrice()- avgPrice);
-    }
-
-    protected Position updatePosition(Stock stock, Portfolio portfolio) {
-        Position position = getPosition(stock, portfolio);
-        if(position == null)
+    protected void refreshPosition(Position position){
+        List<UserTransaction> userTransactionList = position.getUserTransactions();
+        position.reset();
+        for(UserTransaction userTransaction: userTransactionList)
         {
-            position = new Position();
-            position.setStock(stock);
-            position.setPortfolio(portfolio);
-        }
-        double[] avgPriceAndQuantity = computeAveragePurchasePrice(stock, portfolio, Calendar.getInstance().getTimeInMillis());
+            TransactionHandler handler = TransactionFactory.getHandler(userTransaction.getTransactionType());
+            if(handler != null)
+            {
+               handler.apply(position, userTransaction);
 
-        position.setQuantity(avgPriceAndQuantity[1]);
-        position.setAveragePrice(avgPriceAndQuantity[0]);
-        position.setNetRealizedGainLoss(avgPriceAndQuantity[2]);
-        position.setLongShortInd(position.getQuantity()<0?1:2);
-        position.setTotalPrice(position.getQuantity() * position.getAveragePrice());
+            }
+            else
+            {
+                position.setError("Not handler found for transaction type " + userTransaction.getTransactionType());
+            }
+
+            if(!TextUtils.isEmpty(position.getError()))
+                break;
+        }
         position.save();
         EventBus.getDefault().post(new Position.PositionChangeEvent(position));
-        return position;
     }
 
     public Position getPosition(Stock stock, Portfolio portfolio)
@@ -91,55 +84,21 @@ public class TransactionProcessor {
         Position position = null;
         if(positionList == null || positionList.size()==0)
         {
-            return null;
+            position = new Position();
+            position.setStock(stock);
+            position.setPortfolio(portfolio);
+            portfolio.save();
         }
         else
         {
             return positionList.get(0);
         }
+        return position;
     }
-
-    public double[] computeAveragePurchasePrice(Stock stock, Portfolio portfolio, Long date){
-        double avgPrice = 0;
-        double quantity = 0;
-        double realizedGainLoss = 0;
-        List<UserTransaction> userTransactionList = getUserTransactions(stock,portfolio);
-        if(userTransactionList == null || userTransactionList.size()==0)
-            return new double[]{0,0,0};
-        for(UserTransaction userTransaction: userTransactionList)
-        {
-            if(userTransaction.getTransactionDate() < date)
-            {
-                if(userTransaction.isShort())
-                {
-                    quantity = quantity - userTransaction.getQuantity();
-                    realizedGainLoss = realizedGainLoss + userTransaction.getRealizedGainLoss();
-                }
-                else
-                {
-                    if(quantity + userTransaction.getQuantity() >0)
-                        avgPrice = ((avgPrice * quantity)  + (userTransaction.getPrice() * userTransaction.getQuantity()))/ (quantity + userTransaction.getQuantity());
-                    else
-                        avgPrice = 0;
-                    quantity = quantity + userTransaction.getQuantity();
-
-                }
-            }
-        }
-        return new double[] {avgPrice, quantity, realizedGainLoss};
-    }
-
-
-    public List<UserTransaction> getUserTransactions(Stock stock, Portfolio portfolio)
-    {
-        return UserTransaction.find(UserTransaction.class, "stock=? and portfolio = ?", new String[]{String.valueOf(stock.getId()), String.valueOf(portfolio.getId())}, null, StringUtil.toSQLName("transactionDate"), null);
-    }
-
-
 
     public List<PortfolioCurrencySummary> getPortfolioSummary(){
 
-        Cursor c = Application.getInstance().executeQuery(PORTFOLIO_SUMMARY_QUERY,null);
+        Cursor c = Application.getInstance().executeQuery(PORTFOLIO_SUMMARY_QUERY);
         List<PortfolioCurrencySummary> portfolioCurrencySummaryList = new ArrayList<>();
         try {
             while(c.moveToNext()) {

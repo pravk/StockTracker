@@ -20,8 +20,8 @@ public class Position extends SugarRecord<Position> implements HasStock {
     private double quantity;
     private double averagePrice;
     private double totalPrice;
-    private int longShortInd;
     private double netRealizedGainLoss;
+    private String error;
 
     public Stock getStock() {
         return stock;
@@ -37,14 +37,6 @@ public class Position extends SugarRecord<Position> implements HasStock {
 
     public void setQuantity(double quantity) {
         this.quantity = quantity;
-    }
-
-    public int getLongShortInd() {
-        return longShortInd;
-    }
-
-    public void setLongShortInd(int longShortInd) {
-        this.longShortInd = longShortInd;
     }
 
     public Portfolio getPortfolio() {
@@ -89,6 +81,22 @@ public class Position extends SugarRecord<Position> implements HasStock {
 
     public void setNetRealizedGainLoss(double netRealizedGainLoss) {
         this.netRealizedGainLoss = netRealizedGainLoss;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public void reset() {
+        this.setError(null);
+        this.setQuantity(0);
+        this.setNetRealizedGainLoss(0);
+        this.setAveragePrice(0);
+        this.setTotalPrice(0);
     }
 
     public static class PositionChangeEvent {

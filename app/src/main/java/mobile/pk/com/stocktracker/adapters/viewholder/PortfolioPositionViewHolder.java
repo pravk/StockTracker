@@ -5,6 +5,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import mobile.pk.com.stocktracker.R;
@@ -21,6 +22,9 @@ public class PortfolioPositionViewHolder extends RecyclerView.ViewHolder impleme
     public TextView avgPrice;
     public TextView change;
     public TextView marketValue;
+    public TextView error;
+    public ViewGroup errorLayout;
+    public ViewGroup detailLayout;
     public TextView gainLoss;
     public Toolbar toolbar;
     public CardView cardView;
@@ -39,6 +43,9 @@ public class PortfolioPositionViewHolder extends RecyclerView.ViewHolder impleme
         avgPrice =(TextView) itemView.findViewById(R.id.avg_price);
         marketValue = (TextView) itemView.findViewById(R.id.market_value);
         gainLoss = (TextView) itemView.findViewById(R.id.gain_loss);
+        error = (TextView) itemView.findViewById(R.id.position_error);
+        errorLayout = (ViewGroup) itemView.findViewById(R.id.error_layout);
+        detailLayout = (ViewGroup) itemView.findViewById(R.id.detail_layout);
     }
 
     public void setColor(int color)

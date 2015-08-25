@@ -7,9 +7,8 @@ import com.orm.Database;
 import com.orm.SugarApp;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import mobile.pk.com.stocktracker.processor.TransactionProcessor;
+import mobile.pk.com.stocktracker.transaction.processor.TransactionProcessor;
 
 /**
  * Created by hello on 8/1/2015.

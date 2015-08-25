@@ -24,4 +24,12 @@
         <item name="300">300</item>
         <item name="1440">1440</item>
     </string-array>
+    <string-array name="transaction_types">
+        <item>Buy</item>
+        <item>Sell</item>
+    </string-array>
+    <string-array name="transaction_types_values">
+        <item>BUY</item>
+        <item>SELL</item>
+    </string-array>
 </resources>
