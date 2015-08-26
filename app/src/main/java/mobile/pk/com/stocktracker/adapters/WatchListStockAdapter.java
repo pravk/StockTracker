@@ -49,6 +49,11 @@ public class WatchListStockAdapter extends GenericRVAdapter<WatchlistStockViewHo
     }
 
     @Override
+    protected Stock getUnderlyingStock(WatchlistStock data) {
+        return data.getStock();
+    }
+
+    @Override
     public void onBindViewHolderInternal(final WatchlistStockViewHolder stockViewHolder, int i) {
         final WatchlistStock watchlistStock = getDataList().get(i);
 

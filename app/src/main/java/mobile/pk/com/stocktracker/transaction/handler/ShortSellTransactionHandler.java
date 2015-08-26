@@ -10,7 +10,7 @@ public class ShortSellTransactionHandler implements TransactionHandler{
 
     @Override
     public void apply(Position position, UserTransaction userTransaction) {
-        double quantity = position.getQuantity() - userTransaction.getQuantity();
+        int quantity = position.getQuantity() - userTransaction.getQuantity();
         position.setQuantity(quantity);
     }
 }

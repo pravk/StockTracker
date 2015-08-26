@@ -1,23 +1,15 @@
 package mobile.pk.com.stocktracker.dao;
 
-import com.orm.StringUtil;
 import com.orm.SugarRecord;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import de.greenrobot.event.EventBus;
-import mobile.pk.com.stocktracker.dao.tasks.HasStock;
 
 /**
  * Created by hello on 8/10/2015.
  */
-public class Position extends SugarRecord<Position> implements HasStock {
+public class Position extends SugarRecord<Position> {
 
     private Portfolio portfolio;
     private Stock stock;
-    private double quantity;
+    private int quantity;
     private double averagePrice;
     private double totalPrice;
     private double netRealizedGainLoss;
@@ -31,11 +23,11 @@ public class Position extends SugarRecord<Position> implements HasStock {
         this.stock = stock;
     }
 
-    public double getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(double quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
@@ -64,11 +56,15 @@ public class Position extends SugarRecord<Position> implements HasStock {
     }
 
     public double getGainLoss() {
-        return getQuantity() * (getStock().getPrice().getLastPrice() - averagePrice);
+        if(getStock().getPrice() != null)
+            return getQuantity() * (getStock().getPrice().getLastPrice() - averagePrice);
+        return 0;
     }
 
     public double getMarketValue() {
-        return getQuantity() * getStock().getPrice().getLastPrice();
+        if(getStock().getPrice() != null)
+            return getQuantity() * getStock().getPrice().getLastPrice();
+        return 0;
     }
 
     public double getNetRealizedGainLoss() {

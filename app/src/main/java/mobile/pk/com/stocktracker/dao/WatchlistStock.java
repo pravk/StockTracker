@@ -4,12 +4,10 @@ import com.orm.SugarRecord;
 
 import java.util.Date;
 
-import mobile.pk.com.stocktracker.dao.tasks.HasStock;
-
 /**
  * Created by hello on 8/10/2015.
  */
-public class WatchlistStock extends SugarRecord<Watchlist> implements HasStock {
+public class WatchlistStock extends SugarRecord<Watchlist>{
 
     private Stock stock;
     private Watchlist watchlist;

@@ -6,7 +6,6 @@ import com.orm.dsl.Ignore;
 
 import java.util.List;
 
-import mobile.pk.com.stocktracker.dao.tasks.HasStock;
 import mobile.pk.com.stocktracker.service.TickerSearchService;
 
 /**

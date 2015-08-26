@@ -154,7 +154,7 @@ public class EditTransactionActivity extends BaseActivity {
         transaction.setPortfolio(portfolio);
         transaction.setTransactionType( transactionTypeArray.get(transactionType.getSelectedItemPosition()) );
         transaction.setPrice(Double.parseDouble(price.getText().toString()));
-        transaction.setQuantity(Double.parseDouble(quantity.getText().toString()));
+        transaction.setQuantity(Integer.parseInt(quantity.getText().toString()));
         //transaction.setTransactionDate(Date.parse(tradeDate.getText().toString()));
         transaction.save();
         Intent resultIntent = new Intent();

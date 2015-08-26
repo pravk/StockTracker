@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -15,6 +16,8 @@ import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.adapters.viewholder.PortfolioPositionViewHolder;
 import mobile.pk.com.stocktracker.dao.Portfolio;
 import mobile.pk.com.stocktracker.dao.Position;
+import mobile.pk.com.stocktracker.dao.Stock;
+import mobile.pk.com.stocktracker.dataobjects.PositionData;
 import mobile.pk.com.stocktracker.event.RefreshPositionEvent;
 import mobile.pk.com.stocktracker.event.ShowPositionDetailEvent;
 import mobile.pk.com.stocktracker.transaction.processor.TransactionProcessor;
@@ -22,7 +25,7 @@ import mobile.pk.com.stocktracker.transaction.processor.TransactionProcessor;
 /**
  * Created by hello on 8/1/2015.
  */
-public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPositionViewHolder, Position> {
+public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPositionViewHolder, PositionData> {
 
     private Portfolio portfolio;
 
@@ -53,27 +56,29 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
 
     @Override
     protected void onBindViewHolderHeaderInternal(PortfolioPositionViewHolder holder, int i) {
-        holder.gainLoss.setText("Gain/Loss");
-        holder.lastTradePrice.setText("Last Price");
-        holder.ticker.setText("Ticker /");
-        holder.avgPrice.setText("Avg Price");
-        holder.change.setText("Change (%)");
-        holder.marketValue.setText("Mkt Value");
-        holder.name.setText("Company Name");
-        holder.quantity.setText("Quantity x");
-        holder.cardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.green));
+        final PositionData position = getDataList().get(i);
+
+        holder.gainLoss.setText(position.getGainLoss());
+        holder.lastTradePrice.setText(position.getLastTradePrice());
+        holder.ticker.setText(position.getTicker());
+        holder.avgPrice.setText(position.getAveragePrice());
+        holder.change.setText(position.getChange());
+        holder.marketValue.setText(position.getMarketValue());
+        holder.name.setText(position.getStockName());
+        holder.quantity.setText(position.getQuantity());
+        ((PortfolioPositionViewHolder.PortfolioPositionViewHolderHeader) holder).positionType.setText( ((PositionData.PositionHeaderData)position).getPositionDesc() );
+        holder.cardView.setCardBackgroundColor(mContext.getResources().getColor(((PositionData.PositionHeaderData)position).getCardColor()));
         holder.setColor(mContext.getResources().getColor(R.color.white));
-        //holder.toolbar.setVisibility(View.GONE);
     }
 
     @Override
     public void onBindViewHolderInternal(final PortfolioPositionViewHolder portfolioViewHolder, int i) {
-        final Position position = getDataList().get(i);
+        final PositionData position = getDataList().get(i);
 
         //Setting text view title
        // portfolioViewHolder.ticker.setText(position.getStock().getExchange() + ":"+ position.getStock().getTicker());
-        portfolioViewHolder.name.setText(position.getStock().getName());
-        portfolioViewHolder.ticker.setText(position.getStock().getTicker());
+        portfolioViewHolder.name.setText(position.getStockName());
+        portfolioViewHolder.ticker.setText(position.getTicker());
         portfolioViewHolder.error.setText(position.getError());
         if(!TextUtils.isEmpty(position.getError()))
         {
@@ -83,28 +88,14 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
         else {
             portfolioViewHolder.errorLayout.setVisibility(View.GONE);
             portfolioViewHolder.detailLayout.setVisibility(View.VISIBLE);
-            portfolioViewHolder.quantity.setText(String.format("%d x", (int) position.getQuantity()));
-            if (position.getStock().getPrice() != null) {
-                double gainLoss = position.getGainLoss();
-                double marketValue = position.getMarketValue();
-                portfolioViewHolder.avgPrice.setText(String.format(PRICE_FORMAT, position.getStock().getPrice().getCurrency(), position.getAveragePrice()));
-                portfolioViewHolder.lastTradePrice.setText(String.format(PRICE_FORMAT, position.getStock().getPrice().getCurrency(), position.getStock().getPrice().getLastPrice()));
-                portfolioViewHolder.change.setText(String.format(PRICE_CHANGE_FORMAT, position.getStock().getPrice().getChange(), position.getStock().getPrice().getChangePercent()));
-                portfolioViewHolder.gainLoss.setText(String.format(PRICE_FORMAT, position.getStock().getPrice().getCurrency(), gainLoss));
-                portfolioViewHolder.marketValue.setText(String.format(PRICE_FORMAT, position.getStock().getPrice().getCurrency(), marketValue));
-                //portfolioViewHolder.lastTradePrice.setText(String.valueOf(position.getStock().getPrice().getLastPrice()));
-                //portfolioViewHolder.change.setText(String.valueOf(position.getStock().getPrice().getChange()));
-                if (position.getStock().getPrice().getChange() < 0) {
-                    portfolioViewHolder.change.setTextColor(mContext.getResources().getColor(R.color.red));
-                } else {
-                    portfolioViewHolder.change.setTextColor(mContext.getResources().getColor(R.color.green));
-                }
-                if (gainLoss < 0) {
-                    portfolioViewHolder.gainLoss.setTextColor(mContext.getResources().getColor(R.color.red));
-                } else {
-                    portfolioViewHolder.gainLoss.setTextColor(mContext.getResources().getColor(R.color.green));
-                }
-            }
+            portfolioViewHolder.quantity.setText(position.getQuantity());
+            portfolioViewHolder.avgPrice.setText(position.getAveragePrice());
+            portfolioViewHolder.lastTradePrice.setText(position.getLastTradePrice());
+            portfolioViewHolder.change.setText(position.getChange());
+            portfolioViewHolder.gainLoss.setText(position.getGainLoss());
+            portfolioViewHolder.marketValue.setText(position.getMarketValue());
+            portfolioViewHolder.change.setTextColor(mContext.getResources().getColor(position.getChangeTextColor()));
+            portfolioViewHolder.gainLoss.setTextColor(mContext.getResources().getColor(position.getGainLossTextColor()));
         }
         if(portfolioViewHolder.toolbar != null)
             portfolioViewHolder.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -118,11 +109,13 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
                             Toast.makeText(mContext, "Removed", Toast.LENGTH_SHORT).show();
                             break;*/
                         case R.id.refresh:
-                            EventBus.getDefault().post(new RefreshPositionEvent(position));
+                            if(position.getPosition() != null)
+                                EventBus.getDefault().post(new RefreshPositionEvent( position.getPosition()));
                             reset();
                             break;
                         case R.id.transactions:
-                            EventBus.getDefault().post(new ShowPositionDetailEvent(position));
+                            if(position.getPosition() != null)
+                                EventBus.getDefault().post(new ShowPositionDetailEvent(position.getPosition()));
                             break;
                     }
                     return true;
@@ -131,11 +124,37 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
     }
 
     @Override
-    public List<Position> refreshDataInternal() {
-        return TransactionProcessor.getInstance().getOpenPositions(portfolio);
+    public List<PositionData> refreshDataInternal() {
+        List<Position> positionList = TransactionProcessor.getInstance().getOpenPositions(portfolio);
+        List<PositionData> positionDataList= new ArrayList<>();
+        positionDataList.add(new PositionData.PositionHeaderData(mContext.getResources().getString(R.string.open_positions) , R.color.green));
+        for (Position position :
+                positionList) {
+            positionDataList.add(new PositionData(position));
+        }
+        positionDataList.add(new PositionData.PositionHeaderData(mContext.getResources().getString(R.string.closed_positions), R.color.teal));
+        positionList = TransactionProcessor.getInstance().getClosedPositions(portfolio);
+        for (Position position :
+                positionList) {
+            positionDataList.add(new PositionData(position));
+        }
+        return positionDataList;
     }
+
     protected boolean hasHeader(){
         return true;
     }
 
+    protected boolean isPositionHeader(int position)
+    {
+        return getDataList().get(position).getPosition() == null;
+    }
+
+    @Override
+    protected Stock getUnderlyingStock(PositionData data){
+        if(data.getPosition() != null)
+            return data.getPosition().getStock();
+        else
+            return  null;
+    }
 }

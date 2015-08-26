@@ -4,16 +4,13 @@ import android.text.format.DateUtils;
 
 import com.orm.SugarRecord;
 
-import mobile.pk.com.stocktracker.dao.tasks.HasStock;
-import mobile.pk.com.stocktracker.utils.NumberUtils;
-
 /**
  * Created by hello on 8/10/2015.
  */
-public class UserTransaction extends SugarRecord<UserTransaction> implements HasStock {
+public class UserTransaction extends SugarRecord<UserTransaction>{
 
     private Long transactionDate;
-    private double quantity;
+    private int quantity;
     private double price;
     private Stock stock;
     private Portfolio portfolio;
@@ -29,11 +26,11 @@ public class UserTransaction extends SugarRecord<UserTransaction> implements Has
         this.transactionDate = transactionDate;
     }
 
-    public double getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(double quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 

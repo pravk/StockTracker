@@ -14,6 +14,7 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.adapters.viewholder.WatchlistViewHolder;
+import mobile.pk.com.stocktracker.dao.Stock;
 import mobile.pk.com.stocktracker.dao.Watchlist;
 
 /**
@@ -37,6 +38,11 @@ public class WatchlistAdapter extends GenericRVAdapter<WatchlistViewHolder, Watc
     @Override
     protected List<Watchlist> refreshDataInternal() {
         return Watchlist.find(Watchlist.class, null);
+    }
+
+    @Override
+    protected Stock getUnderlyingStock(Watchlist data) {
+        return null;
     }
 
     @Override

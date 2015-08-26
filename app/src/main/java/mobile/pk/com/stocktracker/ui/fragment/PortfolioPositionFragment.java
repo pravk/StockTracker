@@ -1,29 +1,13 @@
 package mobile.pk.com.stocktracker.ui.fragment;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuInflater;
 
 import de.greenrobot.event.EventBus;
-import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.adapters.GenericRVAdapter;
 import mobile.pk.com.stocktracker.adapters.PortfolioPositionAdapter;
 import mobile.pk.com.stocktracker.adapters.viewholder.PortfolioPositionViewHolder;
 import mobile.pk.com.stocktracker.dao.Portfolio;
 import mobile.pk.com.stocktracker.dao.Position;
-import mobile.pk.com.stocktracker.dao.Stock;
-import mobile.pk.com.stocktracker.dao.UserTransaction;
-import mobile.pk.com.stocktracker.dao.Watchlist;
-import mobile.pk.com.stocktracker.event.PortfolioChangeEvent;
-import mobile.pk.com.stocktracker.event.PortfolioDeleteEvent;
-import mobile.pk.com.stocktracker.event.TransactionChangedEvent;
-import mobile.pk.com.stocktracker.event.TransactionDeleteEvent;
-import mobile.pk.com.stocktracker.ui.BaseActivity;
-import mobile.pk.com.stocktracker.ui.EditPortfolioActivity;
-import mobile.pk.com.stocktracker.ui.activity.EditTransactionActivity;
 
 
 public class PortfolioPositionFragment extends GenericRVFragment<PortfolioPositionViewHolder> {
@@ -104,7 +88,7 @@ public class PortfolioPositionFragment extends GenericRVFragment<PortfolioPositi
 
     @Override
     protected boolean onRefreshView() {
-        portfolioAdapter.refreshPrices();
+        portfolioAdapter.populatePrices(true);
         return true;
     }
 

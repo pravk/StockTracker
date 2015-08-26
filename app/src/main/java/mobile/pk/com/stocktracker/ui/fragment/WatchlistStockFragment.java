@@ -63,7 +63,7 @@ public class WatchlistStockFragment extends GenericRVFragment<WatchlistStockView
 
     @Override
     protected boolean onRefreshView() {
-        getAdapter().refreshPrices();
+        getAdapter().populatePrices(true);
         return true;
     }
 

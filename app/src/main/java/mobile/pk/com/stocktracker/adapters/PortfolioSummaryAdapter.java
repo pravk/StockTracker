@@ -10,6 +10,7 @@ import java.util.List;
 import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.adapters.viewholder.PortfolioSummaryViewHolder;
 import mobile.pk.com.stocktracker.dao.PortfolioCurrencySummary;
+import mobile.pk.com.stocktracker.dao.Stock;
 import mobile.pk.com.stocktracker.transaction.processor.TransactionProcessor;
 
 /**
@@ -64,5 +65,10 @@ public class PortfolioSummaryAdapter extends GenericRVAdapter<PortfolioSummaryVi
     @Override
     protected List<PortfolioCurrencySummary> refreshDataInternal() {
         return TransactionProcessor.getInstance().getPortfolioSummary();
+    }
+
+    @Override
+    protected Stock getUnderlyingStock(PortfolioCurrencySummary data) {
+        return null;
     }
 }

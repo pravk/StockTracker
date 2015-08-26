@@ -5,15 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.orm.SugarRecord;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import mobile.pk.com.stocktracker.common.RestClient;
 import mobile.pk.com.stocktracker.dao.Stock;
 import mobile.pk.com.stocktracker.dao.StockPrice;
-import mobile.pk.com.stocktracker.dao.tasks.HasStock;
 import mobile.pk.com.stocktracker.dao.tasks.PriceLoadTask;
 import mobile.pk.com.stocktracker.dao.tasks.ServerPriceRefreshTask;
 
@@ -59,8 +56,6 @@ public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D> ext
         }
         else
         {
-            if(hasHeader())
-                position = position-1;
             onBindViewHolderInternal(holder,position);
         }
     }
@@ -76,20 +71,19 @@ public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D> ext
         List<D> newData = refreshDataInternal();
         getDataList().clear();
         getDataList().addAll(newData);
-        populatePrices();
+        populatePrices(true);
     }
 
     public void addItem(D item) {
         getDataList().add(item);
+        reset();
         notifyDataSetChanged();
+
     }
 
     @Override
     public int getItemCount() {
-        if(hasHeader())
-            return getDataList().size() + 1;
-        else
-            return getDataList().size();
+        return getDataList().size();
     }
 
     public List<D> getDataList(){
@@ -102,43 +96,43 @@ public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D> ext
 
     protected abstract List<D> refreshDataInternal();
 
-    public void populatePrices(){
+    public void populatePrices(final boolean force){
         List<D> dataList = getDataList();
         final List<Stock> stockList = new ArrayList<>();
         for(D data : dataList)
         {
-            if(data instanceof HasStock)
-                stockList.add(((HasStock) data).getStock());
-
+            Stock stock= getUnderlyingStock(data);
+            if(stock != null)
+                stockList.add(stock);
         }
+
         new PriceLoadTask(){
             @Override
             protected void onPostExecute(List<StockPrice> result) {
-                if(result != null && result.size()==stockList.size())
+                if(result != null)
                     notifyDataSetChanged();
-                else
-                    refreshPrices();
+                if(force)
+                    refreshPrices(stockList);
             }
 
         }.execute(stockList.toArray(new Stock[stockList.size()]));
 
     }
 
-    public void refreshPrices(){
-        List<D> dataList = getDataList();
-        final List<Stock> stockList = new ArrayList<>();
-        for(D data : dataList)
-        {
-            if(data instanceof HasStock)
-                stockList.add(((HasStock) data).getStock());
+    protected abstract Stock getUnderlyingStock(D data);/*{
+        if(data instanceof HasStock)
+            return ((HasStock) data).getStock();
+        else
+            return  null;
+    }*/
 
-        }
+    public void refreshPrices(List<Stock> stockList){
 
         new ServerPriceRefreshTask(RestClient.getDefault().getPricingService()) {
             @Override
             protected void onPostExecute(Void result) {
                 if(getException() == null) {
-                    populatePrices();
+                    populatePrices(false);
                 }
                 else
                 {

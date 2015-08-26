@@ -100,7 +100,10 @@ public class TransactionProcessor {
     }
 
     public List<Position> getOpenPositions(Portfolio portfolio){
-        return Position.find(Position.class,  "portfolio = ? and (quantity != 0 OR error is not null)", String.valueOf(portfolio.getId()) );
+        return Position.find(Position.class,  "portfolio = ? and quantity != 0", String.valueOf(portfolio.getId()) );
+    }
+    public List<Position> getClosedPositions(Portfolio portfolio){
+        return Position.find(Position.class,  "portfolio = ? and quantity = 0", String.valueOf(portfolio.getId()) );
     }
 
     public List<UserTransaction> getUserTransactions(Position position){

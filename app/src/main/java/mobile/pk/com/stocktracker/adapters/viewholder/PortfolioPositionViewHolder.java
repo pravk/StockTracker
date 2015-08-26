@@ -61,8 +61,10 @@ public class PortfolioPositionViewHolder extends RecyclerView.ViewHolder impleme
 
     public static class PortfolioPositionViewHolderHeader extends PortfolioPositionViewHolder{
 
+        public TextView positionType;
         public PortfolioPositionViewHolderHeader(View itemView) {
             super(itemView);
+            positionType = (TextView) itemView.findViewById(R.id.position_type);
         }
 
         @Override

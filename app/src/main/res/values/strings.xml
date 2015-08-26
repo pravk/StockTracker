@@ -62,4 +62,5 @@
     <string name="radio_buy">Buy</string>
     <string name="radio_sell">Sell</string>
     <string name="buy_sell">Buy or Sell</string>
+    <string name="closed_positions">Closed Positions</string>
 </resources>
