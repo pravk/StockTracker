@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import com.google.gson.Gson;
 import com.orm.SugarRecord;
 
+import java.util.Iterator;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -56,6 +57,14 @@ public class DeSerializerTask extends AsyncTask<String, Void,Void>{
         return null;
     }
 
+    protected Watchlist getWatchlistFromDB(Watchlist watchlist)
+    {
+        List<Watchlist> watchlistList = Watchlist.find(Watchlist.class, "watchlist_name=?", watchlist.getWatchlistName());
+        if(watchlistList != null && watchlistList.size()>0)
+            return watchlistList.get(0);
+        return null;
+    }
+
     public void executeSync(String data) {
         Gson gson = new Gson();
 
@@ -67,8 +76,9 @@ public class DeSerializerTask extends AsyncTask<String, Void,Void>{
         saveRecordList(stockTrackerApp.getPortfolioList(), Portfolio.class);
 
         if(stockTrackerApp.getUserTransactionList() != null) {
-            for (UserTransaction userTransaction :
-                    stockTrackerApp.getUserTransactionList()) {
+            Iterator<UserTransaction> iteratorTxn = stockTrackerApp.getUserTransactionList().iterator();
+            while (iteratorTxn.hasNext()) {
+                UserTransaction userTransaction = iteratorTxn.next();
                 userTransaction.setStock(getStockFromDB(userTransaction.getStock()));
                 userTransaction.setPortfolio(getPortfolioFromDB(userTransaction.getPortfolio()));
             }
@@ -78,26 +88,37 @@ public class DeSerializerTask extends AsyncTask<String, Void,Void>{
         //stockTrackerApp.setPositionList(IteratorUtils.toList(Position.findAll(Position.class)));
 
         if(stockTrackerApp.getWatchlistStockList() != null) {
-            for (WatchlistStock watchlistStock :
-                    stockTrackerApp.getWatchlistStockList()) {
-                if (watchlistStock.getStock() == null) {
+            Iterator<WatchlistStock> iterator = stockTrackerApp.getWatchlistStockList().iterator();
+            while (iterator.hasNext()) {
+                WatchlistStock watchlistStock = iterator.next();
+                if (watchlistStock.getStock() == null || watchlistStock.getWatchlist() == null) {
+                    iterator.remove();
                     continue;
                 }
-                watchlistStock.setStock(getStockFromDB(watchlistStock.getStock()));
+                else {
+                    watchlistStock.setStock(getStockFromDB(watchlistStock.getStock()));
+                    watchlistStock.setWatchlist(getWatchlistFromDB(watchlistStock.getWatchlist()));
+                }
             }
             saveRecordList(stockTrackerApp.getWatchlistStockList(), WatchlistStock.class);
         }
         if(stockTrackerApp.getPositionList() != null) {
-            for (Position position :
-                    stockTrackerApp.getPositionList()) {
+            Iterator<Position> iteratorPosition = stockTrackerApp.getPositionList().iterator();
+            while (iteratorPosition.hasNext()) {
+                Position position = iteratorPosition.next();
                 if (position.getStock() == null || position.getPortfolio() == null) {
+                    iteratorPosition.remove();
                     continue;
                 }
-                position.setStock(getStockFromDB(position.getStock()));
-                position.setPortfolio(getPortfolioFromDB(position.getPortfolio()));
+                else {
+                    position.setStock(getStockFromDB(position.getStock()));
+                    position.setPortfolio(getPortfolioFromDB(position.getPortfolio()));
+                }
             }
-            saveRecordList(stockTrackerApp.getPositionList(), Position.class);
-            EventBus.getDefault().post(new Position.PositionChangeEvent(stockTrackerApp.getPositionList().get(0)));
+            if(stockTrackerApp.getPositionList().size() >0) {
+                saveRecordList(stockTrackerApp.getPositionList(), Position.class);
+                EventBus.getDefault().post(new Position.PositionChangeEvent(stockTrackerApp.getPositionList().get(0)));
+            }
         }
 
     }
