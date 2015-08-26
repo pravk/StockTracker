@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * Created by hello on 8/10/2015.
  */
-public class WatchlistStock extends SugarRecord<Watchlist>{
+public class WatchlistStock extends SugarRecord<WatchlistStock>{
 
     private Stock stock;
     private Watchlist watchlist;

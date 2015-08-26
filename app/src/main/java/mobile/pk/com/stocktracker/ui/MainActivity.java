@@ -25,6 +25,7 @@ import mobile.pk.com.stocktracker.event.PortfolioNameChangedEvent;
 import mobile.pk.com.stocktracker.event.ShowPositionDetailEvent;
 import mobile.pk.com.stocktracker.event.WatchlistNameChangedEvent;
 import mobile.pk.com.stocktracker.event.WatchlistDeleteEvent;
+import mobile.pk.com.stocktracker.ui.activity.BackupActivity;
 import mobile.pk.com.stocktracker.ui.fragment.PortfolioFragment;
 import mobile.pk.com.stocktracker.ui.fragment.PortfolioPositionFragment;
 import mobile.pk.com.stocktracker.ui.fragment.PortfolioSummaryFragment;
@@ -106,6 +107,11 @@ public class MainActivity extends BaseActivity {
         else if(menuItem.getItemId() == R.id.drawer_portfolio)
         {
             fragmentClass = PortfolioFragment.newInstance(this);
+        }
+        else if(menuItem.getItemId() ==R.id.drawer_backup_restore)
+        {
+            Intent intent = new Intent(this, BackupActivity.class);
+            startActivity(intent);
         }
         else if(menuItem.getTitle().equals(getString(R.string.settings)))
         {

@@ -25,7 +25,19 @@
         <activity android:name=".ui.EditPortfolioActivity" />
         <activity android:name=".ui.activity.EditTransactionActivity" />
         <activity android:name=".ui.activity.TransactionActivity" />
-
+        <activity android:name=".ui.activity.BackupActivity" android:label="Backup &amp; Restore"/>
+        <activity
+            android:name="com.dropbox.client2.android.AuthActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|keyboard">
+            <intent-filter>
+                <!-- Change this to be db- followed by your app key -->
+                <data android:scheme="db-u2m4de3yv42bvto" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <meta-data
             android:name="DATABASE"
             android:value="stock_tracker.db" />

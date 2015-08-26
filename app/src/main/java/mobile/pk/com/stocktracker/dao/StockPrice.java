@@ -12,7 +12,7 @@ import mobile.pk.com.stocktracker.service.PricingService;
 /**
  * Created by hello on 8/11/2015.
  */
-public class StockPrice extends SugarRecord<PricingService.StockPrice>{
+public class StockPrice extends SugarRecord<StockPrice>{
 
     private String clientId;
     private String ticker;

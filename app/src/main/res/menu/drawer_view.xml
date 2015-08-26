@@ -17,6 +17,10 @@
     </group>
     <group android:checkableBehavior="none" android:id="@+id/extras_group">
         <item
+            android:id="@+id/drawer_backup_restore"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/backup_restore"/>
+        <item
             android:id="@+id/drawer_settings"
             android:icon="@drawable/ic_settings_black_24dp"
             android:title="@string/settings"/>

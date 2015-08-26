@@ -14,6 +14,7 @@
             android:summary="@string/auto_refresh_interval_summary"
             android:entryValues="@array/pref_refresh_interval_values"
             android:entries="@array/pref_refresh_interval"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>
