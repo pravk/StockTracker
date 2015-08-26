@@ -136,7 +136,7 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
         positionList = TransactionProcessor.getInstance().getClosedPositions(portfolio);
         for (Position position :
                 positionList) {
-            positionDataList.add(new PositionData(position));
+            positionDataList.add(new PositionData.ClosedPositionData(position));
         }
         return positionDataList;
     }

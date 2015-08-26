@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.melnykov.fab.FloatingActionButton;
 import com.orm.SugarRecord;
 
 import butterknife.ButterKnife;
@@ -58,7 +59,10 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
         final RecyclerView recyclerView =   (RecyclerView) view.findViewById(R.id.recyler_view);
         recyclerView.setLayoutManager(getLayoutManager(getActivity()));
 
-        view.findViewById(R.id.fab_add_new).setVisibility(showAddNewItem()?View.VISIBLE:View.GONE);
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab_add_new);
+        fab.setVisibility(showAddNewItem() ? View.VISIBLE : View.GONE);
+
+        fab.attachToRecyclerView(recyclerView);
 
         GenericRVAdapter adapter = getAdapter();
         recyclerView.setAdapter(adapter);

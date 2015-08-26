@@ -83,6 +83,26 @@ public class PositionData extends BaseDataObject{
             return R.color.green;
     }
 
+    public static class ClosedPositionData extends PositionData{
+
+        public ClosedPositionData(Position position) {
+            super(position);
+        }
+        @Override
+        public String getQuantity(){
+            return "-";
+        }
+        public String getAveragePrice(){
+            return "-";
+        }
+        public String getGainLoss(){
+            return String.format(PRICE_FORMAT, getCurrency(), getPosition().getNetRealizedGainLoss());
+        }
+        public String getMarketValue(){
+            return "-";
+        }
+    }
+
     public static class PositionHeaderData extends PositionData{
 
         private final String positionDesc;
