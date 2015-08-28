@@ -65,4 +65,5 @@
     <string name="closed_positions">Closed Positions</string>
     <string name="backup_restore"><![CDATA[Backup & Restore]]></string>
     <string name="world_indices">World Indices</string>
+    <string name="refresh_complete">Refresh Complete</string>
 </resources>

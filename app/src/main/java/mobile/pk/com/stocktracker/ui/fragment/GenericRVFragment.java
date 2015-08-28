@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.orm.SugarRecord;
@@ -32,6 +34,7 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
 
     private Context context;
     Handler handler;
+    private SwipeRefreshLayout swipeRefreshLayout;
     /*public static GenericRVFragment newInstance(Long portfolioId) {
         GenericRVFragment fragment = new GenericRVFragment();
         Bundle args = new Bundle();
@@ -105,9 +108,30 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
 
         fab.attachToRecyclerView(recyclerView);
 
-        GenericRVAdapter adapter = getAdapter();
+        final GenericRVAdapter adapter = getAdapter();
         recyclerView.setAdapter(adapter);
         adapter.reset();
+
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe);
+        swipeRefreshLayout.setEnabled(showRefreshAction());
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if(showRefreshAction())
+                {
+                    swipeRefreshLayout.setRefreshing(true);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.reset();
+                            swipeRefreshLayout.setRefreshing(false);
+                            Toast.makeText(getContext(),R.string.refresh_complete, Toast.LENGTH_SHORT).show();
+                        }
+                    }, 1000);
+                }
+
+            }
+        });
         return view;
     }
 
@@ -123,7 +147,7 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
     public void onCreateOptionsMenu(
             Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.generic_toolbar_menu, menu);
-        menu.findItem(R.id.refresh_view).setVisible(showRefreshAction());
+       // menu.findItem(R.id.refresh_view).setVisible(showRefreshAction());
         menu.findItem(R.id.edit_view).setVisible(showEditAction());
         menu.findItem(R.id.create_new).setVisible(showCreateAction());
 
@@ -176,6 +200,8 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
     protected abstract void onAddNewItem();
 
     public Context getContext() {
+        if(context == null)
+            return Application.getInstance().getApplicationContext();
         return context;
     }
 

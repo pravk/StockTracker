@@ -6,6 +6,7 @@ import com.orm.StringUtil;
 import com.orm.SugarRecord;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -110,13 +111,19 @@ public class StockPrice extends SugarRecord<StockPrice>{
             stockPrice.setLastPrice(Double.parseDouble(serverPrice.getLastPrice()));
         stockPrice.setLastPriceWithCurrency(serverPrice.getLastPriceWithCurrency());
 
-        DateFormat m_ISO8601Local = new SimpleDateFormat("yyyy MMM dd, hh:mma Z", Locale.getDefault()  );
+        String fullDateStrin = Calendar.getInstance().get(Calendar.YEAR) + " " + serverPrice.getLastTrade();
+
 
         try {
-            String fullDateStrin = Calendar.getInstance().get(Calendar.YEAR) + " " + serverPrice.getLastTrade();
-            stockPrice.setLastTradeTime(m_ISO8601Local.parse(fullDateStrin).getTime());
-        } catch (Exception e) {
-            e.printStackTrace();
+            DateFormat format = new SimpleDateFormat("yyyy MMM dd, hh:mma Z", Locale.getDefault()  );
+            stockPrice.setLastTradeTime(format.parse(fullDateStrin).getTime());
+        } catch (ParseException e) {
+            DateFormat format = new SimpleDateFormat("yyyy MMM dd, hh:mma z", Locale.US  );
+            try {
+                stockPrice.setLastTradeTime(format.parse(fullDateStrin).getTime());
+            } catch (ParseException e1) {
+                e1.printStackTrace();
+            }
         }
         stockPrice.setCurrency(serverPrice.getLastPriceWithCurrency().replace(serverPrice.getLastPriceFormatted(), ""));
         if( TextUtils.isEmpty(stockPrice.getCurrency()))
