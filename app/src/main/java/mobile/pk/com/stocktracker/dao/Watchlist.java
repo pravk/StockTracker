@@ -12,7 +12,7 @@ public class Watchlist extends SugarRecord<Watchlist> {
     private String watchlistName;
     private boolean isSystem;
 
-    public static Watchlist getDefaultWatchList() {
+    /*public static Watchlist getDefaultWatchList() {
         List<Watchlist> watchlistList = find(Watchlist.class, StringUtil.toSQLName("isSystem") + "=?", "1");
         if(watchlistList == null || watchlistList.size()==0)
         {
@@ -26,7 +26,7 @@ public class Watchlist extends SugarRecord<Watchlist> {
         {
             return watchlistList.get(0);
         }
-    }
+    }*/
 
     public String getWatchlistName() {
         return watchlistName;
@@ -38,5 +38,9 @@ public class Watchlist extends SugarRecord<Watchlist> {
 
     public boolean isSystem() {
         return isSystem;
+    }
+
+    public void setIsSystem(boolean isSystem) {
+        this.isSystem = isSystem;
     }
 }

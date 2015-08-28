@@ -33,6 +33,7 @@ import mobile.pk.com.stocktracker.ui.fragment.UserSettingsFragment;
 import mobile.pk.com.stocktracker.ui.activity.TransactionActivity;
 import mobile.pk.com.stocktracker.ui.fragment.WatchlistFragment;
 import mobile.pk.com.stocktracker.ui.fragment.WatchlistStockFragment;
+import mobile.pk.com.stocktracker.watchlist.WatchlistManager;
 
 public class MainActivity extends BaseActivity {
 
@@ -112,6 +113,10 @@ public class MainActivity extends BaseActivity {
         {
             Intent intent = new Intent(this, BackupActivity.class);
             startActivity(intent);
+        }
+        else if(menuItem.getItemId() ==R.id.world_indices){
+            Watchlist watchlist = WatchlistManager.getInstance().getWorldMarketWatchlist(getApplicationContext());
+            fragmentClass = WatchlistStockFragment.newInstance(watchlist.getId());
         }
         else if(menuItem.getTitle().equals(getString(R.string.settings)))
         {

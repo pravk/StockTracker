@@ -12,6 +12,7 @@ import mobile.pk.com.stocktracker.dao.tasks.PriceLoadTask;
 import mobile.pk.com.stocktracker.dao.tasks.ServerPriceRefreshTask;
 
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -63,8 +64,10 @@ public class WatchListStockAdapter extends GenericRVAdapter<WatchlistStockViewHo
         stockViewHolder.name.setText(watchlistStock.getStock().getName());
         if(watchlistStock.getStock().getPrice() != null)
         {
-            stockViewHolder.lastTradePrice.setText(String.format(PRICE_FORMAT, watchlistStock.getStock().getPrice().getCurrency(), watchlistStock.getStock().getPrice().getLastPrice()));
-            stockViewHolder.change.setText(String.format(PRICE_CHANGE_FORMAT, watchlistStock.getStock().getPrice().getChange(), watchlistStock.getStock().getPrice().getChangePercent()));
+            stockViewHolder.lastTradePrice.setText(String.format(PRICE_FORMAT_WITHOUT_CURRENCY,  watchlistStock.getStock().getPrice().getLastPrice()));
+            stockViewHolder.change.setText(String.format(PRICE_CHANGE_FORMAT, watchlistStock.getStock().getPrice().getChange()));
+            stockViewHolder.changePercent.setText(String.format(PRICE_CHANGE_PERCENT_FORMAT, watchlistStock.getStock().getPrice().getChangePercent()));
+            stockViewHolder.lastTradeTime.setText( DateUtils.getRelativeTimeSpanString(watchlistStock.getStock().getPrice().getLastTradeTime()));
             if(watchlistStock.getStock().getPrice().getChange()<0) {
                 stockViewHolder.setTextColor(mContext.getResources().getColor(R.color.red));
             }

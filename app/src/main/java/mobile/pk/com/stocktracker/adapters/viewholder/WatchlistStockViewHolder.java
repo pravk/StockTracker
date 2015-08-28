@@ -17,6 +17,8 @@ public class WatchlistStockViewHolder extends RecyclerView.ViewHolder implements
     public TextView ticker;
     public TextView name;
     public TextView lastTradePrice;
+    public TextView lastTradeTime;
+    public TextView changePercent;
     public TextView change;
     public Toolbar toolbar;
     public CardView cardView;
@@ -26,6 +28,8 @@ public class WatchlistStockViewHolder extends RecyclerView.ViewHolder implements
         ticker = (TextView) itemView.findViewById(R.id.ticker);
         name = (TextView) itemView.findViewById(R.id.name);
         lastTradePrice = (TextView) itemView.findViewById(R.id.last_trade_price);
+        lastTradeTime = (TextView) itemView.findViewById(R.id.last_trade_time);
+        changePercent = (TextView) itemView.findViewById(R.id.change_percent);
         change = (TextView) itemView.findViewById(R.id.change);
         toolbar = (Toolbar) itemView.findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.watchlist_stock_item_menu);
@@ -36,8 +40,9 @@ public class WatchlistStockViewHolder extends RecyclerView.ViewHolder implements
     {
        // ticker.setTextColor(color);
        // name.setTextColor(color);
-        lastTradePrice.setTextColor(color);
+        //lastTradePrice.setTextColor(color);
         change.setTextColor(color);
+        changePercent.setTextColor(color);
     }
 
     @Override

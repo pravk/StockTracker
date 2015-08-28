@@ -7,9 +7,11 @@ import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.adapters.GenericRVAdapter;
 import mobile.pk.com.stocktracker.adapters.WatchListStockAdapter;
 import mobile.pk.com.stocktracker.adapters.viewholder.WatchlistStockViewHolder;
+import mobile.pk.com.stocktracker.dao.Position;
 import mobile.pk.com.stocktracker.dao.Stock;
 import mobile.pk.com.stocktracker.dao.Watchlist;
 import mobile.pk.com.stocktracker.dao.WatchlistStock;
+import mobile.pk.com.stocktracker.event.WatchlistRefreshEvent;
 import mobile.pk.com.stocktracker.ui.SelectStockDialog;
 
 public class WatchlistStockFragment extends GenericRVFragment<WatchlistStockViewHolder> {
@@ -42,6 +44,7 @@ public class WatchlistStockFragment extends GenericRVFragment<WatchlistStockView
         if (getArguments() != null) {
             watchListId = getArguments().getLong(WATCH_LIST_ID);
         }
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -108,6 +111,10 @@ public class WatchlistStockFragment extends GenericRVFragment<WatchlistStockView
             watchlistAdapter = new WatchListStockAdapter(getActivity(), watchlist );
         }
         return watchlistAdapter;
+    }
+
+    public void onEvent(WatchlistRefreshEvent event){
+        getAdapter().reset();
     }
 
     public class OnCreateEvent {

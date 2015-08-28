@@ -15,49 +15,55 @@
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
             android:elevation="4dp"
-            android:layout_gravity="bottom|right"/>
+            android:layout_gravity="bottom|top"/>
 
        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:padding="16dp" android:orientation="horizontal">
+            android:layout_height="wrap_content" android:padding="16dp" android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" android:orientation="vertical" android:paddingRight="16dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
-                <TextView
-                    android:id="@+id/name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" style="@style/MediumFont" android:text="Title" />
-                <TextView
-                    android:id="@+id/last_trade_price"
-                    android:layout_width="0dp" android:layout_weight="1"
-                    android:layout_height="wrap_content" style="@style/MediumFont"
-                    android:text="Price" android:gravity="right"/>
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
 
+               <TextView
+                   android:id="@+id/name"
+                   android:layout_width="0dp" android:layout_weight="5"
+                   android:layout_height="wrap_content" style="@style/LargeFont" android:text="Title" />
+               <TextView
+                   android:id="@+id/last_trade_price"
+                   android:layout_width="0dp" android:layout_weight="4"
+                   android:layout_height="wrap_content" style="@style/LargeFont"
+                   android:text="Price" android:gravity="right"/>
+               <TextView
+                   android:id="@+id/change" android:paddingRight="15dp"
+                   android:layout_width="0dp" android:layout_weight="3"
+                   android:layout_height="wrap_content" style="@style/LargeFont"
+                   android:text="Change"
+                   android:gravity="right"/>
 
-                </LinearLayout>
+           </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/ticker"
-                        android:layout_width="0dp" android:layout_weight="1"
-                        android:layout_height="wrap_content" style="@style/MediumFont" android:text="ticker" />
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/change"
-                        android:layout_width="0dp" android:layout_weight="1"
-                        android:layout_height="wrap_content" style="@style/MediumFont"
-                        android:text="Change"
-                        android:gravity="right"/>
+               <TextView
+                   android:id="@+id/ticker"
+                   android:layout_width="0dp" android:layout_weight="5"
+                   android:layout_height="wrap_content" style="@style/SmallFont" android:text="ticker" />
+               <TextView
+                   android:id="@+id/last_trade_time"
+                   android:layout_width="0dp" android:layout_weight="4"
+                   android:layout_height="wrap_content" style="@style/SmallFont"
+                   android:text="Price" android:gravity="right"/>
+               <TextView
+                   android:id="@+id/change_percent" android:paddingRight="15dp"
+                   android:layout_width="0dp" android:layout_weight="3"
+                   android:layout_height="wrap_content" style="@style/SmallFont"
+                   android:text="Change Percent"
+                   android:gravity="right"/>
 
-                </LinearLayout>
-
-            </LinearLayout>
+           </LinearLayout>
 
         </LinearLayout>
 

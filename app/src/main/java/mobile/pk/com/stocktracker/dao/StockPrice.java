@@ -5,7 +5,12 @@ import android.text.TextUtils;
 import com.orm.StringUtil;
 import com.orm.SugarRecord;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import mobile.pk.com.stocktracker.service.PricingService;
 
@@ -21,7 +26,7 @@ public class StockPrice extends SugarRecord<StockPrice>{
     private String lastPriceWithCurrency;
     private double change;
     private double changePercent;
-    private String lastTrade;
+    private long lastTradeTime;
     private String currency;
 
     public String getClientId() {
@@ -80,13 +85,6 @@ public class StockPrice extends SugarRecord<StockPrice>{
         this.changePercent = changePercent;
     }
 
-    public String getLastTrade() {
-        return lastTrade;
-    }
-
-    public void setLastTrade(String lastTrade) {
-        this.lastTrade = lastTrade;
-    }
 
     public static StockPrice from(PricingService.StockPrice serverPrice)
     {
@@ -111,10 +109,18 @@ public class StockPrice extends SugarRecord<StockPrice>{
         if(!TextUtils.isEmpty( serverPrice.getLastPrice()))
             stockPrice.setLastPrice(Double.parseDouble(serverPrice.getLastPrice()));
         stockPrice.setLastPriceWithCurrency(serverPrice.getLastPriceWithCurrency());
-        stockPrice.setLastTrade(serverPrice.getLastTrade());
+
+        DateFormat m_ISO8601Local = new SimpleDateFormat("yyyy MMM dd, hh:mma Z", Locale.getDefault()  );
+
+        try {
+            String fullDateStrin = Calendar.getInstance().get(Calendar.YEAR) + " " + serverPrice.getLastTrade();
+            stockPrice.setLastTradeTime(m_ISO8601Local.parse(fullDateStrin).getTime());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         stockPrice.setCurrency(serverPrice.getLastPriceWithCurrency().replace(serverPrice.getLastPriceFormatted(), ""));
         if( TextUtils.isEmpty(stockPrice.getCurrency()))
-            stockPrice.setCurrency("$");
+            stockPrice.setCurrency("US$");
         stockPrice.save();
 
         return stockPrice;
@@ -127,5 +133,13 @@ public class StockPrice extends SugarRecord<StockPrice>{
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    public long getLastTradeTime() {
+        return lastTradeTime;
+    }
+
+    public void setLastTradeTime(long lastTradeTime) {
+        this.lastTradeTime = lastTradeTime;
     }
 }

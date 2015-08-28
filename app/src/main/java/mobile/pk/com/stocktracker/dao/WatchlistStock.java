@@ -11,7 +11,6 @@ public class WatchlistStock extends SugarRecord<WatchlistStock>{
 
     private Stock stock;
     private Watchlist watchlist;
-    private Date creationTS;
 
     public Stock getStock() {
         return stock;
@@ -29,19 +28,11 @@ public class WatchlistStock extends SugarRecord<WatchlistStock>{
         this.watchlist = watchlist;
     }
 
-    public Date getCreationTS() {
-        return creationTS;
-    }
-
-    public void setCreationTS(Date creationTS) {
-        this.creationTS = creationTS;
-    }
 
     public static WatchlistStock from(Stock stock, Watchlist watchlist) {
         WatchlistStock watchlistStock = new WatchlistStock();
         watchlistStock.setStock(stock);
         watchlistStock.setWatchlist(watchlist);
-        watchlistStock.setCreationTS(new Date());
         watchlistStock.save();
         return watchlistStock;
     }

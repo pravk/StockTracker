@@ -22,8 +22,11 @@ public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D> ext
     protected Context mContext;
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
-    protected static final String PRICE_CHANGE_FORMAT = "%s (%s%%)";
+    protected static final String PRICE_CHANGE_WITH_PERCENT_FORMAT = "%s (%s%%)";
+    protected static final String PRICE_CHANGE_FORMAT = "%s";
+    protected static final String PRICE_CHANGE_PERCENT_FORMAT = "%s%%";
     protected static final String PRICE_FORMAT = "%s %2$,.2f";
+    protected static final String PRICE_FORMAT_WITHOUT_CURRENCY = "%1$,.2f";
 
     private List<D> dataList;
 
