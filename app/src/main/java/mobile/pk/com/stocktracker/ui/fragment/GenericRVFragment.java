@@ -1,7 +1,12 @@
 package mobile.pk.com.stocktracker.ui.fragment;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,12 +25,13 @@ import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.adapters.GenericRVAdapter;
+import mobile.pk.com.stocktracker.common.Application;
 
 
 public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> extends Fragment {
 
     private Context context;
-
+    Handler handler;
     /*public static GenericRVFragment newInstance(Long portfolioId) {
         GenericRVFragment fragment = new GenericRVFragment();
         Bundle args = new Bundle();
@@ -37,12 +43,47 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        handler = new Handler();
+        handler.postDelayed(timeUpdater,1000);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(Application.getInstance().getApplicationContext());
+        String refreshInterval = settings.getString("priceRefreshInterval", "5");
+        try
+        {
+            final int refreshInMins = Integer.parseInt(refreshInterval);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getAdapter().reset();
+                    if(!isDetached())
+                        handler.postDelayed(this, refreshInMins*60*1000);
+                }
+            }, refreshInMins*60*1000);
+        }
+        catch (Exception e)
+        {
+            //Do not auto refresh
+        }
         /*try {
             EventBus.getDefault().register(this);
         }catch (Exception e)
         {
             e.printStackTrace();
         }*/
+    }
+
+    Runnable timeUpdater = new Runnable() {
+        @Override
+        public void run() {
+            resetTime();
+
+            if(!isDetached())
+                handler.postDelayed(timeUpdater,1000);
+        }
+    };
+
+    protected void resetTime() {
+        getAdapter().notifyDataSetChanged();
     }
 
     @Override
