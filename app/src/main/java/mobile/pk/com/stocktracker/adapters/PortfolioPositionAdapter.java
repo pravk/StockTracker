@@ -18,7 +18,6 @@ import mobile.pk.com.stocktracker.adapters.viewholder.PortfolioPositionViewHolde
 import mobile.pk.com.stocktracker.adapters.viewholder.PortfolioSummaryViewHolder;
 import mobile.pk.com.stocktracker.dao.Portfolio;
 import mobile.pk.com.stocktracker.dao.PortfolioCurrencySummary;
-import mobile.pk.com.stocktracker.dao.PortfolioPosition;
 import mobile.pk.com.stocktracker.dao.Position;
 import mobile.pk.com.stocktracker.dao.Stock;
 import mobile.pk.com.stocktracker.dataobjects.PositionData;
@@ -72,7 +71,7 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PositionData> {
         viewHolder.realizedGain.setText(summaryData.getRealizedGain());
         viewHolder.unrealizedGain.setText(summaryData.getUnRealizedGain());
         viewHolder.netAsset.setText(summaryData.getNetAsset());
-        viewHolder.cardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.primary_light));
+        //viewHolder.cardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.primary_light));
 
     }
 
@@ -165,7 +164,8 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PositionData> {
         }
 
         List<PortfolioCurrencySummary> portfolioCurrencySummaryList = TransactionProcessor.getInstance().getPortfolioSummary(portfolio);
-        positionDataList.add(new PositionData.PortfolioSummaryData(portfolioCurrencySummaryList.get(0)));
+        if(portfolioCurrencySummaryList != null && portfolioCurrencySummaryList.size()>0)
+            positionDataList.add(new PositionData.PortfolioSummaryData(portfolioCurrencySummaryList.get(0)));
 
         return positionDataList;
     }

@@ -73,7 +73,7 @@
     <string name="company_name">Company Name</string>
     <string name="refreshing">Refreshing</string>
     <string name="net_asset">Net Asset</string>
-    <string name="realized_gain">Realized</string>
-    <string name="unrealized_gain">Unrealized Gain</string>
+    <string name="realized_gain">Realized Gain/Loss</string>
+    <string name="unrealized_gain">Unrealized Gain/Loss</string>
     <string name="returns">Returns</string>
 </resources>
