@@ -1,6 +1,7 @@
 package mobile.pk.com.stocktracker.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,7 @@ import mobile.pk.com.stocktracker.service.TickerSearchService;
 /**
  * Created by hello on 8/29/2015.
  */
-public class StockSearchResultAdapter extends GenericRVAdapter<StockSearchResultViewHolder, TickerSearchService.Match> {
+public class StockSearchResultAdapter extends GenericRVAdapter<TickerSearchService.Match> {
 
     private String query;
 
@@ -26,7 +27,8 @@ public class StockSearchResultAdapter extends GenericRVAdapter<StockSearchResult
     }
 
     @Override
-    protected void onBindViewHolderInternal(StockSearchResultViewHolder holder, int i) {
+    protected void onBindViewHolderInternal(RecyclerView.ViewHolder viewHolder, int i) {
+        StockSearchResultViewHolder holder = (StockSearchResultViewHolder) viewHolder;
         TickerSearchService.Match match = getDataList().get(i);
         if(match != null)
         {

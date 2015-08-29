@@ -1,6 +1,7 @@
 package mobile.pk.com.stocktracker.dataobjects;
 
 import mobile.pk.com.stocktracker.R;
+import mobile.pk.com.stocktracker.dao.PortfolioCurrencySummary;
 import mobile.pk.com.stocktracker.dao.Position;
 
 /**
@@ -100,6 +101,33 @@ public class PositionData extends BaseDataObject{
         }
         public String getMarketValue(){
             return "-";
+        }
+    }
+
+    public static class PortfolioSummaryData extends PositionData{
+
+        PortfolioCurrencySummary summary;
+        public PortfolioSummaryData (PortfolioCurrencySummary summary ) {
+            super(null);
+            this.summary = summary;
+        }
+
+        public String getNetAsset()
+        {
+            return String.format(PRICE_FORMAT, summary.getCurrency(), summary.getNetAsset());
+        }
+
+        public String getRealizedGain()
+        {
+            return String.format(PRICE_FORMAT, summary.getCurrency(), summary.getRealizedGainLoss());
+        }
+        public String getUnRealizedGain()
+        {
+            return String.format(PRICE_FORMAT, summary.getCurrency(), summary.getUnrealizedGainLoss());
+        }
+
+        public String getReturnPercent(){
+            return String.format("%1$,.2f%%", summary.getReturnPercent());
         }
     }
 

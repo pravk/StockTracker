@@ -19,11 +19,13 @@ import mobile.pk.com.stocktracker.dao.tasks.ServerPriceRefreshTask;
 /**
  * Created by hello on 8/20/2015.
  */
-public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D> extends RecyclerView.Adapter<T> {
+public abstract class GenericRVAdapter<D> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     protected Context mContext;
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
+    private static final int TYPE_SUMMARY = 2;
+
     protected static final String PRICE_CHANGE_WITH_PERCENT_FORMAT = "%s (%s%%)";
     protected static final String PRICE_CHANGE_FORMAT = "%s";
     protected static final String PRICE_CHANGE_PERCENT_FORMAT = "%s%%";
@@ -38,10 +40,14 @@ public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D> ext
     }
 
     @Override
-    public T onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         if(viewType == TYPE_HEADER)
         {
             return onCreateViewHolderHeaderInternal(viewGroup, viewType);
+        }
+        else if(viewType == TYPE_SUMMARY)
+        {
+            return onCreateViewHolderSummary(viewGroup,viewType);
         }
         else
         {
@@ -49,15 +55,23 @@ public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D> ext
         }
     }
 
-    protected T onCreateViewHolderHeaderInternal(ViewGroup viewGroup, int viewType){
+    protected RecyclerView.ViewHolder onCreateViewHolderSummary(ViewGroup viewGroup, int viewType) {
+        throw new RuntimeException("Not supported by this class");
+    }
+
+    protected RecyclerView.ViewHolder onCreateViewHolderHeaderInternal(ViewGroup viewGroup, int viewType){
         throw new RuntimeException("Not supported by this class");
     }
 
     @Override
-    public void onBindViewHolder(T holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if(isPositionHeader(position))
         {
             onBindViewHolderHeaderInternal(holder, position);
+        }
+        else if (isPositionSummary(position))
+        {
+            onBindViewHolderSummary(holder, position);
         }
         else
         {
@@ -65,11 +79,17 @@ public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D> ext
         }
     }
 
-    protected void onBindViewHolderHeaderInternal(T holder, int i){
-        //Do nothing
+    protected void onBindViewHolderSummary(RecyclerView.ViewHolder holder, int position) {
+        throw new RuntimeException("Not supported by this class");
+
     }
 
-    protected abstract void onBindViewHolderInternal(T holder, int i);
+    protected void onBindViewHolderHeaderInternal(RecyclerView.ViewHolder holder, int i){
+        throw new RuntimeException("Not supported by this class");
+
+    }
+
+    protected abstract void onBindViewHolderInternal(RecyclerView.ViewHolder holder, int i);
 
     public void refreshData()
     {
@@ -96,7 +116,7 @@ public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D> ext
         return dataList;
     }
 
-    protected abstract T onCreateViewHolderInternal(ViewGroup viewGroup, int i);
+    protected abstract RecyclerView.ViewHolder onCreateViewHolderInternal(ViewGroup viewGroup, int i);
 
     protected abstract List<D> refreshDataInternal();
 
@@ -152,7 +172,17 @@ public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D> ext
     public int getItemViewType(int position) {
         if(hasHeader() && isPositionHeader(position))
             return TYPE_HEADER;
+        else if (hasSummary() && isPositionSummary(position))
+            return TYPE_SUMMARY;
         return TYPE_ITEM;
+    }
+
+    protected boolean isPositionSummary(int position) {
+        return false;
+    }
+
+    protected boolean hasSummary() {
+        return false;
     }
 
     protected boolean hasHeader(){

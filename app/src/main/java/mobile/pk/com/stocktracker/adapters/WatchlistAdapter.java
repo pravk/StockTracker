@@ -2,6 +2,7 @@ package mobile.pk.com.stocktracker.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -20,7 +21,7 @@ import mobile.pk.com.stocktracker.dao.Watchlist;
 /**
  * Created by hello on 8/20/2015.
  */
-public class WatchlistAdapter extends GenericRVAdapter<WatchlistViewHolder, Watchlist> {
+public class WatchlistAdapter extends GenericRVAdapter<Watchlist> {
 
     public WatchlistAdapter(Context context) {
         super(context);
@@ -46,7 +47,8 @@ public class WatchlistAdapter extends GenericRVAdapter<WatchlistViewHolder, Watc
     }
 
     @Override
-    public void onBindViewHolderInternal(WatchlistViewHolder holder, int position) {
+    public void onBindViewHolderInternal(RecyclerView.ViewHolder viewHolder, int position) {
+        WatchlistViewHolder holder = (WatchlistViewHolder) viewHolder;
         final Watchlist watchlist = getDataList().get(position);
 
         holder.watchlistName.setText(watchlist.getWatchlistName());

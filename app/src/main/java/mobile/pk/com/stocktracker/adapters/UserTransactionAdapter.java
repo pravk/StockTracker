@@ -1,6 +1,7 @@
 package mobile.pk.com.stocktracker.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -23,7 +24,7 @@ import mobile.pk.com.stocktracker.utils.NumberUtils;
 /**
  * Created by hello on 8/26/2015.
  */
-public class UserTransactionAdapter extends GenericRVAdapter<TransactionViewHolder, UserTransaction> {
+public class UserTransactionAdapter extends GenericRVAdapter<UserTransaction> {
 
     private final Position position;
 
@@ -33,7 +34,8 @@ public class UserTransactionAdapter extends GenericRVAdapter<TransactionViewHold
     }
 
     @Override
-    protected void onBindViewHolderInternal(TransactionViewHolder transactionViewHolder, int i) {
+    protected void onBindViewHolderInternal(RecyclerView.ViewHolder viewHolder, int i) {
+        TransactionViewHolder transactionViewHolder = (TransactionViewHolder) viewHolder;
         final UserTransaction userTransaction = getDataList().get(i);
 
         //Setting text view title

@@ -1,6 +1,7 @@
 package mobile.pk.com.stocktracker.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -14,7 +15,10 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.adapters.viewholder.PortfolioPositionViewHolder;
+import mobile.pk.com.stocktracker.adapters.viewholder.PortfolioSummaryViewHolder;
 import mobile.pk.com.stocktracker.dao.Portfolio;
+import mobile.pk.com.stocktracker.dao.PortfolioCurrencySummary;
+import mobile.pk.com.stocktracker.dao.PortfolioPosition;
 import mobile.pk.com.stocktracker.dao.Position;
 import mobile.pk.com.stocktracker.dao.Stock;
 import mobile.pk.com.stocktracker.dataobjects.PositionData;
@@ -25,7 +29,7 @@ import mobile.pk.com.stocktracker.transaction.processor.TransactionProcessor;
 /**
  * Created by hello on 8/1/2015.
  */
-public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPositionViewHolder, PositionData> {
+public class PortfolioPositionAdapter extends GenericRVAdapter<PositionData> {
 
     private Portfolio portfolio;
 
@@ -34,8 +38,16 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
         this.portfolio = portfolio;
     }
 
+    protected RecyclerView.ViewHolder onCreateViewHolderSummary(ViewGroup viewGroup, int viewType) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_portfolio_position_summary, viewGroup, false);
+
+        final PortfolioSummaryViewHolder viewHolder = new PortfolioSummaryViewHolder(view);
+
+        return viewHolder;
+    }
+
     @Override
-    public PortfolioPositionViewHolder onCreateViewHolderInternal(ViewGroup viewGroup, int i) {
+    public RecyclerView.ViewHolder onCreateViewHolderInternal(ViewGroup viewGroup, int i) {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_portfolio_position_item, viewGroup, false);
 
             final PortfolioPositionViewHolder viewHolder = new PortfolioPositionViewHolder(view);
@@ -44,7 +56,7 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
     }
 
     @Override
-    protected PortfolioPositionViewHolder onCreateViewHolderHeaderInternal(ViewGroup viewGroup, int viewType) {
+    protected RecyclerView.ViewHolder onCreateViewHolderHeaderInternal(ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_portfolio_position_item_header, viewGroup, false);
 
         PortfolioPositionViewHolder.PortfolioPositionViewHolderHeader viewHolder = new PortfolioPositionViewHolder.PortfolioPositionViewHolderHeader(view);
@@ -53,7 +65,20 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
     }
 
     @Override
-    protected void onBindViewHolderHeaderInternal(PortfolioPositionViewHolder holder, int i) {
+    protected void onBindViewHolderSummary(RecyclerView.ViewHolder holder, int position) {
+        PortfolioSummaryViewHolder viewHolder = (PortfolioSummaryViewHolder) holder;
+        PositionData.PortfolioSummaryData summaryData = (PositionData.PortfolioSummaryData) getDataList().get(position);
+        viewHolder.returns.setText(summaryData.getReturnPercent());
+        viewHolder.realizedGain.setText(summaryData.getRealizedGain());
+        viewHolder.unrealizedGain.setText(summaryData.getUnRealizedGain());
+        viewHolder.netAsset.setText(summaryData.getNetAsset());
+        viewHolder.cardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.primary_light));
+
+    }
+
+    @Override
+    protected void onBindViewHolderHeaderInternal(RecyclerView.ViewHolder viewHolder, int i) {
+        PortfolioPositionViewHolder.PortfolioPositionViewHolderHeader holder = (PortfolioPositionViewHolder.PortfolioPositionViewHolderHeader) viewHolder;
         final PositionData position = getDataList().get(i);
 
         holder.gainLoss.setText(position.getGainLoss());
@@ -70,7 +95,8 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
     }
 
     @Override
-    public void onBindViewHolderInternal(final PortfolioPositionViewHolder portfolioViewHolder, int i) {
+    public void onBindViewHolderInternal(final RecyclerView.ViewHolder viewHolder, int i) {
+        PortfolioPositionViewHolder portfolioViewHolder = (PortfolioPositionViewHolder) viewHolder;
         final PositionData position = getDataList().get(i);
 
         //Setting text view title
@@ -125,17 +151,22 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
     public List<PositionData> refreshDataInternal() {
         List<Position> positionList = TransactionProcessor.getInstance().getOpenPositions(portfolio);
         List<PositionData> positionDataList= new ArrayList<>();
-        positionDataList.add(new PositionData.PositionHeaderData(mContext.getResources().getString(R.string.open_positions) , R.color.green));
+        positionDataList.add(new PositionData.PositionHeaderData(mContext.getResources().getString(R.string.open_positions), R.color.green));
         for (Position position :
                 positionList) {
             positionDataList.add(new PositionData(position));
         }
-        positionDataList.add(new PositionData.PositionHeaderData(mContext.getResources().getString(R.string.closed_positions), R.color.teal));
         positionList = TransactionProcessor.getInstance().getClosedPositions(portfolio);
+        if(positionList.size()>0)
+            positionDataList.add(new PositionData.PositionHeaderData(mContext.getResources().getString(R.string.closed_positions), R.color.teal));
         for (Position position :
                 positionList) {
             positionDataList.add(new PositionData.ClosedPositionData(position));
         }
+
+        List<PortfolioCurrencySummary> portfolioCurrencySummaryList = TransactionProcessor.getInstance().getPortfolioSummary(portfolio);
+        positionDataList.add(new PositionData.PortfolioSummaryData(portfolioCurrencySummaryList.get(0)));
+
         return positionDataList;
     }
 
@@ -145,8 +176,16 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
 
     protected boolean isPositionHeader(int position)
     {
-        return getDataList().get(position).getPosition() == null;
+        return getDataList().get(position) instanceof PositionData.PositionHeaderData;
     }
+    protected boolean isPositionSummary(int position) {
+        return getDataList().get(position) instanceof PositionData.PortfolioSummaryData;
+    }
+
+    protected boolean hasSummary() {
+        return true;
+    }
+
 
     @Override
     protected Stock getUnderlyingStock(PositionData data){

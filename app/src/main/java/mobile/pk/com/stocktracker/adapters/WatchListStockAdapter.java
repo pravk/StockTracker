@@ -11,6 +11,7 @@ import mobile.pk.com.stocktracker.dao.WatchlistStock;
 import mobile.pk.com.stocktracker.dao.tasks.PriceLoadTask;
 import mobile.pk.com.stocktracker.dao.tasks.ServerPriceRefreshTask;
 
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -25,7 +26,7 @@ import java.util.List;
 /**
  * Created by hello on 8/1/2015.
  */
-public class WatchListStockAdapter extends GenericRVAdapter<WatchlistStockViewHolder, WatchlistStock> {
+public class WatchListStockAdapter extends GenericRVAdapter<WatchlistStock> {
 
     private Watchlist watchlist;
 
@@ -54,7 +55,8 @@ public class WatchListStockAdapter extends GenericRVAdapter<WatchlistStockViewHo
     }
 
     @Override
-    public void onBindViewHolderInternal(final WatchlistStockViewHolder stockViewHolder, int i) {
+    public void onBindViewHolderInternal(RecyclerView.ViewHolder viewHolder, int i) {
+        final WatchlistStockViewHolder stockViewHolder = (WatchlistStockViewHolder) viewHolder;
         final WatchlistStock watchlistStock = getDataList().get(i);
 
 

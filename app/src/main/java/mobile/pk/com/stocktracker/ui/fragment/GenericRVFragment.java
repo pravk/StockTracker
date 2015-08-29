@@ -228,7 +228,7 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
 
     protected abstract boolean showRefreshAction();
 
-    protected abstract <D> GenericRVAdapter<T,D> getAdapter();
+    protected abstract <D> GenericRVAdapter<D> getAdapter();
 
     @OnClick(R.id.fab_add_new)
     public void onAddNewTransaction(){

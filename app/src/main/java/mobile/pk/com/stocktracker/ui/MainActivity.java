@@ -13,8 +13,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
@@ -35,7 +33,6 @@ import mobile.pk.com.stocktracker.ui.activity.BackupActivity;
 import mobile.pk.com.stocktracker.ui.activity.SearchActivity;
 import mobile.pk.com.stocktracker.ui.fragment.PortfolioFragment;
 import mobile.pk.com.stocktracker.ui.fragment.PortfolioPositionFragment;
-import mobile.pk.com.stocktracker.ui.fragment.PortfolioSummaryFragment;
 import mobile.pk.com.stocktracker.ui.fragment.UserSettingsFragment;
 import mobile.pk.com.stocktracker.ui.activity.TransactionActivity;
 import mobile.pk.com.stocktracker.ui.fragment.WatchlistFragment;
@@ -68,7 +65,7 @@ public class MainActivity extends BaseActivity {
         navigationDrawerHelper = new NavigationDrawerHelper(this);
         // Setup drawer view
         setupDrawerContent(nvDrawer);
-        showHome();
+        loadWorldIndices();
         //nvDrawer.getMenu().performIdentifierAction(R.id.default_watchlist, 0);
 
     }
@@ -117,11 +114,7 @@ public class MainActivity extends BaseActivity {
 
         Fragment fragment = null;
         Fragment fragmentClass = null;
-        if(menuItem.getItemId() == R.id.drawer_summary)
-        {
-           showHome();
-        }
-        else if(menuItem.getItemId() == R.id.drawer_watchlist)
+        if(menuItem.getItemId() == R.id.drawer_watchlist)
         {
             fragmentClass = WatchlistFragment.newInstance(this);
             /*Intent intent = new Intent(this, EditWatchlistActivity.class);
@@ -256,14 +249,14 @@ public class MainActivity extends BaseActivity {
     }
 
 
-    public void showHome()
+    /*public void showHome()
     {
         Fragment fragment = PortfolioSummaryFragment.newInstance(this);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
         setTitle(R.string.porfolio_summary);
         mDrawer.closeDrawers();
-    }
+    }*/
 
 
     private void loadWorldIndices() {

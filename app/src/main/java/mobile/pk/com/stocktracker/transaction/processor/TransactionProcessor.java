@@ -34,6 +34,7 @@ public class TransactionProcessor {
             " JOIN Position pos on pos.portfolio = port.id " +
             " JOIN Stock s on pos.stock = s.id  " +
             " JOIN Stock_price sp on s.client_id = sp.client_id " +
+            " WHERE port.id = ? " +
             " GROUP BY port.id, sp.currency " +
             " --HAVING SUM(pos.quantity*pos.average_price)>0      ";
     public TransactionProcessor()
@@ -115,9 +116,9 @@ public class TransactionProcessor {
                 , new String []{ String.valueOf(position.getStock().getId()), String.valueOf(position.getPortfolio().getId()), transactionType, String.valueOf(before)} ,null, StringUtil.toSQLName("transactionDate"), null );
     }
 
-    public List<PortfolioCurrencySummary> getPortfolioSummary(){
+    public List<PortfolioCurrencySummary> getPortfolioSummary(Portfolio portfolio){
 
-        Cursor c = Application.getInstance().executeQuery(PORTFOLIO_SUMMARY_QUERY);
+        Cursor c = Application.getInstance().executeQuery(PORTFOLIO_SUMMARY_QUERY, String.valueOf(portfolio.getId()));
         List<PortfolioCurrencySummary> portfolioCurrencySummaryList = new ArrayList<>();
         try {
             while(c.moveToNext()) {

@@ -63,7 +63,7 @@ public class StockSearchResultFragment extends GenericRVFragment<StockSearchResu
     }
 
     @Override
-    protected GenericRVAdapter<StockSearchResultViewHolder, TickerSearchService.Match> getAdapter() {
+    protected GenericRVAdapter<TickerSearchService.Match> getAdapter() {
         return adapter;
     }
 

@@ -6,10 +6,10 @@
             android:id="@+id/world_indices"
             android:icon="@drawable/ic_list_black_24dp"
             android:title="@string/world_indices"/>
-        <item
+        <!--<item
             android:id="@+id/drawer_summary"
             android:icon="@drawable/ic_list_black_24dp"
-            android:title="@string/home"/>
+            android:title="@string/home"/>-->
         <item
             android:id="@+id/drawer_watchlist"
             android:icon="@drawable/ic_list_black_24dp"
