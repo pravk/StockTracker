@@ -133,7 +133,7 @@ public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D> ext
 
         new ServerPriceRefreshTask(RestClient.getDefault().getPricingService()) {
             @Override
-            protected void onPostExecute(Void result) {
+            protected void onPostExecute(List<StockPrice> result) {
                 if(getException() == null) {
                     populatePrices(false);
                 }

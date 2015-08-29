@@ -11,6 +11,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 
@@ -23,11 +24,15 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
+import mobile.pk.com.stocktracker.common.RestClient;
 import mobile.pk.com.stocktracker.dao.Portfolio;
 import mobile.pk.com.stocktracker.dao.Stock;
+import mobile.pk.com.stocktracker.dao.StockPrice;
 import mobile.pk.com.stocktracker.dao.UserTransaction;
 import mobile.pk.com.stocktracker.dao.Watchlist;
+import mobile.pk.com.stocktracker.dao.tasks.ServerPriceRefreshTask;
 import mobile.pk.com.stocktracker.event.TransactionChangedEvent;
+import mobile.pk.com.stocktracker.service.TickerSearchService;
 import mobile.pk.com.stocktracker.ui.BaseActivity;
 import mobile.pk.com.stocktracker.utils.StockSearchTextView;
 
@@ -60,6 +65,10 @@ public class EditTransactionActivity extends BaseActivity {
     EditText tradeDate;
     @InjectView(R.id.btn_delete)
     BootstrapButton deleteButton;
+
+    @InjectView(R.id.last_trade_price)
+    TextView lastTradePrice;
+
     private long transactionId;
     private UserTransaction transaction;
     private List<String> transactionTypeArray;
@@ -124,14 +133,34 @@ public class EditTransactionActivity extends BaseActivity {
                         @Override
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                             Calendar calendar1 = Calendar.getInstance();
-                            calendar1.set(year,monthOfYear,dayOfMonth);
+                            calendar1.set(year, monthOfYear, dayOfMonth);
                             setTradeDate(calendar1.getTimeInMillis());
 
                         }
-                    },  year, month, day);
+                    }, year, month, day);
                     datePickerDialog.show();
                 }
             });
+
+            stockSearchTextView.setMatchSelectListener(new StockSearchTextView.MatchSelectListener() {
+                @Override
+                public void onMatchSelect(TickerSearchService.Match match) {
+                    Stock stock = Stock.from(match);
+                    lastTradePrice.setText("Fetching last trade price...");
+                    new ServerPriceRefreshTask(RestClient.getDefault().getPricingService()) {
+                        @Override
+                        protected void onPostExecute(List<StockPrice> result) {
+                            if (getException() == null && result != null && result.size() > 0) {
+                                lastTradePrice.setText(String.format("Last Traded Price: %s %2$,.2f", result.get(0).getCurrency(), result.get(0).getLastPrice()));
+                            } else {
+                                lastTradePrice.setText("Failed to fetch last trade price...");
+                            }
+                        }
+
+                    }.execute(new Stock[]{stock});
+                }
+            });
+            lastTradePrice.setFocusable(false);
 
         }
 
@@ -152,7 +181,7 @@ public class EditTransactionActivity extends BaseActivity {
             transaction.setStock(Stock.from(stockSearchTextView.getMatch()));
         }
         transaction.setPortfolio(portfolio);
-        transaction.setTransactionType( transactionTypeArray.get(transactionType.getSelectedItemPosition()) );
+        transaction.setTransactionType(transactionTypeArray.get(transactionType.getSelectedItemPosition()));
         transaction.setPrice(Double.parseDouble(price.getText().toString()));
         transaction.setQuantity(Integer.parseInt(quantity.getText().toString()));
         //transaction.setTransactionDate(Date.parse(tradeDate.getText().toString()));

@@ -1,5 +1,6 @@
 package mobile.pk.com.stocktracker.ui;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +19,7 @@ public class BaseActivity extends AppCompatActivity {
     public static final int ADD_PORTFOLIO_TRANSACTION = 3000;
     public static final int EDIT_USER_TRANSACTION = 4000;
     public static final int RESULT_SETTINGS = 5000;
+    private ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,5 +47,19 @@ public class BaseActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    protected void showProgressDialog(int resourceId)
+    {
+        if(pd == null)
+            pd = new ProgressDialog(this);
+        pd.setMessage(getString(resourceId));
+        pd.show();
+    }
+
+    protected void hideProgressDialog()
+    {
+        if(pd != null)
+            pd.hide();
     }
 }

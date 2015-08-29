@@ -72,12 +72,12 @@ public class WatchlistStockFragment extends GenericRVFragment<WatchlistStockView
 
     @Override
     protected boolean showEditAction() {
-        return true;
+        return !watchlist.isSystem();
     }
 
     @Override
     protected boolean showCreateAction() {
-        return true;
+        return !watchlist.isSystem();
     }
 
     @Override

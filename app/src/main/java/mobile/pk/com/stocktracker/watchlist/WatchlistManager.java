@@ -8,6 +8,7 @@ import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
+import mobile.pk.com.stocktracker.common.Application;
 import mobile.pk.com.stocktracker.common.RestClient;
 import mobile.pk.com.stocktracker.dao.Stock;
 import mobile.pk.com.stocktracker.dao.Watchlist;
@@ -32,7 +33,7 @@ public class WatchlistManager {
         return instance;
     }
 
-    public Watchlist getWorldMarketWatchlist(Context context)
+    public void getWorldMarketWatchlist(Context context, final WorldMarketLoadComplete worldMarketLoadComplete)
     {
         List<Watchlist> watchlistList = Watchlist.find(Watchlist.class, "watchlist_name=? and is_system=1", WORLD_INDICES_NAME);
         if(watchlistList == null || watchlistList.size()==0)
@@ -46,13 +47,22 @@ public class WatchlistManager {
                 @Override
                 protected Void doInBackground(Void... params) {
                     initWorldIndices(finalWatchlistList.get(0));
+                    worldMarketLoadComplete.loadComplete(finalWatchlistList.get(0));
                     EventBus.getDefault().post(new WatchlistRefreshEvent(finalWatchlistList.get(0)));
                     return null;
                 }
             }.execute();
         }
+        else
+        {
+            worldMarketLoadComplete.loadComplete(watchlistList.get(0));
+        }
+        //return watchlistList.get(0);
+    }
 
-        return watchlistList.get(0);
+    public static interface WorldMarketLoadComplete
+    {
+        void loadComplete(Watchlist watchlist);
     }
 
     private void createWorldIndicesWatchlist(Context context) {
@@ -69,30 +79,17 @@ public class WatchlistManager {
     private void initWorldIndices(Watchlist watchlist){
         long time = Calendar.getInstance().getTimeInMillis();
 
-        WatchlistStock watchlistStock = new WatchlistStock();
-        watchlistStock.setWatchlist(watchlist);
-        watchlistStock.setStock(getStock("INDEXBOM:SENSEX"));
+        String [] indices = Application.getInstance().getApplicationContext().getResources().getStringArray(R.array.world_indices);
 
-        if(watchlistStock.getStock() != null)
-            watchlistStock.save();
+        for (String index : indices) {
+            WatchlistStock watchlistStock = new WatchlistStock();
+            watchlistStock.setWatchlist(watchlist);
+            watchlistStock.setStock(getStock(index));
 
-        watchlistStock = new WatchlistStock();
-        watchlistStock.setWatchlist(watchlist);
-        watchlistStock.setStock(getStock("SHA:000001"));
-        if(watchlistStock.getStock() != null)
-            watchlistStock.save();
+            if (watchlistStock.getStock() != null)
+                watchlistStock.save();
 
-        watchlistStock = new WatchlistStock();
-        watchlistStock.setWatchlist(watchlist);
-        watchlistStock.setStock(getStock("INDEXNIKKEI:NI225"));
-        if(watchlistStock.getStock() != null)
-            watchlistStock.save();
-
-        watchlistStock = new WatchlistStock();
-        watchlistStock.setWatchlist(watchlist);
-        watchlistStock.setStock(getStock("INDEXASX:XJO"));
-        if(watchlistStock.getStock() != null)
-            watchlistStock.save();
+        }
     }
 
     public Stock getStock(String ticker){

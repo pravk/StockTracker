@@ -36,4 +36,27 @@
         <item>SHORT-SELL</item>
         <item>BUY-TO-COVER</item>
     </string-array>
+    <string-array name="world_indices">
+        <item>SHA:000001</item>
+        <item>INDEXNIKKEI:NI225</item>
+        <item>INDEXHANGSENG:HSI</item>
+        <item>TPE:TAIEX</item>
+        <item>INDEXFTSE:UKX</item>
+        <item>INDEXSTOXX:SX5E</item>
+        <item>INDEXEURO:PX1</item>
+        <item>INDEXTSI:OSPTX</item>
+        <item>INDEXASX:XJO</item>
+        <item>INDEXBOM:SENSEX</item>
+        <item>TLV:T25</item>
+        <item>INDEXBVMF:IBOV</item>
+        <item>INDEXSWX:SMI</item>
+        <item>INDEXVIE:ATX</item>
+        <item>INDEXBVMF:IBOV</item>
+        <item>INDEXBKK:SET</item>
+        <item>INDEXIST:XU100</item>
+        <item>INDEXBME:IB</item>
+        <item>WSE:WIG</item>
+        <item>TADAWUL:TASI</item>
+        <item>BCBA:IAR</item>
+    </string-array>
 </resources>

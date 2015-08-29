@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import mobile.pk.com.stocktracker.dao.Stock;
@@ -18,7 +19,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by hello on 8/11/2015.
  */
-public class ServerPriceRefreshTask extends AsyncTask<Stock, Void, Void> {
+public class ServerPriceRefreshTask extends AsyncTask<Stock, Void, List<StockPrice>> {
 
     private static final String TAG = ServerPriceRefreshTask.class.getSimpleName();
     private final PricingService service;
@@ -30,11 +31,12 @@ public class ServerPriceRefreshTask extends AsyncTask<Stock, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(Stock... params) {
+    protected List<StockPrice> doInBackground(Stock... params) {
 
         if(params == null || params.length==0)
             return null;
 
+        List<StockPrice> stockPriceList= new ArrayList<>();
         StringBuilder queryValue = new StringBuilder();
         int index = 0;
         for (Stock stock : params)
@@ -54,13 +56,14 @@ public class ServerPriceRefreshTask extends AsyncTask<Stock, Void, Void> {
             for (PricingService.StockPrice serverPrice : serverPriceList) {
                 StockPrice stockPrice = StockPrice.from(serverPrice);
                 stockPrice.save();
+                stockPriceList.add(stockPrice);
             }
         }catch (Exception e)
         {
             exception = e;
             Log.e(TAG,"Failed to fetch latest prices" ,e);
         }
-        return null;
+        return stockPriceList;
     }
 
     public Exception getException() {

@@ -22,6 +22,8 @@ public class StockSearchTextView extends DelayAutoCompleteTextView {
 
     private TickerSearchService.Match match;
 
+    private MatchSelectListener matchSelectListener;
+
     public StockSearchTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         if(!isInEditMode()) {
@@ -33,9 +35,24 @@ public class StockSearchTextView extends DelayAutoCompleteTextView {
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                     match = (TickerSearchService.Match) adapterView.getItemAtPosition(position);
                     setText(match.getName());
+                    if(matchSelectListener != null)
+                        matchSelectListener.onMatchSelect(match);
                 }
             });
         }
+    }
+
+    public MatchSelectListener getMatchSelectListener() {
+        return matchSelectListener;
+    }
+
+    public void setMatchSelectListener(MatchSelectListener matchSelectListener) {
+        this.matchSelectListener = matchSelectListener;
+    }
+
+    public interface MatchSelectListener
+    {
+        public void onMatchSelect(TickerSearchService.Match match);
     }
 
 }

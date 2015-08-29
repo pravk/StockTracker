@@ -55,6 +55,11 @@
 
                 />
 
+
+            <EditText android:layout_margin="@dimen/form_field_margin"
+                android:layout_width="match_parent" android:text="@string/last_trade_price"
+                android:layout_height="wrap_content" android:id="@+id/last_trade_price" style="@style/LargeFont" />
+
             <EditText
                 android:id="@+id/quantity"
                 android:layout_width="match_parent"

@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
@@ -115,8 +116,8 @@ public class MainActivity extends BaseActivity {
             startActivity(intent);
         }
         else if(menuItem.getItemId() ==R.id.world_indices){
-            Watchlist watchlist = WatchlistManager.getInstance().getWorldMarketWatchlist(getApplicationContext());
-            fragmentClass = WatchlistStockFragment.newInstance(watchlist.getId());
+            loadWorldIndices();
+
         }
         else if(menuItem.getTitle().equals(getString(R.string.settings)))
         {
@@ -159,6 +160,7 @@ public class MainActivity extends BaseActivity {
 
         mDrawer.closeDrawers();
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -239,6 +241,32 @@ public class MainActivity extends BaseActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
         setTitle(R.string.porfolio_summary);
+        mDrawer.closeDrawers();
+    }
+
+
+    private void loadWorldIndices() {
+        showProgressDialog(R.string.loading);
+        WatchlistManager.getInstance().getWorldMarketWatchlist(getApplicationContext(), new WatchlistManager.WorldMarketLoadComplete() {
+            @Override
+            public void loadComplete(final Watchlist watchlist) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        hideProgressDialog();
+                        Fragment fragment = WatchlistStockFragment.newInstance(watchlist.getId());
+                        replaceFragment(fragment, null);
+                    }
+                });
+            }
+        });
+    }
+
+    private void replaceFragment(Fragment fragment, String title){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+        if(!TextUtils.isEmpty(title))
+            setTitle(title);
         mDrawer.closeDrawers();
     }
 }

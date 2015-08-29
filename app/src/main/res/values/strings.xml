@@ -66,4 +66,6 @@
     <string name="backup_restore"><![CDATA[Backup & Restore]]></string>
     <string name="world_indices">World Indices</string>
     <string name="refresh_complete">Refresh Complete</string>
+    <string name="last_trade_price">Last Trade Price</string>
+    <string name="loading">Loading...</string>
 </resources>
