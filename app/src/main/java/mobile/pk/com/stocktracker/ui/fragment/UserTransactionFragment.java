@@ -47,11 +47,6 @@ public class UserTransactionFragment extends GenericRVFragment<TransactionViewHo
         return false;
     }
 
-    @Override
-    protected boolean onRefreshView() {
-        adapter.reset();
-        return true;
-    }
 
     @Override
     protected boolean showEditAction() {
@@ -76,11 +71,11 @@ public class UserTransactionFragment extends GenericRVFragment<TransactionViewHo
     }
 
     public void onEvent(TransactionChangedEvent transactionChangeEvent){
-        adapter.reset();
+        reset();
     }
 
     public void onEvent(TransactionDeleteEvent transactionDeleteEvent){
-        adapter.reset();
+        reset();
     }
     public void onEvent(EditTransactionEvent event){
         Intent intent = new Intent(getContext(), EditTransactionActivity.class);

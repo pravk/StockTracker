@@ -1,13 +1,18 @@
 package mobile.pk.com.stocktracker.ui;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -27,6 +32,7 @@ import mobile.pk.com.stocktracker.event.ShowPositionDetailEvent;
 import mobile.pk.com.stocktracker.event.WatchlistNameChangedEvent;
 import mobile.pk.com.stocktracker.event.WatchlistDeleteEvent;
 import mobile.pk.com.stocktracker.ui.activity.BackupActivity;
+import mobile.pk.com.stocktracker.ui.activity.SearchActivity;
 import mobile.pk.com.stocktracker.ui.fragment.PortfolioFragment;
 import mobile.pk.com.stocktracker.ui.fragment.PortfolioPositionFragment;
 import mobile.pk.com.stocktracker.ui.fragment.PortfolioSummaryFragment;
@@ -70,6 +76,18 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+
+
+            // Associate searchable configuration with the SearchView
+            SearchManager searchManager =
+                    (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            SearchView searchView =
+                    (SearchView) menu.findItem(R.id.search).getActionView();
+            ComponentName cn = new ComponentName(this, SearchActivity.class);
+            searchView.setSearchableInfo(
+                    searchManager.getSearchableInfo(cn));
+        }
         return true;
     }
 
@@ -79,6 +97,9 @@ public class MainActivity extends BaseActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawer.openDrawer(GravityCompat.START);
+                return true;
+            case R.id.search:
+                onSearchRequested();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -262,11 +283,9 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    private void replaceFragment(Fragment fragment, String title){
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
-        if(!TextUtils.isEmpty(title))
-            setTitle(title);
+    @Override
+    protected void replaceFragment(Fragment fragment, String title){
+        super.replaceFragment(fragment,title);
         mDrawer.closeDrawers();
     }
 }

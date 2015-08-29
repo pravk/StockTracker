@@ -32,7 +32,6 @@ public class WatchListStockAdapter extends GenericRVAdapter<WatchlistStockViewHo
     public WatchListStockAdapter(Context context, Watchlist watchlist) {
         super(context);
         this.watchlist = watchlist;
-       reset();
     }
 
     @Override

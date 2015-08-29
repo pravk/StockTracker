@@ -32,8 +32,6 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
     public PortfolioPositionAdapter(Context context, Portfolio portfolio) {
         super(context);
         this.portfolio = portfolio;
-        reset();
-
     }
 
     @Override
@@ -111,7 +109,7 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PortfolioPosition
                         case R.id.refresh:
                             if(position.getPosition() != null)
                                 EventBus.getDefault().post(new RefreshPositionEvent( position.getPosition()));
-                            reset();
+                            refreshData();
                             break;
                         case R.id.transactions:
                             if(position.getPosition() != null)

@@ -2,8 +2,11 @@ package mobile.pk.com.stocktracker.ui;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 
 import de.greenrobot.event.EventBus;
@@ -49,7 +52,7 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    protected void showProgressDialog(int resourceId)
+    public void showProgressDialog(int resourceId)
     {
         if(pd == null)
             pd = new ProgressDialog(this);
@@ -57,9 +60,16 @@ public class BaseActivity extends AppCompatActivity {
         pd.show();
     }
 
-    protected void hideProgressDialog()
+    public void hideProgressDialog()
     {
         if(pd != null)
-            pd.hide();
+            pd.dismiss();
+    }
+
+    protected void replaceFragment(Fragment fragment, String title){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+        if(!TextUtils.isEmpty(title))
+            setTitle(title);
     }
 }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">StockTracker</string>
+    <string name="app_name">Stock Tracker</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -68,4 +68,8 @@
     <string name="refresh_complete">Refresh Complete</string>
     <string name="last_trade_price">Last Trade Price</string>
     <string name="loading">Loading...</string>
+    <string name="search_title">Search</string>
+    <string name="search_hint">Search Ticker/Company Name</string>
+    <string name="company_name">Company Name</string>
+    <string name="refreshing">Refreshing</string>
 </resources>

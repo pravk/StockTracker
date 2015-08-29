@@ -91,8 +91,7 @@ public class WatchlistStockFragment extends GenericRVFragment<WatchlistStockView
             @Override
             public void onStockSelect(Stock stock) {
                 WatchlistStock watchlistStock = WatchlistStock.from(stock, watchlist);
-
-                getAdapter().addItem(watchlistStock);
+                reset();
                 Toast.makeText(getActivity(), stock.getName(), Toast.LENGTH_SHORT).show();
             }
 
@@ -114,7 +113,7 @@ public class WatchlistStockFragment extends GenericRVFragment<WatchlistStockView
     }
 
     public void onEvent(WatchlistRefreshEvent event){
-        getAdapter().reset();
+        reset();
     }
 
     public class OnCreateEvent {

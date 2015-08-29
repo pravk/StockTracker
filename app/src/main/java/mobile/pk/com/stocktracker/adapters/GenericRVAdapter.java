@@ -1,6 +1,8 @@
 package mobile.pk.com.stocktracker.adapters;
 
 import android.content.Context;
+import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -32,7 +34,7 @@ public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D> ext
 
     public GenericRVAdapter(Context context)
     {
-        this.mContext = context;
+        this.mContext = context.getApplicationContext();
     }
 
     @Override
@@ -69,21 +71,20 @@ public abstract class GenericRVAdapter<T extends RecyclerView.ViewHolder, D> ext
 
     protected abstract void onBindViewHolderInternal(T holder, int i);
 
-    public void reset()
+    public void refreshData()
     {
         List<D> newData = refreshDataInternal();
         getDataList().clear();
         getDataList().addAll(newData);
-        populatePrices(true);
     }
 
-    public void addItem(D item) {
+    /*public void addItem(D item) {
         getDataList().add(item);
         reset();
         notifyDataSetChanged();
 
     }
-
+*/
     @Override
     public int getItemCount() {
         return getDataList().size();

@@ -56,7 +56,7 @@ public class WatchlistAdapter extends GenericRVAdapter<WatchlistViewHolder, Watc
                 switch (item.getItemId()) {
                     case R.id.remove:
                         watchlist.delete();
-                        reset();
+                        refreshData();
                         Toast.makeText(mContext, "Removed", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.edit:

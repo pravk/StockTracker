@@ -3,6 +3,7 @@ package mobile.pk.com.stocktracker.ui.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.Preference;
@@ -22,12 +23,15 @@ import android.widget.Toast;
 import com.melnykov.fab.FloatingActionButton;
 import com.orm.SugarRecord;
 
+import java.util.List;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.adapters.GenericRVAdapter;
 import mobile.pk.com.stocktracker.common.Application;
+import mobile.pk.com.stocktracker.ui.BaseActivity;
 
 
 public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> extends Fragment {
@@ -57,7 +61,7 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    getAdapter().reset();
+                    reset();
                     if(!isDetached())
                         handler.postDelayed(this, refreshInMins*60*1000);
                 }
@@ -110,7 +114,14 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
 
         final GenericRVAdapter adapter = getAdapter();
         recyclerView.setAdapter(adapter);
-        adapter.reset();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                reset();
+            }
+        }, 200);
+
 
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe);
         swipeRefreshLayout.setEnabled(showRefreshAction());
@@ -123,11 +134,11 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            adapter.reset();
+                            reset();
                             swipeRefreshLayout.setRefreshing(false);
                             Toast.makeText(getContext(),R.string.refresh_complete, Toast.LENGTH_SHORT).show();
                         }
-                    }, 1000);
+                    }, 200);
                 }
 
             }
@@ -137,6 +148,30 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
 
     protected boolean showAddNewItem(){
         return true;
+    }
+
+    public void reset()
+    {
+        new AsyncTask<Void,Void, Void>(){
+            protected void onPreExecute(Void result) {
+                if(getActivity() != null)
+                    ((BaseActivity)getActivity()).showProgressDialog(R.string.refreshing);
+            }
+            @Override
+            protected Void doInBackground(Void... params) {
+                getAdapter().refreshData();
+                getAdapter().populatePrices(true);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                if(getActivity() != null)
+                    ((BaseActivity)getActivity()).hideProgressDialog();
+            }
+
+        }.execute();
+
     }
 
     protected RecyclerView.LayoutManager getLayoutManager(Context context){
@@ -179,12 +214,15 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
     }
 
     protected void refreshData(){
-        this.getAdapter().reset();
+        reset();
     }
 
     protected abstract boolean onEditView();
 
-    protected abstract boolean onRefreshView();
+    protected boolean onRefreshView(){
+        reset();
+        return true;
+    }
 
     protected abstract boolean showEditAction();
 

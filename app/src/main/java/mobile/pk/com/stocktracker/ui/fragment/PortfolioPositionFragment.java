@@ -86,14 +86,14 @@ public class PortfolioPositionFragment extends GenericRVFragment<PortfolioPositi
         return true;
     }
 
-    @Override
+   /* @Override
     protected boolean onRefreshView() {
         portfolioAdapter.populatePrices(true);
         return true;
-    }
+    }*/
 
     public void onEvent(Position.PositionChangeEvent event){
-        getAdapter().reset();
+        reset();
     }
 
     public class OnCreateEvent {
