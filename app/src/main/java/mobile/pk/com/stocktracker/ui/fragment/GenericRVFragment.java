@@ -52,7 +52,7 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
         setHasOptionsMenu(true);
 
         handler = new Handler();
-        handler.postDelayed(timeUpdater,1000);
+        handler.postDelayed(timeUpdater,60000);
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(Application.getInstance().getApplicationContext());
         String refreshInterval = settings.getString("priceRefreshInterval", "5");
         try
@@ -85,7 +85,7 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
             resetTime();
 
             if(!isDetached())
-                handler.postDelayed(timeUpdater,1000);
+                handler.postDelayed(timeUpdater,60000);
         }
     };
 

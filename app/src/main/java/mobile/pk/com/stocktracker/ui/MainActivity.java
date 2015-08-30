@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
@@ -41,6 +42,7 @@ import mobile.pk.com.stocktracker.watchlist.WatchlistManager;
 
 public class MainActivity extends BaseActivity {
 
+    private static final java.lang.String SELECTED_TAB = "SELECTED_TAB";
     private DrawerLayout mDrawer;
     private NavigationView nvDrawer;
     private NavigationDrawerHelper navigationDrawerHelper;
@@ -65,9 +67,19 @@ public class MainActivity extends BaseActivity {
         navigationDrawerHelper = new NavigationDrawerHelper(this);
         // Setup drawer view
         setupDrawerContent(nvDrawer);
-        loadWorldIndices();
+        if(savedInstanceState == null || TextUtils.isEmpty(savedInstanceState.getString(SELECTED_TAB))) {
+            loadWorldIndices();
+        }
         //nvDrawer.getMenu().performIdentifierAction(R.id.default_watchlist, 0);
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+        savedInstanceState.putString(SELECTED_TAB, "WI");
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
@@ -116,13 +128,11 @@ public class MainActivity extends BaseActivity {
         Fragment fragmentClass = null;
         if(menuItem.getItemId() == R.id.drawer_watchlist)
         {
-            fragmentClass = WatchlistFragment.newInstance(this);
-            /*Intent intent = new Intent(this, EditWatchlistActivity.class);
-            startActivityForResult(intent, EDIT_WATCHLIST_REQUEST );*/
+           loadWatchlist();
         }
         else if(menuItem.getItemId() == R.id.drawer_portfolio)
         {
-            fragmentClass = PortfolioFragment.newInstance(this);
+            loadPortfolio();
         }
         else if(menuItem.getItemId() ==R.id.drawer_backup_restore)
         {
@@ -135,42 +145,10 @@ public class MainActivity extends BaseActivity {
         }
         else if(menuItem.getTitle().equals(getString(R.string.settings)))
         {
-            fragmentClass = UserSettingsFragment.newInstance(this,null);
+            fragment = UserSettingsFragment.newInstance(this,null);
+            replaceFragment(fragment, getString(R.string.settings));
         }
-        else
-        {
-            Intent intent = menuItem.getIntent();
-            if(intent != null)
-            {
-                long watchlistId = intent.getLongExtra("watchlistId", 0);
-                if(watchlistId != 0)
-                    fragmentClass = WatchlistStockFragment.newInstance(watchlistId);
-                if(fragmentClass == null)
-                {
-                    long portfolioId = intent.getLongExtra("portfolioId", 0);
-                    fragmentClass = PortfolioPositionFragment.newInstance(portfolioId);
-                }
-
-
-            }
-
-        }
-
-        try {
-            if(fragmentClass != null)
-                fragment = fragmentClass;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if(fragment != null) {
-            // Insert the fragment by replacing any existing fragment
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
-        }
-
-        // Highlight the selected item, update the title, and close the drawer
         menuItem.setChecked(true);
-        setTitle(menuItem.getTitle());
 
         mDrawer.closeDrawers();
     }
@@ -218,24 +196,16 @@ public class MainActivity extends BaseActivity {
     }
 
     public void onEvent(WatchlistNameChangedEvent event){
-        Fragment fragment = WatchlistFragment.newInstance(this);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+        loadWatchlist();
     }
     public void onEvent(WatchlistDeleteEvent event){
-        Fragment fragment = WatchlistFragment.newInstance(this);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+        loadWatchlist();
     }
     public void onEvent(PortfolioNameChangedEvent event){
-        Fragment fragment = PortfolioFragment.newInstance(this);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+        loadPortfolio();
     }
     public void onEvent(PortfolioDeleteEvent event){
-        Fragment fragment = PortfolioFragment.newInstance(this);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+       loadPortfolio();
     }
     public void onEvent(PortfolioChangeEvent event){
         setupDrawerContent(nvDrawer);
@@ -258,7 +228,15 @@ public class MainActivity extends BaseActivity {
         mDrawer.closeDrawers();
     }*/
 
+    private void loadWatchlist(){
+        Fragment fragment = WatchlistFragment.newInstance(this);
+        replaceFragment(fragment, getString(R.string.watchlist));
+    }
 
+    private void loadPortfolio(){
+        Fragment fragment = PortfolioFragment.newInstance(this);
+        replaceFragment(fragment, getString(R.string.portfolio));
+    }
     private void loadWorldIndices() {
         showProgressDialog(R.string.loading);
         WatchlistManager.getInstance().getWorldMarketWatchlist(getApplicationContext(), new WatchlistManager.WorldMarketLoadComplete() {
@@ -269,7 +247,7 @@ public class MainActivity extends BaseActivity {
                     public void run() {
                         hideProgressDialog();
                         Fragment fragment = WatchlistStockFragment.newInstance(watchlist.getId());
-                        replaceFragment(fragment, null);
+                        replaceFragment(fragment, getString(R.string.world_indices));
                     }
                 });
             }
