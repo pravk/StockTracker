@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/card_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        card_view:cardCornerRadius="4dp"
-        card_view:cardElevation="2dp" android:layout_margin="3dp">
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="4dp"
+    card_view:cardElevation="2dp"
+    android:layout_margin="3dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,45 +20,59 @@
         style="@style/LargeFont" />
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:orientation="horizontal" >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="0dp" android:layout_weight="3"
+                android:layout_height="wrap_content">
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    ></com.github.mikephil.charting.charts.PieChart>
+
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent" android:padding="16dp"  android:layout_margin="3dp" android:background="@drawable/rounded_corner_textview" android:layout_weight="2" android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/SmallFont" android:text="@string/net_asset" />
+                android:layout_height="wrap_content"
+                android:layout_margin="3dp" android:layout_weight="2" android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:padding="16dp"  android:layout_margin="3dp" android:background="@drawable/rounded_corner_textview"
+                    android:layout_weight="2" android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/SmallFont" android:text="@string/net_asset" />
 
-                <TextView
-                    android:id="@+id/net_asset"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" style="@style/LargeFont" android:text="@string/net_asset" />
-            </LinearLayout>
-           <LinearLayout
-               android:layout_width="0dp"
-               android:layout_height="match_parent" android:padding="16dp" android:background="@drawable/rounded_corner_textview" android:layout_weight="2"
+                    <TextView
+                        android:id="@+id/net_asset"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" style="@style/LargeFont" android:text="@string/net_asset" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:padding="16dp" android:background="@drawable/rounded_corner_textview" android:layout_weight="2"
                     android:orientation="vertical"
                     android:layout_margin="3dp">
-               <TextView
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content" style="@style/SmallFont"
-                   android:text="@string/realized_gain" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" style="@style/SmallFont"
+                        android:text="@string/realized_gain" />
 
-               <TextView
-                   android:id="@+id/realized_gain"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content" style="@style/LargeFont" android:text="@string/realized_gain" />
+                    <TextView
+                        android:id="@+id/realized_gain"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" style="@style/LargeFont" android:text="@string/realized_gain" />
 
-           </LinearLayout>
+                </LinearLayout>
 
-           </LinearLayout>
-     <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:orientation="horizontal">
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent" android:padding="16dp" android:layout_margin="3dp" android:background="@drawable/rounded_corner_textview" android:layout_weight="1" android:orientation="vertical">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:padding="16dp" android:layout_margin="3dp" android:background="@drawable/rounded_corner_textview"
+                    android:layout_weight="2" android:orientation="vertical">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" style="@style/SmallFont" android:text="@string/unrealized_gain" />
@@ -70,8 +85,9 @@
 
                 </LinearLayout>
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent" android:padding="16dp" android:layout_margin="3dp" android:layout_weight="1" android:background="@drawable/rounded_corner_textview" android:orientation="vertical">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:padding="16dp"
+                    android:layout_margin="3dp" android:layout_weight="1" android:background="@drawable/rounded_corner_textview" android:orientation="vertical">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" style="@style/SmallFont"
@@ -83,7 +99,24 @@
                         android:layout_height="wrap_content" style="@style/MediumFont"
                         android:text="@string/returns" />
                 </LinearLayout>
+
             </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:orientation="horizontal" >
+
+
+
+           </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:orientation="horizontal">
+
+            </LinearLayout>
+
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

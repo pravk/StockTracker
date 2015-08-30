@@ -15,6 +15,7 @@ import mobile.pk.com.stocktracker.dao.PortfolioCurrencySummary;
 import mobile.pk.com.stocktracker.dao.Position;
 import mobile.pk.com.stocktracker.dao.Stock;
 import mobile.pk.com.stocktracker.dao.UserTransaction;
+import mobile.pk.com.stocktracker.dao.tasks.PriceLoadTask;
 import mobile.pk.com.stocktracker.event.RefreshPositionEvent;
 import mobile.pk.com.stocktracker.event.TransactionChangedEvent;
 import mobile.pk.com.stocktracker.event.TransactionDeleteEvent;
@@ -101,7 +102,16 @@ public class TransactionProcessor {
     }
 
     public List<Position> getOpenPositions(Portfolio portfolio){
-        return Position.find(Position.class,  "portfolio = ? and quantity != 0", String.valueOf(portfolio.getId()) );
+        List<Position> positionList = Position.find(Position.class,  "portfolio = ? and quantity != 0", String.valueOf(portfolio.getId()) );
+        //populatePrices from db
+        List<Stock> stockList = new ArrayList<>();
+        for(Position position: positionList)
+        {
+            stockList.add(position.getStock());
+        }
+        PriceLoadTask task = new PriceLoadTask();
+        task.executeSync(stockList.toArray(new Stock []{}));
+        return positionList;
     }
     public List<Position> getClosedPositions(Portfolio portfolio){
         return Position.find(Position.class,  "portfolio = ? and quantity = 0", String.valueOf(portfolio.getId()) );

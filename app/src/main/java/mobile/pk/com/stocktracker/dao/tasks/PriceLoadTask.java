@@ -19,6 +19,10 @@ public class PriceLoadTask extends AsyncTask<Stock, Void, List<StockPrice>> {
     @Override
     protected List<StockPrice> doInBackground(Stock... params) {
 
+        return executeSync(params);
+    }
+
+    public List<StockPrice> executeSync(Stock... params){
         if(params == null || params.length==0)
             return null;
 

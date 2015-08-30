@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.FontAwesomeText;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
 
 import mobile.pk.com.stocktracker.R;
 
@@ -20,6 +22,7 @@ public class PortfolioSummaryViewHolder extends RecyclerView.ViewHolder {
     public TextView realizedGain;
     public TextView unrealizedGain;
     public TextView netAsset;
+    public PieChart chart;
     public CardView cardView;
 
     public PortfolioSummaryViewHolder(View itemView) {
@@ -29,5 +32,15 @@ public class PortfolioSummaryViewHolder extends RecyclerView.ViewHolder {
         unrealizedGain = (TextView) itemView.findViewById(R.id.unrealized_gain);
         netAsset = (TextView) itemView.findViewById(R.id.net_asset);
         cardView = (CardView) itemView.findViewById(R.id.card_view);
+        chart = (PieChart) itemView.findViewById(R.id.chart);
+        chart.setDescription("");
+        chart.setUsePercentValues(true);
+        chart.setDragDecelerationFrictionCoef(0.95f);
+
+        Legend l = chart.getLegend();
+        l.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
+        l.setWordWrapEnabled(true);
+        l.setYEntrySpace(0f);
+        l.setYOffset(0f);
     }
 }

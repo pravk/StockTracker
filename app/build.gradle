@@ -19,6 +19,9 @@ android {
     }
 }
 
+repositories {
+    maven { url "https://jitpack.io" }
+}
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:22.2.1'
@@ -35,4 +38,5 @@ dependencies {
     compile 'org.apache.commons:commons-collections4:4.0'
     compile files('libs/dropbox-android-sdk-1.6.3.jar')
     compile files('libs/json_simple-1.1.jar')
+    compile 'com.github.PhilJay:MPAndroidChart:v2.1.3'
 }

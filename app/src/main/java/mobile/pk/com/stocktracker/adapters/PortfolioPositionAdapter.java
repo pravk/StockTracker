@@ -1,6 +1,7 @@
 package mobile.pk.com.stocktracker.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -8,6 +9,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.PercentFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +80,63 @@ public class PortfolioPositionAdapter extends GenericRVAdapter<PositionData> {
         viewHolder.unrealizedGain.setText(summaryData.getUnRealizedGain());
         viewHolder.netAsset.setText(summaryData.getNetAsset());
         //viewHolder.cardView.setCardBackgroundColor(mContext.getResources().getColor(R.color.primary_light));
+        setData(viewHolder.chart);
+    }
 
+    protected void setData(PieChart pieChart){
+
+        ArrayList<Entry> yVals1 = new ArrayList<Entry>();
+
+        // IMPORTANT: In a PieChart, no values (Entry) should have the same
+        // xIndex (even if from different DataSets), since no values can be
+        // drawn above each other.
+        List<Position> positionList = TransactionProcessor.getInstance().getOpenPositions(portfolio);
+        for (int i = 0; i < positionList.size(); i++) {
+            yVals1.add(new Entry((float) positionList.get(i).getMarketValue() , i));
+        }
+
+        ArrayList<String> xVals = new ArrayList<String>();
+
+        for (int i = 0; i < positionList.size(); i++)
+            xVals.add(positionList.get(i).getStock().getTicker());
+
+        PieDataSet dataSet = new PieDataSet(yVals1, "Asset distribution");
+        dataSet.setSliceSpace(3f);
+        dataSet.setSelectionShift(5f);
+
+        ArrayList<Integer> colors = new ArrayList<Integer>();
+
+
+        for (int c : ColorTemplate.JOYFUL_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.COLORFUL_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.LIBERTY_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.PASTEL_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.VORDIPLOM_COLORS)
+            colors.add(c);
+
+
+        colors.add(ColorTemplate.getHoloBlue());
+
+        dataSet.setColors(colors);
+
+        PieData data = new PieData(xVals, dataSet);
+        data.setValueFormatter(new PercentFormatter());
+        data.setValueTextSize(11f);
+        data.setValueTextColor(Color.WHITE);
+        pieChart.setData(data);
+
+        // undo all highlights
+        pieChart.highlightValues(null);
+        pieChart.animateXY(900, 900);
+        //pieChart.invalidate();
     }
 
     @Override
