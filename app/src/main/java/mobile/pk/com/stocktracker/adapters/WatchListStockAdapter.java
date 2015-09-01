@@ -2,6 +2,7 @@ package mobile.pk.com.stocktracker.adapters;
 
 import android.content.Context;
 
+import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.adapters.viewholder.WatchlistStockViewHolder;
 import mobile.pk.com.stocktracker.common.RestClient;
@@ -10,7 +11,10 @@ import mobile.pk.com.stocktracker.dao.Watchlist;
 import mobile.pk.com.stocktracker.dao.WatchlistStock;
 import mobile.pk.com.stocktracker.dao.tasks.PriceLoadTask;
 import mobile.pk.com.stocktracker.dao.tasks.ServerPriceRefreshTask;
+import mobile.pk.com.stocktracker.event.ShowStockDetailEvent;
+import mobile.pk.com.stocktracker.ui.activity.StockActivity;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
@@ -85,6 +89,12 @@ public class WatchListStockAdapter extends GenericRVAdapter<WatchlistStock> {
                         getDataList().remove(watchlistStock);
                         notifyDataSetChanged();
                         Toast.makeText(mContext, "Removed", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.detail:
+                        EventBus.getDefault().post(new ShowStockDetailEvent(watchlistStock.getStock()));
+                        /*Intent intent = new Intent(mContext, StockActivity.class);
+                        intent.putExtra(StockActivity.STOCK_ID, watchlistStock.getStock().getId());
+                        mContext.startActivity(intent);*/
                         break;
                 }
                 return true;

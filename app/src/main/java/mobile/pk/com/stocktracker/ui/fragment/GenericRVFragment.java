@@ -34,7 +34,7 @@ import mobile.pk.com.stocktracker.common.Application;
 import mobile.pk.com.stocktracker.ui.BaseActivity;
 
 
-public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> extends Fragment {
+public abstract class GenericRVFragment<T> extends Fragment {
 
     private Context context;
     Handler handler;
@@ -228,7 +228,7 @@ public abstract class GenericRVFragment<T extends RecyclerView.ViewHolder> exten
 
     protected abstract boolean showRefreshAction();
 
-    protected abstract <D> GenericRVAdapter<D> getAdapter();
+    protected abstract GenericRVAdapter<T> getAdapter();
 
     @OnClick(R.id.fab_add_new)
     public void onAddNewTransaction(){

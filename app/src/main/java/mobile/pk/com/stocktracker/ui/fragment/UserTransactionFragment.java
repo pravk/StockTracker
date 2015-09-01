@@ -21,7 +21,7 @@ import mobile.pk.com.stocktracker.ui.activity.EditTransactionActivity;
 /**
  * Created by hello on 8/26/2015.
  */
-public class UserTransactionFragment extends GenericRVFragment<TransactionViewHolder> {
+public class UserTransactionFragment extends GenericRVFragment<UserTransaction> {
     private static final String POSITION_ID = "POSITION_ID";
     UserTransactionAdapter adapter;
     Position position;

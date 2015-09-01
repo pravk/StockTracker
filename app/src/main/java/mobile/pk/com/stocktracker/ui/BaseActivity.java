@@ -1,6 +1,7 @@
 package mobile.pk.com.stocktracker.ui;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +12,10 @@ import android.view.MenuItem;
 
 import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
+import mobile.pk.com.stocktracker.event.ShowPositionDetailEvent;
+import mobile.pk.com.stocktracker.event.ShowStockDetailEvent;
+import mobile.pk.com.stocktracker.ui.activity.StockActivity;
+import mobile.pk.com.stocktracker.ui.activity.TransactionActivity;
 
 /**
  * Created by hello on 8/11/2015.
@@ -72,4 +77,11 @@ public class BaseActivity extends AppCompatActivity {
         if(!TextUtils.isEmpty(title))
             setTitle(title);
     }
+
+    public void onEvent(ShowStockDetailEvent event){
+        Intent intent = new Intent(this, StockActivity.class);
+        intent.putExtra(StockActivity.STOCK_ID, event.getStock().getId());
+        startActivity(intent);
+    }
+
 }

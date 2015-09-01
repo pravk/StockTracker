@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 22
-    buildToolsVersion '23.0.0 rc3'
+    buildToolsVersion '23.0.0'
 
     defaultConfig {
         applicationId "mobile.pk.com.stocktracker"
@@ -39,4 +39,6 @@ dependencies {
     compile files('libs/dropbox-android-sdk-1.6.3.jar')
     compile files('libs/json_simple-1.1.jar')
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.3'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile project(':sAXRSSReader')
 }

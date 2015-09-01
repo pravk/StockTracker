@@ -3,14 +3,13 @@ package mobile.pk.com.stocktracker.ui.fragment;
 import android.os.Bundle;
 
 import de.greenrobot.event.EventBus;
-import mobile.pk.com.stocktracker.adapters.GenericRVAdapter;
 import mobile.pk.com.stocktracker.adapters.PortfolioPositionAdapter;
-import mobile.pk.com.stocktracker.adapters.viewholder.PortfolioPositionViewHolder;
 import mobile.pk.com.stocktracker.dao.Portfolio;
 import mobile.pk.com.stocktracker.dao.Position;
+import mobile.pk.com.stocktracker.dataobjects.PositionData;
 
 
-public class PortfolioPositionFragment extends GenericRVFragment<PortfolioPositionViewHolder> {
+public class PortfolioPositionFragment extends GenericRVFragment<PositionData> {
 
    private static final String PORTFOLIO_ID = "PORTFOLIO_ID";
 
@@ -44,7 +43,7 @@ public class PortfolioPositionFragment extends GenericRVFragment<PortfolioPositi
     }
 
     @Override
-    protected GenericRVAdapter getAdapter() {
+    protected PortfolioPositionAdapter getAdapter() {
         if(portfolioAdapter == null) {
 
             portfolioAdapter = new PortfolioPositionAdapter(getActivity(), portfolio);

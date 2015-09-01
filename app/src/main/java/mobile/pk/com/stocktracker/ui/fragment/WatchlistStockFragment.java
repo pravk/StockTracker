@@ -14,7 +14,7 @@ import mobile.pk.com.stocktracker.dao.WatchlistStock;
 import mobile.pk.com.stocktracker.event.WatchlistRefreshEvent;
 import mobile.pk.com.stocktracker.ui.SelectStockDialog;
 
-public class WatchlistStockFragment extends GenericRVFragment<WatchlistStockViewHolder> {
+public class WatchlistStockFragment extends GenericRVFragment<WatchlistStock> {
 
    private static final String WATCH_LIST_ID = "WATCH_LIST_ID";
 
@@ -103,7 +103,7 @@ public class WatchlistStockFragment extends GenericRVFragment<WatchlistStockView
     }
 
     @Override
-    protected GenericRVAdapter getAdapter() {
+    protected WatchListStockAdapter getAdapter() {
         if(watchlistAdapter == null)
         {
             watchlist = Watchlist.findById(Watchlist.class, watchListId);

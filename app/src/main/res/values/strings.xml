@@ -76,4 +76,6 @@
     <string name="realized_gain">Realized Gain/Loss</string>
     <string name="unrealized_gain">Unrealized Gain/Loss</string>
     <string name="returns">Returns</string>
+    <string name="news_title">News title</string>
+    <string name="news_description">News Contents</string>
 </resources>

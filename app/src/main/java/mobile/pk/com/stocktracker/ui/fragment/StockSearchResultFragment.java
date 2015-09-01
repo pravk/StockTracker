@@ -17,7 +17,7 @@ import mobile.pk.com.stocktracker.service.TickerSearchService;
 /**
  * Created by hello on 8/29/2015.
  */
-public class StockSearchResultFragment extends GenericRVFragment<StockSearchResultViewHolder> {
+public class StockSearchResultFragment extends GenericRVFragment<TickerSearchService.Match> {
 
     private static final String QUERY = "QUERY";
 
@@ -63,7 +63,7 @@ public class StockSearchResultFragment extends GenericRVFragment<StockSearchResu
     }
 
     @Override
-    protected GenericRVAdapter<TickerSearchService.Match> getAdapter() {
+    protected StockSearchResultAdapter getAdapter() {
         return adapter;
     }
 
