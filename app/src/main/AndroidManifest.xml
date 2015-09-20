@@ -29,6 +29,7 @@
         <activity android:name=".ui.activity.EditTransactionActivity" />
         <activity android:name=".ui.activity.TransactionActivity" />
         <activity android:name=".ui.activity.StockActivity"/>
+        <activity android:name=".ui.activity.WebviewActivity"/>
         <activity android:name=".ui.activity.BackupActivity" android:label="Backup &amp; Restore"/>
         <activity
             android:name="com.dropbox.client2.android.AuthActivity"

@@ -11,12 +11,14 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.adapters.GenericRVAdapter;
 import mobile.pk.com.stocktracker.adapters.viewholder.BlogViewHolder;
 import mobile.pk.com.stocktracker.common.RestClient;
 import mobile.pk.com.stocktracker.dao.BlogPost;
 import mobile.pk.com.stocktracker.dao.Stock;
+import mobile.pk.com.stocktracker.event.ViewBlogPostEvent;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -32,15 +34,23 @@ public class BlogAdapter extends GenericRVAdapter<BlogPost> {
 
     @Override
     protected void onBindViewHolderInternal(RecyclerView.ViewHolder holder, int i) {
-        BlogPost rssItem = getDataList().get(i);
+        final BlogPost rssItem = getDataList().get(i);
 
         BlogViewHolder viewHolder = (BlogViewHolder) holder;
 
         viewHolder.title.setText(rssItem.getTitle());
-        viewHolder.description.setText(Html.fromHtml(rssItem.getContent()));
+        viewHolder.description.setText(Html.fromHtml(rssItem.getSummary()));
         viewHolder.date.setText(DateUtils.formatDateTime(mContext, rssItem.getLastModified(), DateUtils.FORMAT_SHOW_DATE));
 
         viewHolder.description.setMovementMethod(LinkMovementMethod.getInstance());
+
+        viewHolder.more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventBus.getDefault().post(new ViewBlogPostEvent(rssItem));
+            }
+        });
+
         //Picasso.with(mContext).load(rssItem.ge).into(imageView);
 
     }

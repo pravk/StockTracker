@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
+import android.webkit.WebView;
 
 import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
@@ -28,10 +29,12 @@ import mobile.pk.com.stocktracker.event.PortfolioChangeEvent;
 import mobile.pk.com.stocktracker.event.PortfolioDeleteEvent;
 import mobile.pk.com.stocktracker.event.PortfolioNameChangedEvent;
 import mobile.pk.com.stocktracker.event.ShowPositionDetailEvent;
+import mobile.pk.com.stocktracker.event.ViewBlogPostEvent;
 import mobile.pk.com.stocktracker.event.WatchlistNameChangedEvent;
 import mobile.pk.com.stocktracker.event.WatchlistDeleteEvent;
 import mobile.pk.com.stocktracker.ui.activity.BackupActivity;
 import mobile.pk.com.stocktracker.ui.activity.SearchActivity;
+import mobile.pk.com.stocktracker.ui.activity.WebviewActivity;
 import mobile.pk.com.stocktracker.ui.fragment.BlogFragment;
 import mobile.pk.com.stocktracker.ui.fragment.PortfolioFragment;
 import mobile.pk.com.stocktracker.ui.fragment.PortfolioPositionFragment;
@@ -223,7 +226,12 @@ public class MainActivity extends BaseActivity {
         startActivity(intent);
     }
 
-
+    public void onEvent(ViewBlogPostEvent event){
+        Intent intent = new Intent(this, WebviewActivity.class);
+        intent.putExtra(WebviewActivity.CONTENT, event.getBlogPost().getContent());
+        intent.putExtra(WebviewActivity.TITLE, event.getBlogPost().getTitle());
+        startActivity(intent);
+    }
     /*public void showHome()
     {
         Fragment fragment = PortfolioSummaryFragment.newInstance(this);
