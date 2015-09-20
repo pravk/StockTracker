@@ -105,7 +105,15 @@ public abstract class GenericRVFragment<T> extends Fragment {
         ButterKnife.inject(this, view);
 
         final RecyclerView recyclerView =   (RecyclerView) view.findViewById(R.id.recyler_view);
-        recyclerView.setLayoutManager(getLayoutManager(getActivity()));
+        RecyclerView.LayoutManager layoutManager = getLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+
+        recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener((LinearLayoutManager)layoutManager) {
+            @Override
+            public void onLoadMore(int current_page) {
+                loadMoreData(current_page);
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab_add_new);
         fab.setVisibility(showAddNewItem() ? View.VISIBLE : View.GONE);
@@ -150,6 +158,10 @@ public abstract class GenericRVFragment<T> extends Fragment {
         return true;
     }
 
+    protected void loadMoreData(int currentPage){
+        //TO be implented by derived classes
+    }
+
     public void reset()
     {
         new AsyncTask<Void,Void, Void>(){
@@ -168,6 +180,7 @@ public abstract class GenericRVFragment<T> extends Fragment {
             protected void onPostExecute(Void result) {
                 if(getActivity() != null)
                     ((BaseActivity)getActivity()).hideProgressDialog();
+                getAdapter().notifyDataSetChanged();
             }
 
         }.execute();

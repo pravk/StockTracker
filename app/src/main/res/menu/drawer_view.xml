@@ -3,6 +3,10 @@
 
     <group android:checkableBehavior="none" android:id="@+id/app_group">
         <item
+            android:id="@+id/blog"
+            android:icon="@drawable/ic_list_black_24dp"
+            android:title="@string/value_picks"/>
+        <item
             android:id="@+id/world_indices"
             android:icon="@drawable/ic_list_black_24dp"
             android:title="@string/world_indices"/>

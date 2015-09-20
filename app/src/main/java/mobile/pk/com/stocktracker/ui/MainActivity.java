@@ -32,6 +32,7 @@ import mobile.pk.com.stocktracker.event.WatchlistNameChangedEvent;
 import mobile.pk.com.stocktracker.event.WatchlistDeleteEvent;
 import mobile.pk.com.stocktracker.ui.activity.BackupActivity;
 import mobile.pk.com.stocktracker.ui.activity.SearchActivity;
+import mobile.pk.com.stocktracker.ui.fragment.BlogFragment;
 import mobile.pk.com.stocktracker.ui.fragment.PortfolioFragment;
 import mobile.pk.com.stocktracker.ui.fragment.PortfolioPositionFragment;
 import mobile.pk.com.stocktracker.ui.fragment.UserSettingsFragment;
@@ -143,6 +144,10 @@ public class MainActivity extends BaseActivity {
             loadWorldIndices();
 
         }
+        else if(menuItem.getItemId() ==R.id.blog){
+            loadBlogs();
+
+        }
         else if(menuItem.getTitle().equals(getString(R.string.settings)))
         {
             fragment = UserSettingsFragment.newInstance(this,null);
@@ -252,6 +257,12 @@ public class MainActivity extends BaseActivity {
                 });
             }
         });
+    }
+
+    private void loadBlogs() {
+        showProgressDialog(R.string.loading);
+        Fragment fragment = BlogFragment.newInstance(this);
+        replaceFragment(fragment, getString(R.string.value_picks));
     }
 
     @Override
