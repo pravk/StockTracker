@@ -3,6 +3,7 @@ package mobile.pk.com.stocktracker.ui.activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.webkit.WebView;
 
 import butterknife.ButterKnife;
@@ -17,6 +18,8 @@ public class WebviewActivity extends BaseActivity {
    public static final String CONTENT = "CONTENT";
 
     public static final String TITLE = "TITLE";
+    public static final String SUBTITLE = "Subtitle";
+
 
     public WebviewActivity() {
         // Required empty public constructor
@@ -31,7 +34,11 @@ public class WebviewActivity extends BaseActivity {
         String content = getIntent().getStringExtra(CONTENT);
         String title = getIntent().getStringExtra(TITLE);
 
+        String subtitle = getIntent().getStringExtra(SUBTITLE);
+
         setTitle(title);
+        if(!TextUtils.isEmpty(subtitle))
+            getSupportActionBar().setSubtitle(subtitle);
 
         WebView webView = (WebView) findViewById(R.id.webview);
         webView.getSettings().setJavaScriptEnabled(true);

@@ -13,6 +13,14 @@ import retrofit.http.Query;
  */
 public interface BlogService {
 
+
+    @GET("/blog/search")
+    List<BlogPost> findBlogPosts(@Query("search")String text);
+
+    @GET("/blog/search")
+    void findBlogPosts(@Query("search")String text, @Query("page")int page, @Query("size")int size, Callback<List<BlogPost>> callback);
+
+
     @GET("/blog/recent")
     List<BlogPost> getRecentBlogPosts();
 

@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
@@ -230,6 +231,7 @@ public class MainActivity extends BaseActivity {
         Intent intent = new Intent(this, WebviewActivity.class);
         intent.putExtra(WebviewActivity.CONTENT, event.getBlogPost().getContent());
         intent.putExtra(WebviewActivity.TITLE, event.getBlogPost().getTitle());
+        intent.putExtra(WebviewActivity.SUBTITLE, DateUtils.formatDateTime(this, event.getBlogPost().getLastModified(),DateUtils.FORMAT_SHOW_DATE));
         startActivity(intent);
     }
     /*public void showHome()
