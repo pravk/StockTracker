@@ -1,5 +1,7 @@
 package mobile.pk.com.stocktracker.dao;
 
+import java.util.List;
+
 /**
  * Created by praveen on 20/09/15.
  */
@@ -21,6 +23,8 @@ public class BlogPost {
     private String blog;
     private String url;
     private String summary;
+
+    private List<BlogComment> comments;
 
     public String getTitle() {
         return title;
@@ -76,5 +80,13 @@ public class BlogPost {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public List<BlogComment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<BlogComment> comments) {
+        this.comments = comments;
     }
 }
