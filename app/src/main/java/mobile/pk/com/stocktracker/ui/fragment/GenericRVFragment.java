@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.melnykov.fab.FloatingActionButton;
 import com.orm.SugarRecord;
 
@@ -36,9 +39,11 @@ import mobile.pk.com.stocktracker.ui.BaseActivity;
 
 public abstract class GenericRVFragment<T> extends Fragment {
 
+    private static final String TAG = GenericRVFragment.class.getSimpleName();
     private Context context;
     Handler handler;
     private SwipeRefreshLayout swipeRefreshLayout;
+    protected Tracker mTracker;
     /*public static GenericRVFragment newInstance(Long portfolioId) {
         GenericRVFragment fragment = new GenericRVFragment();
         Bundle args = new Bundle();
@@ -71,6 +76,11 @@ public abstract class GenericRVFragment<T> extends Fragment {
         {
             //Do not auto refresh
         }
+
+        // Obtain the shared Tracker instance.
+        Application application = Application.getInstance();
+        mTracker = application.getDefaultTracker();
+
         /*try {
             EventBus.getDefault().register(this);
         }catch (Exception e)
@@ -88,6 +98,14 @@ public abstract class GenericRVFragment<T> extends Fragment {
                 handler.postDelayed(timeUpdater,60000);
         }
     };
+
+    @Override
+    public void onResume() {
+       super.onResume();
+        Log.i(TAG, "Setting screen name: " + this.getClass().getSimpleName());
+        mTracker.setScreenName(this.getClass().getSimpleName());
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
 
     protected void resetTime() {
         getAdapter().notifyDataSetChanged();

@@ -1,12 +1,12 @@
 package mobile.pk.com.stocktracker.ui.fragment;
 
 import android.content.Context;
-import android.os.Bundle;
 
 import mobile.pk.com.stocktracker.adapters.GenericRVAdapter;
 import mobile.pk.com.stocktracker.adapters.RSSNewsAdapter;
 import mobile.pk.com.stocktracker.dao.Stock;
-import nl.matshofman.saxrssreader.RssItem;
+import mobile.pk.com.stocktracker.rss.RssItem;
+
 
 /**
  * Created by hello on 8/31/2015.

@@ -8,8 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.squareup.picasso.Picasso;
-
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -19,11 +17,10 @@ import java.util.List;
 
 import mobile.pk.com.stocktracker.R;
 import mobile.pk.com.stocktracker.adapters.viewholder.RSSNewsViewHolder;
-import mobile.pk.com.stocktracker.adapters.viewholder.StockSearchResultViewHolder;
 import mobile.pk.com.stocktracker.dao.Stock;
-import nl.matshofman.saxrssreader.RssFeed;
-import nl.matshofman.saxrssreader.RssItem;
-import nl.matshofman.saxrssreader.RssReader;
+import mobile.pk.com.stocktracker.rss.RssFeed;
+import mobile.pk.com.stocktracker.rss.RssItem;
+import mobile.pk.com.stocktracker.rss.RssReader;
 
 /**
  * Created by hello on 8/31/2015.

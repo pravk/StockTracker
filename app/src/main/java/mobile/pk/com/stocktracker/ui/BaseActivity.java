@@ -8,10 +8,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
+
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import de.greenrobot.event.EventBus;
 import mobile.pk.com.stocktracker.R;
+import mobile.pk.com.stocktracker.common.Application;
 import mobile.pk.com.stocktracker.event.ShowPositionDetailEvent;
 import mobile.pk.com.stocktracker.event.ShowStockDetailEvent;
 import mobile.pk.com.stocktracker.ui.activity.StockActivity;
@@ -27,7 +32,9 @@ public class BaseActivity extends AppCompatActivity {
     public static final int ADD_PORTFOLIO_TRANSACTION = 3000;
     public static final int EDIT_USER_TRANSACTION = 4000;
     public static final int RESULT_SETTINGS = 5000;
+    private static final String TAG = BaseActivity.class.getSimpleName();
     private ProgressDialog pd;
+    private Tracker mTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +42,18 @@ public class BaseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         if(EventBus.getDefault().hasSubscriberForEvent(this.getClass()))
             EventBus.getDefault().register(this);
+
+        // Obtain the shared Tracker instance.
+        Application application = Application.getInstance();
+        mTracker = application.getDefaultTracker();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "Setting screen name: " + this.getClass().getSimpleName());
+        mTracker.setScreenName(this.getTitle().toString() + ":" + this.getClass().getSimpleName());
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     protected void setupToolbar(){
