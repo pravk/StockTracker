@@ -16,6 +16,7 @@ public class BlogViewHolder extends RecyclerView.ViewHolder {
     public TextView title;
     public TextView description;
     public TextView date;
+    public Button comments;
     public Button more;
 
     public BlogViewHolder(View itemView) {
@@ -24,5 +25,6 @@ public class BlogViewHolder extends RecyclerView.ViewHolder {
         date = (TextView) itemView.findViewById(R.id.date);
         description = (TextView) itemView.findViewById(R.id.description);
         more = (Button) itemView.findViewById(R.id.more_button);
+        comments = (Button) itemView.findViewById(R.id.comment_count);
     }
 }

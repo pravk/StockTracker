@@ -44,6 +44,8 @@ public class BlogAdapter extends GenericRVAdapter<BlogPost> {
 
         viewHolder.description.setMovementMethod(LinkMovementMethod.getInstance());
 
+        viewHolder.comments.setText(String.format("%d comments", rssItem.getComments() !=null?rssItem.getComments().size():0));
+
         viewHolder.more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

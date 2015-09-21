@@ -84,4 +84,5 @@
     <string name="blog_date">Date</string>
     <string name="value_picks">Value Picks</string>
     <string name="more">Full article</string>
+    <string name="comments">Comments</string>
 </resources>
