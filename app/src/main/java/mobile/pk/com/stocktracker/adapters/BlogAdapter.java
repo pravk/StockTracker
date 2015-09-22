@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -39,12 +41,12 @@ public class BlogAdapter extends GenericRVAdapter<BlogPost> {
         BlogViewHolder viewHolder = (BlogViewHolder) holder;
 
         viewHolder.title.setText(rssItem.getTitle());
-        viewHolder.description.setText(Html.fromHtml(rssItem.getSummary()));
-        viewHolder.date.setText(DateUtils.formatDateTime(mContext, rssItem.getLastModified(), DateUtils.FORMAT_SHOW_DATE));
+        viewHolder.description.setText(rssItem.getSummary());
+        viewHolder.dateandauthor.setText( String.format( "- Posted by %s, %s", rssItem.getAuthor(), DateUtils.formatDateTime(mContext, rssItem.getLastModified(), DateUtils.FORMAT_SHOW_DATE)));
 
         viewHolder.description.setMovementMethod(LinkMovementMethod.getInstance());
 
-        viewHolder.comments.setText(String.format("%d comments", rssItem.getComments() !=null?rssItem.getComments().size():0));
+        viewHolder.comments.setText(String.format("%d comments", rssItem.getCommentCount()));
 
         viewHolder.more.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,6 +54,14 @@ public class BlogAdapter extends GenericRVAdapter<BlogPost> {
                 EventBus.getDefault().post(new ViewBlogPostEvent(rssItem));
             }
         });
+        if(rssItem.getImageUrlList() != null && rssItem.getImageUrlList().size()>0){
+            viewHolder.image.setVisibility(View.VISIBLE);
+            Picasso.with(mContext).load(rssItem.getImageUrlList().get(0)).into(viewHolder.image);
+        }
+        else
+        {
+            viewHolder.image.setVisibility(View.GONE);
+        }
 
         //Picasso.with(mContext).load(rssItem.ge).into(imageView);
 

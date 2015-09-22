@@ -229,9 +229,7 @@ public class MainActivity extends BaseActivity {
 
     public void onEvent(ViewBlogPostEvent event){
         Intent intent = new Intent(this, WebviewActivity.class);
-        intent.putExtra(WebviewActivity.CONTENT, event.getBlogPost().getContent());
-        intent.putExtra(WebviewActivity.TITLE, event.getBlogPost().getTitle());
-        intent.putExtra(WebviewActivity.SUBTITLE, DateUtils.formatDateTime(this, event.getBlogPost().getLastModified(),DateUtils.FORMAT_SHOW_DATE));
+        intent.putExtra(WebviewActivity.BLOG_ID, event.getBlogPost().getId());
         startActivity(intent);
     }
     /*public void showHome()

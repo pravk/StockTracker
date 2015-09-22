@@ -15,16 +15,18 @@ public class BlogViewHolder extends RecyclerView.ViewHolder {
 
     public TextView title;
     public TextView description;
-    public TextView date;
+    public TextView dateandauthor;
     public Button comments;
     public Button more;
+    public ImageView image;
 
     public BlogViewHolder(View itemView) {
         super(itemView);
         title = (TextView) itemView.findViewById(R.id.title);
-        date = (TextView) itemView.findViewById(R.id.date);
+        dateandauthor = (TextView) itemView.findViewById(R.id.dateandauthor);
         description = (TextView) itemView.findViewById(R.id.description);
         more = (Button) itemView.findViewById(R.id.more_button);
         comments = (Button) itemView.findViewById(R.id.comment_count);
+        image = (ImageView) itemView.findViewById(R.id.image);
     }
 }

@@ -1,5 +1,7 @@
 package mobile.pk.com.stocktracker.service;
 
+import android.telecom.Call;
+
 import java.util.List;
 
 import mobile.pk.com.stocktracker.dao.BlogPost;
@@ -19,6 +21,9 @@ public interface BlogService {
 
     @GET("/blog/search")
     void findBlogPosts(@Query("search")String text, @Query("page")int page, @Query("size")int size, Callback<List<BlogPost>> callback);
+
+    @GET("/blog/post")
+    void getBlogPostById(@Query("id") String blogPostId, Callback<BlogPost> callback);
 
 
     @GET("/blog/recent")
