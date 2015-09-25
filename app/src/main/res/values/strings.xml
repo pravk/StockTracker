@@ -20,7 +20,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search_stock">Search stock</string>
     <string name="server_url">https://www.google.com/finance</string>
-    <string name="backend_url">http://52.89.206.140/Scrap</string>
+    <string name="backend_url">http://52.26.182.191/Scrap</string>
     <string name="exchange">Exchange</string>
     <string name="date_added">Date Added</string>
     <string name="ticker">Ticker</string>
