@@ -35,8 +35,10 @@ import mobile.pk.com.stocktracker.event.WatchlistNameChangedEvent;
 import mobile.pk.com.stocktracker.event.WatchlistDeleteEvent;
 import mobile.pk.com.stocktracker.ui.activity.BackupActivity;
 import mobile.pk.com.stocktracker.ui.activity.SearchActivity;
+import mobile.pk.com.stocktracker.ui.activity.ViewPagerActivity;
 import mobile.pk.com.stocktracker.ui.activity.WebviewActivity;
 import mobile.pk.com.stocktracker.ui.fragment.BlogFragment;
+import mobile.pk.com.stocktracker.ui.fragment.BlogStackFragment;
 import mobile.pk.com.stocktracker.ui.fragment.PortfolioFragment;
 import mobile.pk.com.stocktracker.ui.fragment.PortfolioPositionFragment;
 import mobile.pk.com.stocktracker.ui.fragment.UserSettingsFragment;
@@ -268,9 +270,13 @@ public class MainActivity extends BaseActivity {
     }
 
     private void loadBlogs() {
-        showProgressDialog(R.string.loading);
-        Fragment fragment = BlogFragment.newInstance(this);
+        //showProgressDialog(R.string.loading);
+        Fragment fragment = new BlogStackFragment();
         replaceFragment(fragment, getString(R.string.value_picks));
+
+       /* Intent intent = new Intent(this, ViewPagerActivity.class);
+        startActivity(intent);
+        */
     }
 
     @Override

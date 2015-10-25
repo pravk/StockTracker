@@ -8,4 +8,5 @@
     <dimen name="navigation_drawer_width">240dp</dimen>
     <dimen name="margin_default">10dp</dimen>
     <dimen name="form_field_margin">8dp</dimen>
+    <dimen name="view_pager_margin">15dp</dimen>
 </resources>

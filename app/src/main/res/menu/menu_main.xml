@@ -10,6 +10,9 @@
         app:showAsAction="collapseActionView|ifRoom"
         app:actionViewClass="android.support.v7.widget.SearchView" />
 
+    <item android:id="@+id/gototop" android:icon="@drawable/ic_arrow_up_white_24dp"
+        app:showAsAction="always" android:title="@string/go_to_top"/>
+
     <!--    <item android:id="@+id/action_settings" android:title="@string/action_settings"
             android:orderInCategory="100" app:showAsAction="never" />-->
 </menu>

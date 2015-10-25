@@ -18,8 +18,10 @@
             />
     </android.support.design.widget.AppBarLayout>
 
-    <WebView
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vpPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" android:id="@+id/webview"></WebView>
+        android:layout_height="wrap_content">
+    </android.support.v4.view.ViewPager>
 
 </LinearLayout>

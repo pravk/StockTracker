@@ -13,4 +13,5 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#212121</color>
     <color name="teal">#2196F3</color>
+    <color name="primary_transparent">#55673AB7</color>
 </resources>

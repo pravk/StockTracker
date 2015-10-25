@@ -1,8 +1,9 @@
 package mobile.pk.com.stocktracker.dao;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class BlogComment {
+public class BlogComment implements Serializable {
 	
 	private long commentDate;
 	private String user;
